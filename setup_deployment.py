@@ -52,8 +52,11 @@ def setup_env_file():
         print("    ✗ No se encuentra .env.example")
         return False
     
-    # Leer .env.example
-    content = example_file.read_text()
+    # Leer .env.example con encoding correcto
+    try:
+        content = example_file.read_text(encoding='utf-8')
+    except UnicodeDecodeError:
+        content = example_file.read_text(encoding='latin-1')
     
     # Reemplazar valores por defecto
     replacements = {
@@ -64,8 +67,8 @@ def setup_env_file():
     for old, new in replacements.items():
         content = content.replace(old, new)
     
-    # Escribir .env
-    env_file.write_text(content)
+    # Escribir .env con encoding UTF-8
+    env_file.write_text(content, encoding='utf-8')
     print("    ✓ Archivo .env creado")
     return True
 
