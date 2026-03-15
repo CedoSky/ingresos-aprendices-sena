@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+    <script src="/socket.io/?EIO=4&transport=websocket"></script>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .connected { background-color: #90EE90; }
+        .disconnected { background-color: #FFB6C6; }
+        .event-log { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto; }
+        .event-item { padding: 5px; border-bottom: 1px dashed #ccc; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h1>🔌 WebSocket Connection Test</h1>
+    
+    <div id="status" class="status disconnected">
+        Status: Connecting...
+    </div>
+    
+    <h3>Events Received:</h3>
+    <div class="event-log" id="eventLog"></div>
+    
+    <button onclick="testRequest()">Test Data Request</button>
+    <button onclick="clearLog()">Clear Log</button>
+    
+    <script>
+        const socket = io({
+            reconnection: true,
+            reconnectionDelay: 1000,
+            reconnectionDelayMax: 5000,
+            reconnectionAttempts: 5
+        });
+        
+        const statusEl = document.getElementById('status');
+        const logEl = document.getElementById('eventLog');
+        
+        function addLog(event, data) {
+            const item = document.createElement('div');
+            item.className = 'event-item';
+            item.textContent = `[${new Date().toLocaleTimeString()}] ${event}: ${JSON.stringify(data).substring(0, 100)}`;
+            logEl.appendChild(item);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+        
+        socket.on('connect', function() {
+            console.log('Connected!');
+            statusEl.innerHTML = '✓ Status: <strong>Connected</strong>';
+            statusEl.className = 'status connected';
+            addLog('CONNECT', 'WebSocket connected');
+            socket.emit('request_personas');
+            socket.emit('request_stats');
+        });
+        
+        socket.on('disconnect', function() {
+            console.log('Disconnected!');
+            statusEl.innerHTML = '✗ Status: <strong>Disconnected</strong>';
+            statusEl.className = 'status disconnected';
+            addLog('DISCONNECT', 'WebSocket disconnected');
+        });
+        
+        socket.on('personas_data', function(data) {
+            console.log('Received personas:', data);
+            addLog('personas_data', `${data.total} personas`);
+        });
+        
+        socket.on('personas_updated', function(data) {
+            console.log('Personas updated:', data);
+            addLog('personas_updated', `${data.total} personas (real-time update)`);
+        });
+        
+        socket.on('stats_data', function(data) {
+            console.log('Received stats:', data);
+            addLog('stats_data', JSON.stringify(data));
+        });
+        
+        // Event listeners for common events
+        socket.on('connect_error', (error) => {
+            console.error('Connection error:', error);
+            addLog('ERROR', error.message);
+        });
+        
+        function testRequest() {
+            console.log('Sending test request...');
+            socket.emit('request_personas');
+            addLog('REQUEST', 'request_personas sent');
+        }
+        
+        function clearLog() {
+            logEl.innerHTML = '';
+        }
+    </script>
+</body>
+</html>

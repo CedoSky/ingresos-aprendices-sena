@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEST - SENA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #003087;
+            color: white;
+        }
+        button {
+            padding: 20px 40px;
+            margin: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+        }
+        .verde { background: #39A900; }
+        .naranja { background: #FF5800; }
+        .info {
+            background: #005EB8;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test de Botones SENA</h1>
+    <div class="info">
+        <p>Abre la consola del navegador (F12) para ver los logs.</p>
+        <p id="status">Estado: Esperando...</p>
+    </div>
+    
+    <div>
+        <button class="verde" onclick="testEntrada()">
+            ENTRADA (TEST)
+        </button>
+        <button class="naranja" onclick="testSalida()">
+            SALIDA (TEST)
+        </button>
+    </div>
+    
+    <div class="info">
+        <h3>Eventos:</h3>
+        <ul id="eventos"></ul>
+    </div>
+
+    <script>
+        console.log('🔧 Script cargado correctamente');
+        
+        let eventos = [];
+        
+        function testEntrada() {
+            console.log('✅ ENTRADA clickeado');
+            const msg = '✅ Botón ENTRADA presionado a las ' + new Date().toLocaleTimeString();
+            eventos.push(msg);
+            console.log(msg);
+            document.getElementById('status').textContent = 'Estado: ' + msg;
+            actualizarEventos();
+        }
+        
+        function testSalida() {
+            console.log('✅ SALIDA clickeado');
+            const msg = '✅ Botón SALIDA presionado a las ' + new Date().toLocaleTimeString();
+            eventos.push(msg);
+            console.log(msg);
+            document.getElementById('status').textContent = 'Estado: ' + msg;
+            actualizarEventos();
+        }
+        
+        function actualizarEventos() {
+            const ul = document.getElementById('eventos');
+            ul.innerHTML = '';
+            eventos.forEach(e => {
+                const li = document.createElement('li');
+                li.textContent = e;
+                ul.appendChild(li);
+            });
+        }
+        
+        console.log('🔧 Funciones definidas: testEntrada, testSalida');
+        document.getElementById('status').textContent = 'Estado: Listo - haz clic en los botones';
+    </script>
+</body>
+</html>

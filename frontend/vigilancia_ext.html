@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control de Accesos — Edificio Externo</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;user-select:none}
+input,select,textarea{user-select:text}
+body{font-family:"Segoe UI",Arial,sans-serif;background:#eef1f6;color:#1c2b4b;font-size:14px}
+
+/* ── TOPBAR ── */
+.topbar{background:#1a3a2a;color:#fff;height:60px;padding:0 24px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:50}
+.tb-logo{font-size:1rem;font-weight:700;letter-spacing:.3px;white-space:nowrap}
+.tb-logo span{color:#5dd48a}
+.tb-ed-badge{background:rgba(93,212,138,.18);border:1px solid rgba(93,212,138,.4);color:#5dd48a;border-radius:5px;padding:5px 12px;font-size:.8rem;font-weight:700;white-space:nowrap;letter-spacing:.4px}
+.tb-spacer{flex:1}
+.tb-clock{font-family:"Courier New",monospace;font-size:1.45rem;font-weight:700;letter-spacing:2px;color:#fff}
+.tb-spacer2{flex:1}
+.tb-pill{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:5px;padding:6px 13px;font-size:.78rem;font-weight:600;cursor:default;white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:#888;flex-shrink:0}
+.dot.on{background:#3fbf3f;box-shadow:0 0 0 3px rgba(63,191,63,.25)}
+.dot.off{background:#f08c00}
+.tb-btn{border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.09);color:#fff;border-radius:5px;padding:7px 14px;font-size:.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px;white-space:nowrap;transition:background .15s}
+.tb-btn:hover{background:rgba(255,255,255,.18)}
+.tb-btn.change{border-color:rgba(93,212,138,.5);background:rgba(93,212,138,.12)}
+.tb-btn.change:hover{background:rgba(93,212,138,.25)}
+.badge-count{background:#c0392b;color:#fff;border-radius:999px;padding:1px 7px;font-size:.72rem;font-weight:700;min-width:20px;text-align:center}
+.badge-count.none{background:#3fbf3f}
+
+/* ── LAYOUT ── */
+.page{padding:22px 22px 30px;max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+
+/* ── BANNER ── */
+.ed-banner{background:linear-gradient(135deg,#1a3a2a,#1c4b3a);color:#fff;border-radius:8px;padding:16px 22px;display:flex;align-items:center;gap:16px}
+.ed-banner-ico{font-size:2rem}
+.ed-banner-title{font-size:1.15rem;font-weight:800;letter-spacing:.3px}
+.ed-banner-sub{font-size:.8rem;color:rgba(255,255,255,.65);margin-top:3px}
+.ed-banner-spacer{flex:1}
+.ed-banner-pisos{text-align:right}
+.ed-banner-pisos .val{font-size:1.6rem;font-weight:800}
+.ed-banner-pisos .lbl{font-size:.68rem;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.5px}
+
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat{background:#fff;border-radius:8px;padding:18px 20px;display:flex;align-items:center;gap:16px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.stat-ico{width:44px;height:44px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.stat-ico.gray{background:#f0f2f5}
+.stat-ico.green{background:#edfcee;color:#2e8b35}
+.stat-ico.orange{background:#fff8ee;color:#c4700a}
+.stat-ico.blue{background:#eff7ff;color:#1563c5}
+.stat-label{font-size:.72rem;color:#7a8aab;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.stat-val{font-size:1.85rem;font-weight:800;color:#1c2b4b;line-height:1}
+
+/* ── MAIN GRID ── */
+.grid2{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start}
+.left{display:flex;flex-direction:column;gap:18px}
+
+/* ── CARD ── */
+.card{background:#fff;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);overflow:hidden}
+.card-hd{padding:13px 18px;border-bottom:1px solid #e8ecf2;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card-title{font-size:.82rem;font-weight:700;color:#1c2b4b;text-transform:uppercase;letter-spacing:.5px}
+.card-body{padding:14px 18px}
+
+/* ── PISOS ── */
+.floors{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.floor{background:#f5f7fa;border:1px solid #dde3ef;border-radius:7px;padding:12px 6px;text-align:center;transition:border-color .2s}
+.floor:hover{border-color:#5dd48a}
+.floor.alert{background:#fff8ee;border-color:#f0aa40}
+.floor-lbl{font-size:.65rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.floor-n{font-size:1.6rem;font-weight:800;color:#1c2b4b}
+.floor.alert .floor-n{color:#c4700a}
+.floor.alert .floor-lbl{color:#c4700a}
+
+/* ── FEED ── */
+.filters{display:flex;gap:6px}
+.f-btn{padding:5px 12px;border:1px solid #d0d8e8;border-radius:5px;background:#fff;color:#5a6a80;font-size:.77rem;font-weight:600;cursor:pointer;transition:all .15s}
+.f-btn:hover,.f-btn.active{background:#1a3a2a;color:#fff;border-color:#1a3a2a}
+
+.tbl-wrap{overflow-y:auto;max-height:540px}
+.tbl-wrap::-webkit-scrollbar{width:5px}
+.tbl-wrap::-webkit-scrollbar-thumb{background:#c8d4e4;border-radius:3px}
+table{width:100%;border-collapse:collapse;font-size:.86rem}
+thead th{background:#f5f7fa;padding:10px 14px;text-align:left;font-size:.7rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid #e8ecf2;position:sticky;top:0}
+tbody td{padding:9px 14px;border-bottom:1px solid #f0f3f8;color:#2c3e5a;background:#fff}
+tbody tr:hover td{background:#f8fafc}
+.badge-e,.badge-s{padding:3px 9px;border-radius:4px;font-size:.7rem;font-weight:700;text-transform:uppercase}
+.badge-e{background:#edfcee;color:#2e8b35}
+.badge-s{background:#fff3ee;color:#c4700a}
+.mono{font-family:"Courier New",monospace;font-size:.82rem;color:#3d6294}
+@keyframes rowIn{from{background:#dff7e0}to{background:#fff}}
+.row-new td{animation:rowIn 1.6s ease}
+
+/* ── TRASLADOS PANEL ── */
+.tras-panel{background:#fff;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);overflow:hidden}
+.tras-panel-hd{padding:13px 18px;border-bottom:1px solid #e8ecf2;display:flex;align-items:center;gap:10px;background:#1a3a2a;color:#fff}
+.tras-panel-title{font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;flex:1}
+.tras-badge{background:#5dd48a;color:#1a3a2a;border-radius:999px;padding:1px 8px;font-size:.72rem;font-weight:800}
+.tras-list{max-height:220px;overflow-y:auto}
+.tras-item{padding:10px 16px;border-bottom:1px solid #f0f3f8;font-size:.84rem;display:flex;align-items:center;gap:10px}
+.tras-item:last-child{border-bottom:none}
+.tras-ico{font-size:1.1rem;flex-shrink:0}
+.tras-info{flex:1;min-width:0}
+.tras-name{font-weight:700;color:#1c2b4b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tras-sub{font-size:.75rem;color:#7a8aab;margin-top:2px}
+.tras-time{font-size:.72rem;color:#9aabbc;white-space:nowrap}
+.tras-in{border-left:3px solid #3fbf3f}
+.tras-out{border-left:3px solid #f0aa40}
+.tras-empty{text-align:center;padding:28px 16px;color:#9aabbc;font-size:.85rem}
+
+/* ── MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.overlay.show{display:flex}
+.mbox{background:#fff;border-radius:10px;width:min(580px,96vw);max-height:88vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.mhd{padding:16px 22px;border-bottom:1px solid #e8ecf2;display:flex;align-items:center;justify-content:space-between;background:#1a3a2a;color:#fff;border-radius:10px 10px 0 0}
+.mhd-title{font-size:.95rem;font-weight:700}
+.mclose{background:none;border:none;color:rgba(255,255,255,.7);font-size:1.1rem;cursor:pointer;padding:2px 6px;border-radius:4px}
+.mclose:hover{background:rgba(255,255,255,.15);color:#fff}
+.mbody{padding:18px 22px;overflow-y:auto;flex:1}
+.m-empty{text-align:center;padding:32px 16px;color:#9aabbc;font-size:.9rem}
+
+.env-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.env-table th{background:#f5f7fa;padding:9px 12px;text-align:left;font-size:.7rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;border-bottom:2px solid #e8ecf2}
+.env-table td{padding:10px 12px;border-bottom:1px solid #f0f3f8;vertical-align:middle}
+.env-table tr:last-child td{border-bottom:none}
+.btn-lib{padding:5px 12px;background:#c0392b;color:#fff;border:none;border-radius:5px;font-size:.77rem;font-weight:700;cursor:pointer;transition:opacity .15s;white-space:nowrap}
+.btn-lib:hover{opacity:.85}
+.btn-lib:disabled{background:#aaa;cursor:not-allowed}
+.btn-tras{padding:5px 12px;background:#1a3a2a;color:#fff;border:none;border-radius:5px;font-size:.77rem;font-weight:700;cursor:pointer;margin-left:5px;white-space:nowrap;transition:opacity .15s}
+.btn-tras:hover{opacity:.85}
+
+/* Toast traslados */
+.toast-tras{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:9px;pointer-events:none;max-width:380px}
+.toast-item{color:#fff;border-radius:8px;padding:14px 18px;font-size:.84rem;box-shadow:0 6px 24px rgba(0,0,0,.3);pointer-events:auto;animation:toastIn .3s ease}
+.toast-item.arriving{background:#1c4b3a;border-left:4px solid #5dd48a}
+.toast-item.leaving{background:#3a2a00;border-left:4px solid #f0aa40}
+.toast-item.neutral{background:#1c2b4b;border-left:4px solid #4eb3e8}
+@keyframes toastIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* Modal selector edificio */
+.ed-sel-card{background:#f5f7fa;border:2px solid #dde3ef;border-radius:9px;padding:18px;cursor:pointer;transition:all .18s;text-align:center}
+.ed-sel-card:hover{border-color:#5dd48a;background:#f0fff6}
+.ed-sel-card .name{font-weight:800;font-size:1rem;color:#1c2b4b;margin-bottom:5px}
+.ed-sel-card .meta{font-size:.78rem;color:#7a8aab}
+
+/* confirmacion limpiar */
+.mbox-sm{background:#fff;border-radius:10px;width:min(420px,96vw);box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.mhd-warn{padding:16px 22px;border-bottom:1px solid #e8ecf2;display:flex;align-items:center;justify-content:space-between;background:#8b1e1e;color:#fff;border-radius:10px 10px 0 0}
+.mbody-warn{padding:22px}
+.warn-txt{font-size:.9rem;color:#3a2222;margin-bottom:16px;line-height:1.6}
+.warn-txt strong{color:#8b1e1e}
+.mfoot{display:flex;gap:10px;margin-top:18px}
+.btn-cancel-w{flex:1;padding:10px;border:1px solid #ccc;background:#fff;border-radius:6px;font-size:.85rem;font-weight:600;cursor:pointer}
+.btn-cancel-w:hover{background:#f5f5f5}
+.btn-confirm-w{flex:1;padding:10px;border:none;background:#8b1e1e;color:#fff;border-radius:6px;font-size:.85rem;font-weight:700;cursor:pointer}
+.btn-confirm-w:hover{background:#a52222}
+.btn-confirm-w:disabled{background:#bbb;cursor:not-allowed}
+
+/* inventario */
+.mbox-lg{background:#fff;border-radius:10px;width:min(760px,97vw);max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.inv-tabs{display:flex;border-bottom:2px solid #e8ecf2;padding:0 22px;background:#f8fafc}
+.inv-tab{padding:12px 20px;border:none;background:none;cursor:pointer;font-size:.82rem;font-weight:700;color:#7a8aab;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s;white-space:nowrap}
+.inv-tab.active{color:#1c2b4b;border-bottom-color:#1a3a2a}
+.inv-tab:hover{color:#1c2b4b}
+.inv-pane{display:none;padding:20px 22px;overflow-y:auto;flex:1}
+.inv-pane.active{display:block}
+.inv-form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.inv-form .full{grid-column:1/-1}
+.fg label{display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+.fg input,.fg select,.fg textarea{width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none;transition:border-color .15s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#5dd48a}
+.fg textarea{resize:vertical;min-height:62px;font-family:inherit}
+.fg .req{color:#c0392b}
+.badge-en{display:inline-block;padding:2px 9px;border-radius:4px;font-size:.7rem;font-weight:700;background:#edfcee;color:#2a7f30}
+.badge-ret{display:inline-block;padding:2px 9px;border-radius:4px;font-size:.7rem;font-weight:700;background:#f0f3f8;color:#7a8aab}
+.btn-salida{padding:5px 12px;background:#1a3a2a;color:#fff;border:none;border-radius:5px;font-size:.77rem;font-weight:700;cursor:pointer;transition:opacity .15s;white-space:nowrap}
+.btn-salida:hover{opacity:.8}
+.btn-salida:disabled{background:#aaa;cursor:not-allowed}
+.btn-inv-save{width:100%;padding:11px;background:#1a3a2a;color:#fff;border:none;border-radius:7px;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:6px;transition:background .15s}
+.btn-inv-save:hover{background:#2a5a3a}
+.btn-inv-save:disabled{background:#aaa;cursor:not-allowed}
+.inv-msg{padding:10px 14px;border-radius:6px;font-size:.84rem;font-weight:600;margin-top:10px;display:none}
+.inv-msg.ok{background:#edfcee;color:#2a7f30;display:block}
+.inv-msg.err{background:#fff3f3;color:#c0392b;display:block}
+
+@media(max-width:960px){.grid2{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.stats{grid-template-columns:1fr}.tb-clock{font-size:1rem}.topbar{gap:10px}}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+    <div class="tb-logo">SENA <span>Externo</span></div>
+    <div class="tb-ed-badge" id="tb-ed-badge">&#x1F3DB; Cargando...</div>
+    <div class="tb-spacer"></div>
+    <div class="tb-clock" id="reloj">--:--:--</div>
+    <div class="tb-spacer2"></div>
+    <div class="tb-pill" id="pill-vig"><span>&#128100;</span><span id="lbl-vig">...</span></div>
+    <div class="tb-pill"><div class="dot" id="dot-rt"></div><span id="lbl-rt">Iniciando</span></div>
+    <button class="tb-btn change" onclick="cambiarEdificio()" title="Cambiar edificio monitoreado">&#x1F501; Cambiar edificio</button>
+    <button class="tb-btn" id="btn-ambientes" onclick="abrirModalAmbientes()">
+        Ambientes <span class="badge-count none" id="cnt-amb">0</span>
+    </button>
+    <button class="tb-btn" id="btn-inventario" onclick="abrirInventario()">
+        Objetos <span class="badge-count none" id="cnt-inv">0</span>
+    </button>
+    <button class="tb-btn" onclick="abrirBusquedaGlobal()">&#128269; Historial</button>
+</div>
+
+<!-- PAGINA -->
+<div class="page">
+    <!-- BANNER EDIFICIO -->
+    <div class="ed-banner" id="ed-banner">
+        <div class="ed-banner-ico">&#x1F3DB;</div>
+        <div>
+            <div class="ed-banner-title" id="ed-banner-title">Cargando edificio...</div>
+            <div class="ed-banner-sub" id="ed-banner-desc">Sistema de vigilancia externo</div>
+        </div>
+        <div class="ed-banner-spacer"></div>
+        <div class="ed-banner-pisos">
+            <div class="val" id="ed-banner-pisos">—</div>
+            <div class="lbl">Pisos configurados</div>
+        </div>
+        <div class="ed-banner-pisos" style="margin-left:24px">
+            <div class="val" id="ed-banner-amb">—</div>
+            <div class="lbl">Amb. por piso</div>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat"><div class="stat-ico gray">📊</div><div><div class="stat-label">Movimientos hoy (este edificio)</div><div class="stat-val" id="kpi-total">0</div></div></div>
+        <div class="stat"><div class="stat-ico green">↓</div><div><div class="stat-label">Entradas</div><div class="stat-val" id="kpi-ent">0</div></div></div>
+        <div class="stat"><div class="stat-ico orange">↑</div><div><div class="stat-label">Salidas</div><div class="stat-val" id="kpi-sal">0</div></div></div>
+        <div class="stat"><div class="stat-ico blue">◉</div><div><div class="stat-label">Personas en edificio</div><div class="stat-val" id="kpi-den">0</div></div></div>
+    </div>
+
+    <div class="grid2">
+        <div class="left">
+            <div class="card">
+                <div class="card-hd"><div class="card-title">Personas por piso</div></div>
+                <div class="card-body"><div class="floors" id="floors"></div></div>
+            </div>
+
+            <!-- PANEL DE TRASLADOS RECIENTES -->
+            <div class="tras-panel">
+                <div class="tras-panel-hd">
+                    <div class="tras-panel-title">&#x1F504; Traslados recientes</div>
+                    <span class="tras-badge" id="tras-badge">0</span>
+                    <button onclick="limpiarTraslados()" style="background:none;border:none;color:rgba(255,255,255,.6);font-size:.75rem;cursor:pointer;margin-left:8px;text-decoration:underline">Limpiar</button>
+                </div>
+                <div class="tras-list" id="tras-list">
+                    <div class="tras-empty">Sin traslados recientes</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="overflow:visible">
+            <div class="card-hd">
+                <div class="card-title" id="feed-title">Entradas y salidas en vivo — Este edificio</div>
+                <div class="filters">
+                    <button class="f-btn active" onclick="filtrar('TODOS',this)">Todos</button>
+                    <button class="f-btn" onclick="filtrar('ENTRADA',this)">Entradas</button>
+                    <button class="f-btn" onclick="filtrar('SALIDA',this)">Salidas</button>
+                </div>
+            </div>
+            <div class="tbl-wrap">
+                <table><thead><tr><th>Hora</th><th>Tipo</th><th>Nombre</th><th>Cédula</th><th>Ambiente</th><th>Equipo</th></tr></thead>
+                <tbody id="tbody-feed"></tbody></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST TRASLADOS -->
+<div class="toast-tras" id="toast-tras"></div>
+
+<!-- MODAL SELECTOR DE EDIFICIO -->
+<div class="overlay show" id="ov-sel-ed">
+    <div class="mbox">
+        <div class="mhd"><div class="mhd-title">&#x1F3DB; Selecciona el edificio a monitorear</div></div>
+        <div class="mbody">
+            <p style="font-size:.88rem;color:#7a8aab;margin-bottom:16px">Esta página monitorea los accesos y ambientes de un edificio específico. Selecciona el edificio que corresponde a este puesto de vigilancia.</p>
+            <div id="ed-sel-lista" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div style="text-align:center;padding:20px;color:#9aabbc;grid-column:1/-1">Cargando edificios...</div>
+            </div>
+            <p style="font-size:.75rem;color:#9aabbc;margin-top:14px;text-align:center">También puedes acceder directamente con: <code style="background:#f5f7fa;padding:2px 6px;border-radius:3px">?edificio=NOMBRE</code> en la URL</p>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL AMBIENTES OCUPADOS -->
+<div class="overlay" id="ov-amb">
+    <div class="mbox">
+        <div class="mhd">
+            <div class="mhd-title">Ambientes ocupados — <span id="ov-amb-ed">este edificio</span></div>
+            <button class="mclose" onclick="cerrarOvAmb()">&#x2715;</button>
+        </div>
+        <div class="mbody" id="mbody-amb"></div>
+    </div>
+</div>
+
+<!-- MODAL TRASLADO -->
+<div class="overlay" id="ov-traslado">
+    <div class="mbox">
+        <div class="mhd"><div class="mhd-title">&#x1F504; Trasladar a otro edificio</div><button class="mclose" onclick="cerrarTraslado()">&#x2715;</button></div>
+        <div class="mbody">
+            <div id="tras-persona-info" style="background:#f5f7fa;border-radius:7px;padding:12px 16px;margin-bottom:16px;font-size:.88rem"></div>
+            <div style="margin-bottom:12px">
+                <label style="display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Edificio destino</label>
+                <select id="tras-sel-ed" onchange="trasSelectorPiso()" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;outline:none">
+                    <option value="">Cargando edificios...</option>
+                </select>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+                <div>
+                    <label style="display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Piso destino</label>
+                    <select id="tras-sel-piso" onchange="trasSelectorAmb()" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;outline:none" disabled>
+                        <option value="">Primero elige edificio</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Ambiente destino</label>
+                    <select id="tras-sel-amb" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;outline:none" disabled>
+                        <option value="">Primero elige piso</option>
+                    </select>
+                </div>
+            </div>
+            <div id="tras-msg" style="display:none;padding:9px 14px;border-radius:6px;font-size:.84rem;font-weight:600;margin-bottom:12px"></div>
+            <div style="display:flex;gap:10px">
+                <button class="btn-cancel-w" onclick="cerrarTraslado()">Cancelar</button>
+                <button id="btn-tras-confirm" onclick="ejecutarTraslado()" style="flex:1;padding:10px;border:none;background:#1a3a2a;color:#fff;border-radius:6px;font-size:.87rem;font-weight:700;cursor:pointer">&#x1F504; Confirmar traslado</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL BUSQUEDA GLOBAL -->
+<div class="overlay" id="ov-busq">
+    <div class="mbox-lg">
+        <div class="mhd">
+            <div class="mhd-title">&#128269; Consultar historial de personas</div>
+            <button class="mclose" onclick="cerrarBusquedaGlobal()">&#x2715;</button>
+        </div>
+        <div style="padding:18px 22px;border-bottom:1px solid #e8ecf2;display:flex;gap:10px;align-items:flex-end">
+            <div class="fg" style="flex:1">
+                <label style="display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Número de documento</label>
+                <input type="text" id="busq-doc" placeholder="Ej: 1234567890" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none" onkeydown="if(event.key==='Enter')ejecutarBusquedaGlobal()">
+            </div>
+            <div class="fg" style="flex:1">
+                <label style="display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Nombre</label>
+                <input type="text" id="busq-nombre" placeholder="Ej: Juan Perez" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none" onkeydown="if(event.key==='Enter')ejecutarBusquedaGlobal()">
+            </div>
+            <button class="btn-inv-save" id="btn-busq" onclick="ejecutarBusquedaGlobal()" style="width:auto;padding:10px 22px;margin-top:0">Buscar</button>
+        </div>
+        <div class="inv-pane active" id="busq-resultados" style="padding:18px 22px;overflow-y:auto;flex:1;max-height:440px">
+            <div class="m-empty">Ingresa un documento o nombre para buscar.</div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CONFIRMACION SALIDA OBJETO -->
+<div class="overlay" id="ov-sal-obj">
+    <div class="mbox-sm">
+        <div class="mhd-warn" style="background:#1c4b3a">
+            <div class="mhd-title">&#128230; Confirmar salida de objeto</div>
+            <button class="mclose" onclick="cerrarConfirmSalida()">&#x2715;</button>
+        </div>
+        <div class="mbody-warn">
+            <div style="background:#f0fff8;border:1px solid #b2dfdb;border-radius:7px;padding:14px 16px;margin-bottom:16px;font-size:.88rem;line-height:1.7">
+                <div><strong>Objeto:</strong> <span id="sal-obj-desc"></span></div>
+                <div><strong>Cantidad:</strong> <span id="sal-obj-cant"></span></div>
+                <div><strong>Portador:</strong> <span id="sal-obj-portador"></span></div>
+                <div><strong>Documento:</strong> <span id="sal-obj-doc" class="mono"></span></div>
+                <div><strong>Destino:</strong> <span id="sal-obj-dest" style="color:#7a8aab"></span></div>
+                <div><strong>Hora de ingreso:</strong> <span id="sal-obj-entrada" style="color:#7a8aab"></span></div>
+            </div>
+            <div class="warn-txt" style="color:#1c4b3a;font-size:.88rem">¿El objeto realmente está saliendo?</div>
+            <div class="mfoot">
+                <button class="btn-cancel-w" onclick="cerrarConfirmSalida()">Cancelar</button>
+                <button class="btn-confirm-w" id="btn-sal-obj-confirm" onclick="ejecutarSalidaInv()" style="background:#1c4b3a">Confirmar salida</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL INVENTARIO -->
+<div class="overlay" id="ov-inv">
+    <div class="mbox-lg">
+        <div class="mhd">
+            <div class="mhd-title">&#128230; Registro de objetos y Bitácora</div>
+            <button class="mclose" onclick="cerrarInventario()">&#x2715;</button>
+        </div>
+        <div class="inv-tabs">
+            <button class="inv-tab active" onclick="invTab('registrar',this)">Ingresar objeto</button>
+            <button class="inv-tab" onclick="invTab('ensede',this)">En sede ahora <span id="cnt-inv-tab" style="font-size:.7rem;background:#1a3a2a;color:#fff;border-radius:99px;padding:1px 7px;margin-left:4px">0</span></button>
+            <button class="inv-tab" onclick="invTab('bitacora',this)">Historial</button>
+        </div>
+        <div class="inv-pane active" id="inv-registrar">
+            <div class="inv-form">
+                <div class="fg full"><label>Descripción <span class="req">*</span></label><input type="text" id="inv-desc" placeholder="Laptop Dell, taladro..."></div>
+                <div class="fg"><label>Cantidad <span class="req">*</span></label><input type="number" id="inv-cant" value="1" min="1"></div>
+                <div class="fg"><label>Destino / Ambiente</label><input type="text" id="inv-dest" placeholder="Ej: Piso 2, Ambiente 201..."></div>
+                <div class="fg"><label>Nombre de quien ingresa <span class="req">*</span></label><input type="text" id="inv-pnombre" placeholder="Nombre completo"></div>
+                <div class="fg"><label>Documento <span class="req">*</span></label><input type="text" id="inv-pdoc" placeholder="Número de documento"></div>
+                <div class="fg full"><label>Observaciones</label><textarea id="inv-obs" placeholder="Serial, color, marca..."></textarea></div>
+                <div class="fg full">
+                    <button class="btn-inv-save" id="btn-inv-save" onclick="guardarInvIngreso()">Registrar entrada</button>
+                    <div class="inv-msg" id="inv-msg"></div>
+                </div>
+            </div>
+        </div>
+        <div class="inv-pane" id="inv-ensede"><div id="inv-ensede-body"><div class="m-empty">Cargando...</div></div></div>
+        <div class="inv-pane" id="inv-bitacora"><div id="inv-bitacora-body"><div class="m-empty">Cargando...</div></div></div>
+    </div>
+</div>
+
+
+<script src="/js/socket.io.min.js"></script>
+<script>
+// ── ESTADO GLOBAL ─────────────────────────────────────────────
+var token = localStorage.getItem("sena_api_token");
+var filtroActual = "TODOS";
+var todos = [];
+var flashNext = false;
+var socket = null;
+var _listaAmb = [];
+var _listaTraslados = [];
+var _trasOcuId = null;
+var _miEdificio = "";       // nombre del edificio que monitorea esta pantalla
+var _miEdificioData = null; // objeto completo del edificio desde la API
+var _pendSalidaId = null;
+var _listaInv = [];
+
+// ── ARRANQUE ─────────────────────────────────────────────────
+window.addEventListener("load", async function(){
+    if(!token){ window.location.replace('/login'); return; }
+    tickReloj();
+    setInterval(tickReloj,1000);
+    // Leer edificio de URL param
+    var params = new URLSearchParams(window.location.search);
+    var edParam = (params.get('edificio')||'').trim().toUpperCase();
+    if(edParam){
+        // intenta cargar ese edificio directamente
+        await seleccionarEdificioPorNombre(edParam);
+    } else {
+        // mostrar selector
+        await cargarSelectorEdificios();
+    }
+});
+
+async function cargarSelectorEdificios(){
+    var lista = document.getElementById('ed-sel-lista');
+    try{
+        var resp = await fetch('/api/edificios',{headers:{'Authorization':'Bearer '+token}});
+        var data = await resp.json();
+        var eds = (data.edificios||[]).filter(function(e){return e.activo;});
+        if(eds.length===0){
+            lista.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:20px;color:#c0392b">No hay edificios configurados. Ve al panel de Administración y crea los edificios primero.</div>';
+            return;
+        }
+        lista.innerHTML='';
+        eds.forEach(function(e){
+            var div=document.createElement('div');
+            div.className='ed-sel-card';
+            div.innerHTML='<div class="name">&#x1F3DB; '+esc(e.nombre)+'</div>'
+                +'<div class="meta">'+e.num_pisos+' pisos &nbsp;·&nbsp; '+e.num_ambientes_por_piso+' ambientes/piso</div>'
+                +(e.descripcion?'<div class="meta" style="margin-top:4px">'+esc(e.descripcion)+'</div>':'');
+            div.onclick=function(){ aplicarEdificio(e); };
+            lista.appendChild(div);
+        });
+    }catch(ex){
+        lista.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:20px;color:#c0392b">Error al cargar edificios: '+esc(ex.message)+'</div>';
+    }
+}
+
+async function seleccionarEdificioPorNombre(nombreParam){
+    try{
+        var resp = await fetch('/api/edificios',{headers:{'Authorization':'Bearer '+token}});
+        var data = await resp.json();
+        var eds = (data.edificios||[]).filter(function(e){return e.activo;});
+        var encontrado = eds.find(function(e){ return e.nombre.toUpperCase()===nombreParam; });
+        if(encontrado){
+            aplicarEdificio(encontrado);
+        } else {
+            // no encontrado, mostrar selector
+            document.getElementById('ov-sel-ed').classList.add('show');
+            await cargarSelectorEdificios();
+        }
+    }catch(ex){
+        document.getElementById('ov-sel-ed').classList.add('show');
+        await cargarSelectorEdificios();
+    }
+}
+
+function aplicarEdificio(ed){
+    _miEdificio = ed.nombre.toUpperCase();
+    _miEdificioData = ed;
+    // Actualizar URL sin recargar
+    var url = new URL(window.location.href);
+    url.searchParams.set('edificio', _miEdificio);
+    window.history.replaceState({}, '', url.toString());
+    // Actualizar UI
+    document.getElementById('tb-ed-badge').textContent = '\uD83C\uDFDB ' + ed.nombre;
+    document.getElementById('ed-banner-title').textContent = ed.nombre;
+    document.getElementById('ed-banner-desc').textContent = ed.descripcion || 'Sistema de vigilancia externo';
+    document.getElementById('ed-banner-pisos').textContent = ed.num_pisos;
+    document.getElementById('ed-banner-amb').textContent = ed.num_ambientes_por_piso;
+    document.getElementById('ov-amb-ed').textContent = ed.nombre;
+    document.getElementById('feed-title').textContent = 'Entradas y salidas en vivo — ' + ed.nombre;
+    document.title = 'Vigilancia — ' + ed.nombre;
+    document.getElementById('ov-sel-ed').classList.remove('show');
+    // Iniciar el sistema
+    initFloors();
+    cargarInfoVigilante();
+    cargarDatos();
+    cargarAmbientes();
+    cargarInventario();
+    iniciarRT();
+    setInterval(cargarDatos, 3000);
+    setInterval(cargarAmbientes, 5000);
+    setInterval(cargarInventario, 12000);
+}
+
+function cambiarEdificio(){
+    document.getElementById('ov-sel-ed').classList.add('show');
+    cargarSelectorEdificios();
+}
+
+// ── VIGILANTE ─────────────────────────────────────────────────
+async function cargarInfoVigilante(){
+    try{
+        var resp=await fetch('/api/auth/me',{headers:{'Authorization':'Bearer '+token}});
+        if(resp.ok){
+            var u=await resp.json();
+            document.getElementById('lbl-vig').textContent=u.nombre||u.email;
+        }
+    }catch(e){}
+}
+
+// ── RELOJ ─────────────────────────────────────────────────────
+function tickReloj(){
+    var n=new Date();
+    document.getElementById("reloj").textContent=p(n.getHours())+":"+p(n.getMinutes())+":"+p(n.getSeconds());
+}
+function p(n){return String(n).padStart(2,"0")}
+
+// ── WEBSOCKET ─────────────────────────────────────────────────
+function iniciarRT(){
+    if(typeof io==="undefined"){setRT(false);return}
+    if(socket) socket.disconnect();
+    socket=io(window.location.origin,{transports:["websocket","polling"]});
+    socket.on("connect",function(){setRT(true)});
+    socket.on("disconnect",function(){setRT(false)});
+    socket.on("acceso_registrado",function(){flashNext=true; cargarDatos();});
+    socket.on("ambiente_ocupado", cargarAmbientes);
+    socket.on("ambiente_liberado", cargarAmbientes);
+    socket.on("traslado_ambiente", function(d){
+        manejarTrasladoRT(d);
+        flashNext=true;
+        cargarDatos();
+        cargarAmbientes();
+    });
+}
+function setRT(ok){
+    document.getElementById("dot-rt").className="dot "+(ok?"on":"off");
+    document.getElementById("lbl-rt").textContent=ok?"En vivo":"Sin conexión";
+}
+
+function manejarTrasladoRT(d){
+    var destEd=(d.destino&&d.destino.edificio||'').toUpperCase();
+    var origEd=(d.origen&&d.origen.edificio||'').toUpperCase();
+    var nombre=(d.persona&&d.persona.nombre)||'N/A';
+    var hora=p(new Date().getHours())+":"+p(new Date().getMinutes());
+
+    if(destEd===_miEdificio){
+        // Llega alguien a este edificio
+        agregarTrasladoPanel({tipo:'in',nombre:nombre,desde:origEd||'otro edificio',hora:hora});
+        mostrarToast('\uD83D\uDFE2 <strong>'+esc(nombre)+'</strong> viene para <strong>'+esc(d.destino&&d.destino.ambiente||'')+'</strong><br><span style="font-size:.78rem;color:rgba(255,255,255,.7)">Traslado desde '+esc(origEd||'otro edificio')+'</span>','arriving');
+    } else if(origEd===_miEdificio){
+        // Sale alguien de este edificio
+        agregarTrasladoPanel({tipo:'out',nombre:nombre,hacia:destEd||'otro edificio',hora:hora});
+        mostrarToast('\uD83D\uDFE1 <strong>'+esc(nombre)+'</strong> fue trasladado al <strong>'+esc(destEd||'otro edificio')+'</strong>','leaving');
+    }
+}
+
+function agregarTrasladoPanel(item){
+    _listaTraslados.unshift(item);
+    if(_listaTraslados.length>30) _listaTraslados.pop();
+    renderTrasladosPanel();
+}
+
+function renderTrasladosPanel(){
+    var list=document.getElementById('tras-list');
+    var badge=document.getElementById('tras-badge');
+    badge.textContent=_listaTraslados.length;
+    if(_listaTraslados.length===0){
+        list.innerHTML='<div class="tras-empty">Sin traslados recientes</div>';
+        return;
+    }
+    var h='';
+    _listaTraslados.forEach(function(t){
+        var cls=t.tipo==='in'?'tras-in':'tras-out';
+        var ico=t.tipo==='in'?'\uD83D\uDFE2':'\uD83D\uDFE1';
+        var sub=t.tipo==='in'?('Llegó desde '+esc(t.desde||'')):('Fue a '+esc(t.hacia||''));
+        h+='<div class="tras-item '+cls+'"><div class="tras-ico">'+ico+'</div><div class="tras-info"><div class="tras-name">'+esc(t.nombre)+'</div><div class="tras-sub">'+sub+'</div></div><div class="tras-time">'+esc(t.hora)+'</div></div>';
+    });
+    list.innerHTML=h;
+}
+
+function limpiarTraslados(){
+    _listaTraslados=[];
+    renderTrasladosPanel();
+}
+
+// ── PISOS ─────────────────────────────────────────────────────
+function initFloors(){
+    var numP = _miEdificioData ? _miEdificioData.num_pisos : 6;
+    var cols = numP<=3?numP:(numP<=6?3:4);
+    var h="";
+    for(var i=1;i<=numP;i++) h+='<div class="floor" id="fl-'+i+'"><div class="floor-lbl">Piso '+i+'</div><div class="floor-n">0</div></div>';
+    var el=document.getElementById("floors");
+    el.style.gridTemplateColumns='repeat('+cols+',1fr)';
+    el.innerHTML=h;
+}
+
+// ── DATOS / FEED ─────────────────────────────────────────────
+async function cargarDatos(){
+    if(!_miEdificio) return;
+    try{
+        var resp=await fetch("/api/registros-acceso",{headers:{"Authorization":"Bearer "+token}});
+        if(!resp.ok) return;
+        var data=await resp.json();
+        var all=Array.isArray(data)?data:(data.registros||[]);
+        // filtrar solo este edificio
+        todos=all.filter(function(r){ return (r.ambiente||'').toUpperCase().indexOf(_miEdificio)===0; });
+        var ent=todos.filter(function(r){return r.tipo==="ENTRADA"}).length;
+        var sal=todos.filter(function(r){return r.tipo==="SALIDA"}).length;
+        document.getElementById("kpi-total").textContent=todos.length;
+        document.getElementById("kpi-ent").textContent=ent;
+        document.getElementById("kpi-sal").textContent=sal;
+        document.getElementById("kpi-den").textContent=Math.max(0,ent-sal);
+        // pisos
+        var numP = _miEdificioData ? _miEdificioData.num_pisos : 6;
+        var cp={};for(var i=1;i<=numP;i++) cp[i]=0;
+        todos.forEach(function(r){
+            var m=(r.ambiente||"").match(/PISO\s*(\d+)/i);
+            if(m){var pi=parseInt(m[1]);if(pi>=1&&pi<=numP){cp[pi]+=r.tipo==="ENTRADA"?1:-1}}
+        });
+        for(var i=1;i<=numP;i++){
+            var c=document.getElementById("fl-"+i);
+            if(c){c.querySelector(".floor-n").textContent=Math.max(0,cp[i]||0);c.classList.toggle("alert",(cp[i]||0)>15)}
+        }
+        renderFeed();
+    }catch(e){console.warn(e)}
+}
+
+function renderFeed(){
+    var lista=filtroActual==="TODOS"?todos:todos.filter(function(r){return r.tipo===filtroActual});
+    lista=lista.slice().sort(function(a,b){return new Date(b.created_at||b.timestamp||0)-new Date(a.created_at||a.timestamp||0)});
+    var html="";
+    lista.slice(0,60).forEach(function(r,i){
+        var ts=new Date(r.created_at||r.timestamp||Date.now());
+        var hora=p(ts.getHours())+":"+p(ts.getMinutes())+":"+p(ts.getSeconds());
+        var bc=r.tipo==="ENTRADA"?"badge-e":"badge-s";
+        var cls=(flashNext&&i===0)?' class="row-new"':'';
+        var eqHtml='<span style="color:#c8d4e4;font-size:.8rem;font-style:italic">—</span>';
+        if(r.equipos&&r.equipos.length>0){
+            var n=r.equipos.length;
+            eqHtml='<span style="display:inline-flex;align-items:center;gap:5px;background:#e8f4fd;border:1px solid #90caf9;color:#1565c0;border-radius:6px;padding:3px 10px;font-size:.76rem;font-weight:700;white-space:nowrap">&#x1F4BB; '+(n>1?n+' equipos':'Con equipo')+'</span>';
+        }
+        html+='<tr'+cls+'><td class="mono">'+hora+'</td><td><span class="'+bc+'">'+r.tipo+'</span></td><td>'+(r.persona?esc(r.persona.nombre):"N/A")+'</td><td class="mono">'+(r.persona?esc(r.persona.numero_doc):"N/A")+'</td><td style="color:#7a8aab;font-size:.8rem">'+esc(r.ambiente||"—")+'</td><td>'+eqHtml+'</td></tr>';
+    });
+    document.getElementById("tbody-feed").innerHTML=html||'<tr><td colspan="6" style="text-align:center;padding:24px;color:#aaa">Sin registros para este edificio</td></tr>';
+    flashNext=false;
+}
+
+function filtrar(tipo,btn){
+    filtroActual=tipo;
+    document.querySelectorAll(".f-btn").forEach(function(b){b.classList.remove("active")});
+    if(btn) btn.classList.add("active");
+    renderFeed();
+}
+
+// ── AMBIENTES ─────────────────────────────────────────────────
+async function cargarAmbientes(){
+    if(!_miEdificio) return;
+    try{
+        var resp=await fetch("/api/ambientes/ocupados",{headers:{"Authorization":"Bearer "+token}});
+        if(!resp.ok) return;
+        var data=await resp.json();
+        var todas=data.ocupaciones||[];
+        // filtrar solo ambientes de este edificio
+        _listaAmb=todas.filter(function(o){ return (o.ambiente||'').toUpperCase().indexOf(_miEdificio)===0; });
+        var cnt=document.getElementById("cnt-amb");
+        cnt.textContent=_listaAmb.length;
+        cnt.className="badge-count "+(_listaAmb.length===0?"none":"");
+        if(document.getElementById("ov-amb").classList.contains("show")) renderModalAmb();
+    }catch(e){console.warn(e)}
+}
+
+function abrirModalAmbientes(){renderModalAmb();document.getElementById("ov-amb").classList.add("show");}
+function cerrarOvAmb(){document.getElementById("ov-amb").classList.remove("show")}
+document.getElementById("ov-amb").addEventListener("click",function(e){if(e.target===this)cerrarOvAmb()});
+
+function renderModalAmb(){
+    var cont=document.getElementById("mbody-amb");
+    if(_listaAmb.length===0){
+        cont.innerHTML='<div class="m-empty">No hay ambientes ocupados en '+esc(_miEdificio||'este edificio')+'.</div>';
+        return;
+    }
+    var h='<table class="env-table"><thead><tr><th>Instructor</th><th>Cédula</th><th>Ambiente</th><th>Hora</th><th></th></tr></thead><tbody>';
+    _listaAmb.forEach(function(o){
+        var desde="--";
+        if(o.desde){var d=new Date(o.desde);desde=p(d.getHours())+":"+p(d.getMinutes())}
+        var nombre=o.persona?o.persona.nombre:"N/A";
+        var doc=o.persona?o.persona.numero_doc:"";
+        h+='<tr id="erow-'+o.id+'"><td><strong>'+esc(nombre)+'</strong></td><td style="font-family:Courier New,monospace;font-size:.82rem">'+esc(doc)+'</td><td>'+esc(o.ambiente||"\u2014")+'</td><td style="color:#9aabbc;font-size:.82rem">'+desde+'</td><td style="white-space:nowrap"><button class="btn-lib" id="blib-'+o.id+'" onclick="liberarAmb(\''+o.id+'\')">Liberar</button> <button class="btn-tras" onclick="abrirTraslado(\''+o.id+'\')">&#x1F504; Trasladar</button></td></tr>';
+    });
+    h+='</tbody></table>';
+    cont.innerHTML=h;
+}
+
+async function liberarAmb(id){
+    var btn=document.getElementById("blib-"+id);
+    if(btn){btn.disabled=true;btn.textContent="..."}
+    try{
+        var resp=await fetch("/api/ambientes/"+id+"/liberar",{method:"PUT",headers:{"Authorization":"Bearer "+token}});
+        if(resp.ok){
+            var row=document.getElementById("erow-"+id);
+            if(row){row.style.opacity="0";row.style.transition="opacity .3s";setTimeout(function(){cargarAmbientes();},320)}
+        } else {
+            var d=await resp.json();
+            alert(d.error||"No se pudo liberar");
+            if(btn){btn.disabled=false;btn.textContent="Liberar"}
+        }
+    }catch(e){alert("Error de red");if(btn){btn.disabled=false;btn.textContent="Liberar"}}
+}
+
+// ── TRASLADO ──────────────────────────────────────────────────
+async function abrirTraslado(ocuId){
+    _trasOcuId = ocuId;
+    var ocu = _listaAmb.find(function(x){return x.id===ocuId;});
+    var iEl = document.getElementById('tras-persona-info');
+    if(ocu){
+        iEl.innerHTML='<strong style="color:#1c2b4b">'+(ocu.persona?esc(ocu.persona.nombre):'N/A')+'</strong>'
+            +' <span style="color:#9aabbc;font-size:.8rem">'+esc(ocu.persona&&ocu.persona.numero_doc?ocu.persona.numero_doc:'')+'</span>'
+            +'<br><span style="font-size:.82rem;color:#c4700a">&#128205; En: '+esc(ocu.ambiente||'—')+'</span>';
+    }
+    var sel=document.getElementById('tras-sel-ed');
+    sel.innerHTML='<option>Cargando...</option>'; sel.disabled=true;
+    document.getElementById('tras-sel-piso').innerHTML='<option>Primero elige edificio</option>'; document.getElementById('tras-sel-piso').disabled=true;
+    document.getElementById('tras-sel-amb').innerHTML='<option>Primero elige piso</option>'; document.getElementById('tras-sel-amb').disabled=true;
+    document.getElementById('tras-msg').style.display='none';
+    var btn=document.getElementById('btn-tras-confirm'); btn.disabled=false; btn.textContent='\uD83D\uDD04 Confirmar traslado';
+    document.getElementById('ov-traslado').classList.add('show');
+    try{
+        var resp=await fetch('/api/edificios',{headers:{'Authorization':'Bearer '+token}});
+        var data=await resp.json();
+        var lista=(data.edificios||[]).filter(function(e){return e.activo;});
+        sel.innerHTML='<option value="">Selecciona edificio destino...</option>';
+        lista.forEach(function(e){
+            sel.innerHTML+='<option value="'+e.id+'" data-pisos="'+e.num_pisos+'" data-amb="'+e.num_ambientes_por_piso+'" data-nombre="'+esc(e.nombre)+'">'+esc(e.nombre)+'</option>';
+        });
+        sel.disabled=false;
+    }catch(ex){ sel.innerHTML='<option>Error al cargar edificios</option>'; }
+}
+
+function trasSelectorPiso(){
+    var sel=document.getElementById('tras-sel-ed'); var opt=sel.options[sel.selectedIndex];
+    var pisoSel=document.getElementById('tras-sel-piso'); var ambSel=document.getElementById('tras-sel-amb');
+    pisoSel.innerHTML='<option value="">Selecciona piso...</option>'; ambSel.innerHTML='<option>Primero elige piso</option>'; ambSel.disabled=true;
+    if(!opt||!opt.value){pisoSel.disabled=true;return;}
+    var numPisos=parseInt(opt.getAttribute('data-pisos'))||3;
+    for(var i=1;i<=numPisos;i++) pisoSel.innerHTML+='<option value="'+i+'">Piso '+i+'</option>';
+    pisoSel.disabled=false;
+}
+
+function trasSelectorAmb(){
+    var edSel=document.getElementById('tras-sel-ed'); var pisoSel=document.getElementById('tras-sel-piso'); var ambSel=document.getElementById('tras-sel-amb');
+    var opt=edSel.options[edSel.selectedIndex]; var piso=parseInt(pisoSel.value)||0;
+    ambSel.innerHTML='<option value="">Selecciona ambiente...</option>';
+    if(!piso||!opt||!opt.value){ambSel.disabled=true;return;}
+    var nombreEd=opt.getAttribute('data-nombre')||opt.text;
+    var numAmb=parseInt(opt.getAttribute('data-amb'))||10;
+    var prefix=piso*100;
+    for(var i=1;i<=numAmb;i++){
+        var salaNum=prefix+i;
+        var label=nombreEd+' - PISO '+piso+' - AMBIENTE '+salaNum;
+        ambSel.innerHTML+='<option value="'+label+'">AMBIENTE '+salaNum+'</option>';
+    }
+    ambSel.disabled=false;
+}
+
+function cerrarTraslado(){
+    document.getElementById('ov-traslado').classList.remove('show'); _trasOcuId=null;
+}
+document.getElementById('ov-traslado').addEventListener('click',function(e){if(e.target===this)cerrarTraslado();});
+
+async function ejecutarTraslado(){
+    var ambDest=(document.getElementById('tras-sel-amb').value||'').trim();
+    if(!ambDest||!ambDest.includes('AMBIENTE')){alert('Selecciona un ambiente de destino.');return;}
+    var btn=document.getElementById('btn-tras-confirm'); btn.disabled=true; btn.textContent='Trasladando...';
+    var msgEl=document.getElementById('tras-msg');
+    try{
+        var resp=await fetch('/api/ambientes/trasladar',{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({ocupacion_id:_trasOcuId,ambiente_destino:ambDest})});
+        var data=await resp.json();
+        msgEl.style.display='block';
+        if(resp.ok){
+            Object.assign(msgEl.style,{background:'#edfcee',color:'#1b5e20',border:'1px solid #a5d6a7',padding:'9px 14px',borderRadius:'6px',fontSize:'.84rem',fontWeight:'600',marginBottom:'12px'});
+            msgEl.textContent='\u2705 '+data.mensaje;
+            setTimeout(function(){cerrarTraslado();cargarAmbientes();},1400);
+        } else {
+            Object.assign(msgEl.style,{background:'#fff0f0',color:'#c0392b',border:'1px solid #f5c8c8',padding:'9px 14px',borderRadius:'6px',fontSize:'.84rem',fontWeight:'600',marginBottom:'12px'});
+            msgEl.textContent='\u274c '+(data.error||'Error al trasladar');
+            btn.disabled=false; btn.textContent='\uD83D\uDD04 Confirmar traslado';
+        }
+    }catch(e){
+        msgEl.style.display='block';
+        Object.assign(msgEl.style,{background:'#fff0f0',color:'#c0392b',border:'1px solid #f5c8c8',padding:'9px 14px',borderRadius:'6px',fontSize:'.84rem',fontWeight:'600',marginBottom:'12px'});
+        msgEl.textContent='\u274c Error de red.';
+        btn.disabled=false; btn.textContent='\uD83D\uDD04 Confirmar traslado';
+    }
+}
+
+// ── TOASTS ───────────────────────────────────────────────────
+function mostrarToast(html, tipo){
+    var cont=document.getElementById('toast-tras'); if(!cont) return;
+    var div=document.createElement('div');
+    div.className='toast-item '+(tipo||'neutral');
+    div.innerHTML=html;
+    cont.appendChild(div);
+    setTimeout(function(){div.style.opacity='0';div.style.transition='opacity .4s';setTimeout(function(){if(cont.contains(div))cont.removeChild(div);},420);},6000);
+}
+
+// ── INVENTARIO ───────────────────────────────────────────────
+var _invEnSede=[]; var _invBitacora=[];
+async function cargarInventario(){
+    try{
+        var r=await fetch('/api/inventario',{headers:{'Authorization':'Bearer '+token}});
+        if(!r.ok) return;
+        var d=await r.json();
+        _invEnSede=(d.en_sede||[]);
+        _invBitacora=(d.historial||d.bitacora||[]);
+        var cnt=document.getElementById('cnt-inv');
+        cnt.textContent=_invEnSede.length;
+        cnt.className='badge-count '+(_invEnSede.length===0?'none':'');
+        document.getElementById('cnt-inv-tab').textContent=_invEnSede.length;
+        if(document.getElementById('inv-ensede').classList.contains('active')) renderInvEnSede();
+        if(document.getElementById('inv-bitacora').classList.contains('active')) renderInvBitacora();
+    }catch(e){}
+}
+function abrirInventario(){ cargarInventario(); document.getElementById('ov-inv').classList.add('show'); }
+function cerrarInventario(){ document.getElementById('ov-inv').classList.remove('show'); }
+document.getElementById('ov-inv').addEventListener('click',function(e){if(e.target===this)cerrarInventario();});
+function invTab(tab,btn){
+    document.querySelectorAll('.inv-tab').forEach(function(b){b.classList.remove('active')});
+    document.querySelectorAll('.inv-pane').forEach(function(p){p.classList.remove('active')});
+    if(btn) btn.classList.add('active');
+    document.getElementById('inv-'+tab).classList.add('active');
+    if(tab==='ensede') renderInvEnSede();
+    if(tab==='bitacora') renderInvBitacora();
+}
+function renderInvEnSede(){
+    var el=document.getElementById('inv-ensede-body');
+    if(_invEnSede.length===0){el.innerHTML='<div class="m-empty">No hay objetos en sede ahora.</div>';return;}
+    var h='<table class="env-table"><thead><tr><th>Objeto</th><th>Cant.</th><th>Portador</th><th>Destino</th><th>Hora entrada</th><th></th></tr></thead><tbody>';
+    _invEnSede.forEach(function(o){
+        var hora='—';if(o.entrada_at){var d=new Date(o.entrada_at);hora=p(d.getHours())+':'+p(d.getMinutes());}
+        h+='<tr><td><strong>'+esc(o.descripcion||'')+'</strong><br><span style="font-size:.75rem;color:#9aabbc">x'+o.cantidad+'</span></td>'
+            +'<td>'+o.cantidad+'</td>'
+            +'<td>'+esc(o.portador_nombre||'—')+'<br><span class="mono" style="font-size:.75rem">'+esc(o.portador_doc||'')+'</span></td>'
+            +'<td style="color:#7a8aab;font-size:.82rem">'+esc(o.destino||'—')+'</td>'
+            +'<td style="color:#9aabbc;font-size:.82rem">'+hora+'</td>'
+            +'<td><button class="btn-salida" onclick="pedirConfirmSalida(\''+o.id+'\',\''+esc(o.descripcion||'')+'\','+o.cantidad+',\''+esc(o.portador_nombre||'')+'\',\''+esc(o.portador_doc||'')+'\',\''+esc(o.destino||'')+'\',\''+hora+'\')">Registrar salida</button></td></tr>';
+    });
+    h+='</tbody></table>';el.innerHTML=h;
+}
+function renderInvBitacora(){
+    var el=document.getElementById('inv-bitacora-body');
+    if(_invBitacora.length===0){el.innerHTML='<div class="m-empty">Sin registros en historial.</div>';return;}
+    var h='<table class="env-table"><thead><tr><th>Objeto</th><th>Portador</th><th>Entrada</th><th>Salida</th><th>Obs.</th></tr></thead><tbody>';
+    _invBitacora.forEach(function(o){
+        var en='—',sa='—';
+        if(o.entrada_at){var d=new Date(o.entrada_at);en=p(d.getDate())+'/'+p(d.getMonth()+1)+' '+p(d.getHours())+':'+p(d.getMinutes());}
+        if(o.salida_at){var d=new Date(o.salida_at);sa=p(d.getDate())+'/'+p(d.getMonth()+1)+' '+p(d.getHours())+':'+p(d.getMinutes());}
+        var badge=o.salida_at?'<span class="badge-ret">Salió</span>':'<span class="badge-en">En sede</span>';
+        h+='<tr><td>'+badge+' '+esc(o.descripcion||'')+'<br><span style="font-size:.75rem;color:#9aabbc">x'+o.cantidad+'</span></td>'
+            +'<td>'+esc(o.portador_nombre||'—')+'<br><span class="mono" style="font-size:.75rem">'+esc(o.portador_doc||'')+'</span></td>'
+            +'<td style="font-size:.8rem">'+en+'</td><td style="font-size:.8rem">'+sa+'</td><td style="color:#7a8aab;font-size:.78rem;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(o.observaciones||'—')+'</td></tr>';
+    });
+    h+='</tbody></table>';el.innerHTML=h;
+}
+async function guardarInvIngreso(){
+    var desc=(document.getElementById('inv-desc').value||'').trim();
+    var cant=parseInt(document.getElementById('inv-cant').value)||1;
+    var dest=(document.getElementById('inv-dest').value||'').trim();
+    var pnombre=(document.getElementById('inv-pnombre').value||'').trim();
+    var pdoc=(document.getElementById('inv-pdoc').value||'').trim();
+    var obs=(document.getElementById('inv-obs').value||'').trim();
+    var msg=document.getElementById('inv-msg');
+    msg.className='inv-msg';msg.style.display='none';
+    if(!desc||!pnombre||!pdoc){msg.className='inv-msg err';msg.textContent='Los campos marcados con * son obligatorios.';return;}
+    var btn=document.getElementById('btn-inv-save');btn.disabled=true;btn.textContent='Guardando...';
+    try{
+        var r=await fetch('/api/inventario',{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({descripcion:desc,cantidad:cant,destino:dest,portador_nombre:pnombre,portador_doc:pdoc,observaciones:obs})});
+        var d=await r.json();
+        if(r.ok){
+            msg.className='inv-msg ok';msg.textContent='\u2705 Objeto registrado correctamente.';
+            ['inv-desc','inv-dest','inv-pnombre','inv-pdoc','inv-obs'].forEach(function(id){document.getElementById(id).value='';});
+            document.getElementById('inv-cant').value='1';
+            cargarInventario();
+        } else { msg.className='inv-msg err';msg.textContent='\u274c '+(d.error||'Error al guardar'); }
+    }catch(e){ msg.className='inv-msg err';msg.textContent='\u274c Error de red.'; }
+    btn.disabled=false;btn.textContent='Registrar entrada';
+}
+function pedirConfirmSalida(id,desc,cant,pnombre,pdoc,dest,hora){
+    _pendSalidaId=id;
+    document.getElementById('sal-obj-desc').textContent=desc;
+    document.getElementById('sal-obj-cant').textContent=cant;
+    document.getElementById('sal-obj-portador').textContent=pnombre;
+    document.getElementById('sal-obj-doc').textContent=pdoc;
+    document.getElementById('sal-obj-dest').textContent=dest;
+    document.getElementById('sal-obj-entrada').textContent=hora;
+    document.getElementById('btn-sal-obj-confirm').disabled=false;document.getElementById('btn-sal-obj-confirm').textContent='Confirmar salida';
+    document.getElementById('ov-sal-obj').classList.add('show');
+}
+function cerrarConfirmSalida(){document.getElementById('ov-sal-obj').classList.remove('show');_pendSalidaId=null;}
+document.getElementById('ov-sal-obj').addEventListener('click',function(e){if(e.target===this)cerrarConfirmSalida();});
+async function ejecutarSalidaInv(){
+    if(!_pendSalidaId) return;
+    var btn=document.getElementById('btn-sal-obj-confirm');btn.disabled=true;btn.textContent='Registrando...';
+    try{
+        var r=await fetch('/api/inventario/'+_pendSalidaId+'/salida',{method:'PUT',headers:{'Authorization':'Bearer '+token}});
+        var d=await r.json();
+        if(r.ok){cerrarConfirmSalida();cargarInventario();}
+        else{alert(d.error||'Error al registrar salida');btn.disabled=false;btn.textContent='Confirmar salida';}
+    }catch(e){alert('Error de red');btn.disabled=false;btn.textContent='Confirmar salida';}
+}
+
+// ── BUSQUEDA GLOBAL ──────────────────────────────────────────
+function abrirBusquedaGlobal(){ document.getElementById('ov-busq').classList.add('show'); }
+function cerrarBusquedaGlobal(){ document.getElementById('ov-busq').classList.remove('show'); }
+document.getElementById('ov-busq').addEventListener('click',function(e){if(e.target===this)cerrarBusquedaGlobal();});
+async function ejecutarBusquedaGlobal(){
+    var doc=(document.getElementById('busq-doc').value||'').trim();
+    var nombre=(document.getElementById('busq-nombre').value||'').trim();
+    var btn=document.getElementById('btn-busq'); btn.disabled=true; btn.textContent='Buscando...';
+    var res=document.getElementById('busq-resultados');
+    res.innerHTML='<div class="m-empty">Buscando...</div>';
+    var params=[];if(doc) params.push('doc='+encodeURIComponent(doc));if(nombre) params.push('nombre='+encodeURIComponent(nombre));
+    if(!params.length){res.innerHTML='<div class="m-empty">Ingresa un documento o nombre.</div>';btn.disabled=false;btn.textContent='Buscar';return;}
+    try{
+        var r=await fetch('/api/buscar-persona?'+params.join('&'),{headers:{'Authorization':'Bearer '+token}});
+        var d=await r.json();
+        var lista=d.personas||d.resultados||[];
+        if(lista.length===0){res.innerHTML='<div class="m-empty">No se encontraron registros.</div>';btn.disabled=false;btn.textContent='Buscar';return;}
+        var h='';
+        lista.forEach(function(per){
+            h+='<div style="background:#f8fafc;border:1px solid #e8ecf2;border-radius:8px;padding:14px 18px;margin-bottom:12px">';
+            h+='<div style="font-weight:700;font-size:.92rem;color:#1c2b4b">'+esc(per.nombre||'')+'</div>';
+            h+='<div class="mono" style="font-size:.82rem;color:#5a6a80;margin-bottom:10px">'+esc(per.numero_doc||'')+'</div>';
+            var regs=per.registros||per.historial||[];
+            if(regs.length>0){
+                h+='<table class="env-table" style="margin:0"><thead><tr><th>Fecha/Hora</th><th>Tipo</th><th>Ambiente</th></tr></thead><tbody>';
+                regs.slice(0,20).forEach(function(reg){
+                    var ts=new Date(reg.created_at||reg.timestamp||0);
+                    var f=p(ts.getDate())+'/'+p(ts.getMonth()+1)+' '+p(ts.getHours())+':'+p(ts.getMinutes());
+                    var bc=reg.tipo==="ENTRADA"?"badge-e":"badge-s";
+                    h+='<tr><td class="mono" style="font-size:.8rem">'+f+'</td><td><span class="'+bc+'">'+reg.tipo+'</span></td><td style="font-size:.8rem;color:#7a8aab">'+esc(reg.ambiente||'—')+'</td></tr>';
+                });
+                if(regs.length>20) h+='<tr><td colspan="3" style="text-align:center;color:#9aabbc;font-size:.78rem">... y '+(regs.length-20)+' registros más</td></tr>';
+                h+='</tbody></table>';
+            } else { h+='<div style="font-size:.82rem;color:#9aabbc">Sin registros de acceso.</div>'; }
+            h+='</div>';
+        });
+        res.innerHTML=h;
+    }catch(e){ res.innerHTML='<div class="m-empty" style="color:#c0392b">Error de red: '+esc(e.message||'')+'</div>'; }
+    btn.disabled=false; btn.textContent='Buscar';
+}
+
+// ── UTILS ─────────────────────────────────────────────────────
+function esc(s){return(s||"").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+</script>
+
+<!-- ═══ MODO MANTENIMIENTO ═══ -->
+<div id="_mantOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(8,18,60,0.97);z-index:99999;align-items:center;justify-content:center;flex-direction:column;text-align:center">
+    <div style="padding:40px 24px;max-width:680px">
+        <div style="font-size:88px;margin-bottom:14px">&#x1F527;</div>
+        <div style="font-size:2.6rem;font-weight:900;color:#fff;letter-spacing:4px;text-transform:uppercase;line-height:1.2;margin-bottom:18px">Sistema en<br>Mantenimiento</div>
+        <div id="_mantMsg" style="font-size:1.2rem;color:#9bbce0;margin-bottom:24px">El sistema est&aacute; siendo actualizado. Por favor espere.</div>
+        <div style="font-size:.9rem;color:#5b7a99;line-height:1.7">Si tiene urgencia, contacte al personal de soporte t&eacute;cnico.<br>El servicio ser&aacute; restablecido en breve.</div>
+        <div style="margin-top:44px;display:flex;gap:12px;justify-content:center">
+            <div style="width:10px;height:10px;border-radius:50%;background:#3a7bd5;animation:_mp .8s 0s infinite alternate"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#f39c12;animation:_mp .8s .2s infinite alternate"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#3a7bd5;animation:_mp .8s .4s infinite alternate"></div>
+        </div>
+    </div>
+</div>
+<style>@keyframes _mp{from{opacity:.2;transform:translateY(4px)}to{opacity:1;transform:translateY(-4px)}}</style>
+<script>(function(){function _chkMant(){fetch('/api/sistema/mantenimiento').then(function(r){return r.json();}).then(function(d){var ov=document.getElementById('_mantOverlay');if(!ov)return;if(d.activo){ov.style.display='flex';var msg=document.getElementById('_mantMsg');if(msg&&d.mensaje)msg.textContent=d.mensaje;}else{ov.style.display='none';}}).catch(function(){});}_chkMant();setInterval(_chkMant,20000);})();</script>
+</body>
+</html>
