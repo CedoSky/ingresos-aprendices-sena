@@ -19,6 +19,7 @@ import getpass
 import urllib.request
 import random
 import time
+import requests
 from validaciones import (
     validar_formato_email,
     validar_dominio_email,
@@ -45,7 +46,30 @@ app = crear_app_minima()
 
 # ─────────────────────────────────────────
 def _notificar_servidor():
-    """Avisa al servidor Flask (si está corriendo) que los usuarios cambiaron."""
+    """Sincroniza las cuentas locales con la base cloud y avisa al servidor local."""
+    try:
+        cloud_url = os.getenv('CLOUD_URL', '').rstrip('/')
+        cloud_email = os.getenv('CLOUD_ADMIN_EMAIL', 'admin@sena.edu.co')
+        cloud_password = os.getenv('CLOUD_ADMIN_PASSWORD') or os.getenv('ADMIN_PASSWORD')
+        if cloud_url and cloud_password:
+            with app.app_context():
+                usuarios = Usuario.query.filter_by(deleted_at=None).all()
+                payload = {'usuarios': [
+                    {'email': u.email, 'nombre': u.nombre, 'rol': u.rol,
+                     'activo': bool(u.activo), 'password_hash': u.password_hash}
+                    for u in usuarios
+                ]}
+            login = requests.post(f'{cloud_url}/api/auth/login',
+                                  json={'email': cloud_email, 'password': cloud_password}, timeout=30)
+            login.raise_for_status()
+            token = login.json()['token']
+            sync = requests.post(f'{cloud_url}/api/admin/importar-usuarios',
+                                 json=payload,
+                                 headers={'Authorization': f'Bearer {token}'}, timeout=30)
+            sync.raise_for_status()
+            print(f'  [CLOUD] {sync.json().get("importados", 0)} usuarios sincronizados.')
+    except Exception as e:
+        print(f'  [CLOUD] No se pudo sincronizar: {e}')
     try:
         secret = os.getenv('SECRET_KEY', '')
         req = urllib.request.Request(

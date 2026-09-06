@@ -3007,6 +3007,33 @@ def importar_usuarios(usuario_id):
     return jsonify({'mensaje': 'Usuarios importados correctamente', 'importados': importados}), 200
 
 
+@api_bp.route('/admin/crear-usuario', methods=['POST'])
+@token_required
+def crear_usuario_admin(usuario_id):
+    """Crea una cuenta cloud para el gestor local o el panel administrativo."""
+    solicitante = Usuario.query.get(usuario_id)
+    datos = request.get_json(silent=True) or {}
+    if not solicitante or solicitante.rol != 'admin':
+        return jsonify({'error': 'Solo admins pueden crear usuarios'}), 403
+    email = str(datos.get('email', '')).strip().lower()
+    password_hash = str(datos.get('password_hash', ''))
+    if not email or '@' not in email or not password_hash:
+        return jsonify({'error': 'email y password_hash son obligatorios'}), 400
+    usuario = Usuario.query.filter_by(email=email).first()
+    if usuario and usuario.deleted_at is None:
+        usuario.password_hash = password_hash
+        usuario.nombre = str(datos.get('nombre') or usuario.nombre)
+        usuario.rol = str(datos.get('rol') or 'vigilante')
+        usuario.activo = True
+    else:
+        usuario = Usuario(email=email, password_hash=password_hash,
+                          nombre=str(datos.get('nombre') or email),
+                          rol=str(datos.get('rol') or 'vigilante'), activo=True)
+        db.session.add(usuario)
+    db.session.commit()
+    return jsonify({'id': usuario.id, 'email': usuario.email}), 201
+
+
 @api_bp.route('/usuarios/<uid>', methods=['PUT'])
 @token_required
 def actualizar_usuario(usuario_id, uid):
