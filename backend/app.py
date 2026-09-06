@@ -250,13 +250,12 @@ def create_app(config_name=None):
     #     init_mqtt()
     # except Exception as e:
     #     print(f"[WARNING] MQTT no disponible: {e}")
-    init_actualiza_continuo(app)
-    
-    # Exportación automática a Excel/USB cada hora + sync nube cada 5 min
-    init_scheduler(app)
-
-    # Sincronización local ↔ nube (sube respaldos pendientes cuando vuelve la conexión)
-    init_sync_manager(app)
+    # Los monitores locales consumen memoria y no son necesarios en Render.
+    # Se mantienen activos para el modo local de Windows.
+    if config_name != 'production':
+        init_actualiza_continuo(app)
+        init_scheduler(app)
+        init_sync_manager(app)
 
     # Registrar comandos CLI (flask usuario crear/listar/...)
     registrar_comandos(app)
