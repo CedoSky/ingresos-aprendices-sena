@@ -2967,6 +2967,46 @@ def listar_usuarios(usuario_id):
     }), 200
 
 
+@api_bp.route('/admin/importar-usuarios', methods=['POST'])
+@token_required
+def importar_usuarios(usuario_id):
+    """Migra usuarios existentes conservando sus hashes de contraseña."""
+    solicitante = Usuario.query.get(usuario_id)
+    if not solicitante or solicitante.rol != 'admin':
+        return jsonify({'error': 'Solo admins pueden importar usuarios'}), 403
+
+    datos = request.get_json(silent=True) or {}
+    usuarios = datos.get('usuarios')
+    if not isinstance(usuarios, list) or len(usuarios) > 500:
+        return jsonify({'error': 'Lista de usuarios inválida'}), 400
+
+    import re
+    hash_re = re.compile(r'^(scrypt|pbkdf2|argon2|bcrypt|sha256\$)')
+    importados = 0
+    with db.session.no_autoflush:
+        for item in usuarios:
+            email = str(item.get('email', '')).strip().lower()
+            password_hash = str(item.get('password_hash', ''))
+            if not email or '@' not in email or not hash_re.match(password_hash):
+                continue
+            usuario = Usuario.query.filter_by(email=email).first()
+            if not usuario:
+                usuario = Usuario(email=email, password_hash=password_hash,
+                                  nombre=str(item.get('nombre') or email),
+                                  rol=str(item.get('rol') or 'vigilante'),
+                                  activo=bool(item.get('activo', True)))
+                db.session.add(usuario)
+            else:
+                usuario.password_hash = password_hash
+                usuario.nombre = str(item.get('nombre') or usuario.nombre)
+                usuario.rol = str(item.get('rol') or usuario.rol)
+                usuario.activo = bool(item.get('activo', True))
+                usuario.deleted_at = None
+            importados += 1
+    db.session.commit()
+    return jsonify({'mensaje': 'Usuarios importados correctamente', 'importados': importados}), 200
+
+
 @api_bp.route('/usuarios/<uid>', methods=['PUT'])
 @token_required
 def actualizar_usuario(usuario_id, uid):
