@@ -28,8 +28,8 @@ services:
     # Tamaño del plan
     plan: free
     
-  # Base de datos PostgreSQL
-  - type: pserv
-    name: sena-db
-    runtime: postgres
+databases:
+  - name: sena-db
+    databaseName: sena_db
+    user: sena_user
     plan: free
