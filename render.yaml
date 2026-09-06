@@ -19,6 +19,12 @@ services:
         
       - key: JWT_SECRET_KEY
         generateValue: true
+
+      - key: ADMIN_PASSWORD
+        sync: false
+
+      - key: VIGILANTE_PASSWORD
+        sync: false
         
       - key: DATABASE_URL
         fromDatabase:

@@ -296,10 +296,17 @@ def _migrar_columnas_limpieza_inventario():
 
 def crear_admin_por_defecto():
     admin = Usuario.query.filter_by(email='admin@sena.edu.co').first()
+    configured_password = os.getenv('ADMIN_PASSWORD')
+    if admin and configured_password:
+        from werkzeug.security import check_password_hash, generate_password_hash
+        if not check_password_hash(admin.password_hash, configured_password):
+            admin.password_hash = generate_password_hash(configured_password)
+            db.session.commit()
+        return
     if not admin:
         from werkzeug.security import generate_password_hash
         import secrets
-        password = os.getenv('ADMIN_PASSWORD')
+        password = configured_password
         if not password:
             password = secrets.token_urlsafe(12)
             print('=' * 55)
@@ -320,10 +327,17 @@ def crear_admin_por_defecto():
 
 def crear_vigilante_por_defecto():
     vigilante = Usuario.query.filter_by(email='vigilante@sena.edu.co').first()
+    configured_password = os.getenv('VIGILANTE_PASSWORD')
+    if vigilante and configured_password:
+        from werkzeug.security import check_password_hash, generate_password_hash
+        if not check_password_hash(vigilante.password_hash, configured_password):
+            vigilante.password_hash = generate_password_hash(configured_password)
+            db.session.commit()
+        return
     if not vigilante:
         from werkzeug.security import generate_password_hash
         import secrets
-        password = os.getenv('VIGILANTE_PASSWORD')
+        password = configured_password
         if not password:
             password = secrets.token_urlsafe(12)
             print('=' * 55)
