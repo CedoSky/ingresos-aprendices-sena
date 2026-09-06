@@ -241,8 +241,9 @@ def create_app(config_name=None):
     app.register_blueprint(db_viewer_bp)
     app.register_blueprint(pagos_bp)
     
-    # Inicializar WebSocket y monitoreo continuo
-    init_websocket(app, socketio)
+    # Socket.IO y monitoreo continuo solo son necesarios en la instalación local.
+    if config_name != 'production':
+        init_websocket(app, socketio)
     
     # DESABILITADO: Usando HTTP directo con ESP32 via CERRADURA_LOCAL
     #  Inicializar MQTT para comunicación con ESP32
