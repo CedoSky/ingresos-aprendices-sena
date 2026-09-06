@@ -4,7 +4,7 @@ services:
     name: sena-ingresos
     runtime: python310
     buildCommand: "./build.sh"
-    startCommand: "cd backend && gunicorn -w 4 -b 0.0.0.0:$PORT app:app"
+    startCommand: "cd backend && gunicorn -w 1 -b 0.0.0.0:$PORT wsgi:app --timeout 60 --keep-alive 5"
     
     # Variables de entorno
     envVars:
@@ -23,7 +23,7 @@ services:
           property: connectionString
     
     # Salud del servicio
-    healthCheckPath: /api/health
+    healthCheckPath: /health
     
     # Tamaño del plan
     plan: free

@@ -107,21 +107,48 @@ def main():
     seg = tiempo_restante()
     mins, segs = divmod(seg, 60)
 
+    # ── Detectar si el servidor Flask está corriendo ────────────────────────
+    servidor_activo = False
+    try:
+        import requests
+        response = requests.get('http://localhost:8000/api/auth/me', headers={'Authorization': 'Bearer test'}, timeout=1)
+        # Si no da error 404 o 401, el servidor está activo
+        servidor_activo = response.status_code in (200, 401, 403)
+    except:
+        servidor_activo = False
+
+    if servidor_activo:
+        print('  ✓ Servidor Flask detectado en http://localhost:8000')
+        print('  ✓ Sesión de administración ACTIVA detectada')
+        print()
+    else:
+        print('  ⚠️  ADVERTENCIA: Servidor Flask NO detectado')
+        print('  Si necesitas usar Herramientas, asegúrate de ejecutar primero:')
+        print('      cd backend && python app.py')
+        print()
+
     print(f'  Codigo actual :  {pin}  (6 digitos, sin espacios)')
     print(f'  Valido por    :  {mins}m {segs:02d}s mas')
     print()
     print('  Este codigo cambia automaticamente cada 5 minutos.')
-    print('  Ingresalo en la pantalla del Panel de Sistemas.')
+    print('  ═══════════════════════════════════════════════════════════════')
+    print('   ✓ Mejor opcion: Abre http://localhost:8000/administracion')
+    print('   ✓ Ve a Herramientas > Generar PIN Ahora')
+    print('   ✓ El PIN aparecerá en grande en la pantalla')
+    print('  ═══════════════════════════════════════════════════════════════')
     print()
-    print('  ----------------------------------------------------------------')
-    print('   Opciones:')
-    print('   [R] Rotar secreto  (genera un codigo completamente nuevo;')
-    print('       invalida todas las sesiones abiertas del panel)')
+    print('  Opciones:')
+    print('   [1] Mostrar PIN nuevamente')
+    print('   [R] Rotar secreto  (invalida todas las sesiones abiertas)')
     print('   [0] Volver al menu')
     print()
 
     opcion = input('  Selecciona: ').strip().upper()
-    if opcion == 'R':
+    if opcion == '1':
+        print()
+        print(f'  PIN ACTUAL: {pin}')
+        print()
+    elif opcion == 'R':
         confirmar = input('  Seguro? Se invalidaran todas las sesiones. (S/N): ').strip().upper()
         if confirmar == 'S':
             secreto = generar_secreto()

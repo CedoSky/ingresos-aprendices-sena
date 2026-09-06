@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Sesión - SENA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f5f7fa;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #1a5200;
+            margin-bottom: 30px;
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #39A900;
+        }
+        .card h2 {
+            color: #1a5200;
+            margin-bottom: 16px;
+            font-size: 18px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .log-box {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            line-height: 1.6;
+            color: #333;
+            margin-top: 10px;
+        }
+        .log-entry {
+            padding: 4px 0;
+            border-bottom: 1px solid #efefef;
+        }
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        .log-success { color: #28a745; font-weight: bold; }
+        .log-error { color: #dc3545; font-weight: bold; }
+        .log-warn { color: #ffc107; font-weight: bold; }
+        .log-info { color: #0066cc; }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #39A900;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #2d7f00;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(57,169,0,0.3);
+        }
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        .data-item {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 15px;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        .data-key {
+            font-weight: 600;
+            color: #666;
+        }
+        .data-value {
+            color: #333;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-ok { background: #d4edda; color: #155724; }
+        .status-error { background: #f8d7da; color: #721c24; }
+        .status-pending { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Test de Sesión - Sistema SENA</h1>
+
+        <div class="card">
+            <h2>1️⃣ Estado de localStorage</h2>
+            <button class="btn-primary" onclick="testStorageStatus()">Verificar Storage</button>
+            <button class="btn-secondary" onclick="limpiarStorage()">Limpiar Storage</button>
+            <div id="storage-log" class="log-box"></div>
+        </div>
+
+        <div class="card">
+            <h2>2️⃣ Información del Usuario</h2>
+            <button class="btn-primary" onclick="testUserInfo()">Actualizar Información</button>
+            <div id="user-info"></div>
+        </div>
+
+        <div class="card">
+            <h2>3️⃣ Test de Conexión al Servidor</h2>
+            <button class="btn-primary" onclick="testServerConnection()">Probar Conexión</button>
+            <div id="connection-log" class="log-box"></div>
+        </div>
+
+        <div class="card">
+            <h2>4️⃣ Test de Sesión Válida (/api/auth/me)</h2>
+            <button class="btn-primary" onclick="testSessionValidity()">Verificar Sesión</button>
+            <div id="session-log" class="log-box"></div>
+        </div>
+
+        <div class="card">
+            <h2>5️⃣ Test de Acceso a Recursos (/api/personas)</h2>
+            <button class="btn-primary" onclick="testResourceAccess()">Probar Acceso</button>
+            <div id="resource-log" class="log-box"></div>
+        </div>
+
+        <div class="card">
+            <h2>6️⃣ Test Completo de Sesión</h2>
+            <div class="section">
+                <label>Email: <input type="email" id="test-email" value="admin@sena.edu.co" style="padding: 8px; width: 100%; max-width: 300px; border: 1px solid #ddd; border-radius: 4px;"></label>
+            </div>
+            <div class="section">
+                <label>Password: <input type="password" id="test-password" value="" style="padding: 8px; width: 100%; max-width: 300px; border: 1px solid #ddd; border-radius: 4px;"></label>
+            </div>
+            <button class="btn-primary" onclick="testFullSession()">Ejecutar Test Completo</button>
+            <button class="btn-danger" onclick="testLogout()">Simular Logout</button>
+            <div id="full-test-log" class="log-box"></div>
+        </div>
+    </div>
+
+    <script>
+        function addLog(containerId, message, type = 'info') {
+            const container = document.getElementById(containerId);
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            container.appendChild(entry);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function clearLog(containerId) {
+            document.getElementById(containerId).innerHTML = '';
+        }
+
+        function testStorageStatus() {
+            clearLog('storage-log');
+            addLog('storage-log', '🔍 Verificando localStorage...', 'info');
+
+            const keys = ['token', 'usuario', 'sena_api_token', 'sena_rol'];
+            let foundAny = false;
+
+            keys.forEach(key => {
+                const value = localStorage.getItem(key);
+                if (value) {
+                    foundAny = true;
+                    if (key === 'usuario') {
+                        try {
+                            const user = JSON.parse(value);
+                            addLog('storage-log', `✅ ${key}: ${JSON.stringify(user, null, 2)}`, 'success');
+                        } catch {
+                            addLog('storage-log', `⚠️ ${key}: (JSON inválido)`, 'warn');
+                        }
+                    } else if (key.includes('token')) {
+                        const shortValue = value.substring(0, 20) + '...' + value.substring(value.length - 20);
+                        addLog('storage-log', `✅ ${key}: ${shortValue}`, 'success');
+                    } else {
+                        addLog('storage-log', `✅ ${key}: ${value}`, 'success');
+                    }
+                } else {
+                    addLog('storage-log', `❌ ${key}: NO ENCONTRADO`, 'error');
+                }
+            });
+
+            if (!foundAny) {
+                addLog('storage-log', '⚠️ No hay sesión activa en localStorage', 'warn');
+            }
+        }
+
+        function testUserInfo() {
+            clearLog('storage-log');
+            const userJSON = localStorage.getItem('usuario');
+            const email = localStorage.getItem('email');
+            
+            const container = document.getElementById('user-info');
+            container.innerHTML = '';
+
+            if (userJSON) {
+                try {
+                    const user = JSON.parse(userJSON);
+                    const html = `
+                        <div class="data-item">
+                            <div class="data-key">Nombre</div>
+                            <div class="data-value">${user.nombre || 'N/A'}</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-key">Email</div>
+                            <div class="data-value">${user.email || 'N/A'}</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-key">Rol</div>
+                            <div class="data-value">${user.rol || 'N/A'}</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-key">ID</div>
+                            <div class="data-value">${user.id || 'N/A'}</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-key">Estado</div>
+                            <div class="data-value"><span class="status-badge status-ok">✅ Sesión Activa</span></div>
+                        </div>
+                    `;
+                    container.innerHTML = html;
+                } catch (e) {
+                    container.innerHTML = '<div class="data-item"><div class="data-key">Error</div><div class="data-value">JSON inválido</div></div>';
+                }
+            } else {
+                container.innerHTML = '<div class="data-item"><div class="data-key">Estado</div><div class="data-value"><span class="status-badge status-error">❌ Sin Sesión</span></div></div>';
+            }
+        }
+
+        async function testServerConnection() {
+            clearLog('connection-log');
+            addLog('connection-log', '🔗 Intentando conectar a servidor...', 'info');
+
+            try {
+                const resp = await fetch('http://localhost:8000/health', { timeout: 5000 });
+                if (resp.ok) {
+                    const data = await resp.json();
+                    addLog('connection-log', `✅ Servidor activo`, 'success');
+                    addLog('connection-log', `   Status: ${data.status}`, 'info');
+                } else {
+                    addLog('connection-log', `❌ Servidor respondió con error: ${resp.status}`, 'error');
+                }
+            } catch (e) {
+                addLog('connection-log', `❌ Error: ${e.message}`, 'error');
+            }
+        }
+
+        async function testSessionValidity() {
+            clearLog('session-log');
+            const token = localStorage.getItem('token') || localStorage.getItem('sena_api_token');
+
+            if (!token) {
+                addLog('session-log', '❌ No hay token en localStorage', 'error');
+                return;
+            }
+
+            addLog('session-log', '🔐 Validando token con /api/auth/me...', 'info');
+
+            try {
+                const resp = await fetch('http://localhost:8000/api/auth/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (resp.ok) {
+                    const user = await resp.json();
+                    addLog('session-log', `✅ Token válido`, 'success');
+                    addLog('session-log', `   Usuario: ${user.nombre} (${user.email})`, 'info');
+                    addLog('session-log', `   Rol: ${user.rol}`, 'info');
+                } else if (resp.status === 401) {
+                    addLog('session-log', `❌ Token expirado o inválido`, 'error');
+                } else {
+                    addLog('session-log', `❌ Error: HTTP ${resp.status}`, 'error');
+                }
+            } catch (e) {
+                addLog('session-log', `❌ Error: ${e.message}`, 'error');
+            }
+        }
+
+        async function testResourceAccess() {
+            clearLog('resource-log');
+            const token = localStorage.getItem('token') || localStorage.getItem('sena_api_token');
+
+            if (!token) {
+                addLog('resource-log', '❌ No hay token en localStorage', 'error');
+                return;
+            }
+
+            addLog('resource-log', '📊 Accediendo a /api/personas...', 'info');
+
+            try {
+                const resp = await fetch('http://localhost:8000/api/personas?limit=1', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (resp.ok) {
+                    const data = await resp.json();
+                    addLog('resource-log', `✅ Acceso permitido`, 'success');
+                    addLog('resource-log', `   Total de personas: ${data.total}`, 'info');
+                    addLog('resource-log', `   Personas en respuesta: ${data.personas.length}`, 'info');
+                } else if (resp.status === 401) {
+                    addLog('resource-log', `❌ Token inválido`, 'error');
+                } else {
+                    addLog('resource-log', `❌ Error: HTTP ${resp.status}`, 'error');
+                }
+            } catch (e) {
+                addLog('resource-log', `❌ Error: ${e.message}`, 'error');
+            }
+        }
+
+        async function testFullSession() {
+            clearLog('full-test-log');
+            const email = document.getElementById('test-email').value;
+            const password = document.getElementById('test-password').value;
+
+            if (!password) {
+                addLog('full-test-log', '❌ Ingresa una contraseña', 'error');
+                return;
+            }
+
+            addLog('full-test-log', `📝 Test completo: ${email}`, 'info');
+
+            // Step 1: Login
+            addLog('full-test-log', '1️⃣ Intentando login...', 'info');
+            try {
+                const loginResp = await fetch('http://localhost:8000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (!loginResp.ok) {
+                    addLog('full-test-log', `❌ Login falló: ${loginResp.status}`, 'error');
+                    return;
+                }
+
+                const loginData = await loginResp.json();
+                const token = loginData.token;
+                const usuario = loginData.usuario;
+
+                addLog('full-test-log', `✅ Login exitoso`, 'success');
+                addLog('full-test-log', `   Usuario: ${usuario.nombre}`, 'info');
+                addLog('full-test-log', `   Rol: ${usuario.rol}`, 'info');
+
+                // Step 2: Verificar token
+                addLog('full-test-log', '2️⃣ Verificando token...', 'info');
+                const authResp = await fetch('http://localhost:8000/api/auth/me', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (authResp.ok) {
+                    addLog('full-test-log', `✅ Token válido`, 'success');
+                } else {
+                    addLog('full-test-log', `❌ Token inválido: ${authResp.status}`, 'error');
+                }
+
+                // Step 3: Acceder a recursos
+                addLog('full-test-log', '3️⃣ Accediendo a recursos...', 'info');
+                const resourceResp = await fetch('http://localhost:8000/api/personas?limit=1', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (resourceResp.ok) {
+                    const data = await resourceResp.json();
+                    addLog('full-test-log', `✅ Acceso a recursos permitido`, 'success');
+                    addLog('full-test-log', `   Total: ${data.total} personas`, 'info');
+                } else {
+                    addLog('full-test-log', `❌ Acceso denegado: ${resourceResp.status}`, 'error');
+                }
+
+                addLog('full-test-log', '🎉 TEST COMPLETO EXITOSO', 'success');
+
+            } catch (e) {
+                addLog('full-test-log', `❌ Error: ${e.message}`, 'error');
+            }
+        }
+
+        function limpiarStorage() {
+            if (confirm('¿Limpiar localStorage?')) {
+                ['token', 'usuario', 'sena_api_token', 'sena_rol'].forEach(k => localStorage.removeItem(k));
+                sessionStorage.removeItem('herramientas-desbloqueado');
+                addLog('storage-log', '✅ localStorage limpiado', 'success');
+                testStorageStatus();
+            }
+        }
+
+        function testLogout() {
+            if (confirm('¿Simular logout?')) {
+                limpiarStorage();
+                addLog('storage-log', '👋 Si visitas administración.html, serás redirigido a login', 'success');
+            }
+        }
+
+        // Cargar estado al abrir
+        window.addEventListener('load', () => {
+            testStorageStatus();
+            testUserInfo();
+        });
+    </script>
+</body>
+</html>

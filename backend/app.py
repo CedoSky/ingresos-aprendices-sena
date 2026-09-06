@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-# Cargar variables de entorno desde backend/.env
+# Cargar variables de entorno
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 from flask import Flask, jsonify, send_from_directory, request, session
@@ -50,7 +50,7 @@ def create_app(config_name=None):
     
     @app.before_request
     def before_request():
-        db.session.expire_on_commit = False
+        db.session.expire_on_commit = False  # type: ignore
     
     @app.after_request
     def agregar_cabeceras_seguridad(response):
@@ -83,6 +83,7 @@ def create_app(config_name=None):
     with app.app_context():
         db.create_all()
         _migrar_columna_vigilante_id()
+        _migrar_columnas_limpieza_inventario()
         crear_admin_por_defecto()
         crear_vigilante_por_defecto()
     
@@ -124,12 +125,31 @@ def create_app(config_name=None):
             return jsonify({'error': 'File not found', 'details': str(e)}), 404
 
     @app.route('/', methods=['GET'])
+    def serve_index():
+        parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        try:
+            return send_from_directory(os.path.join(parent_dir, 'frontend'), 'index.html')
+        except Exception as e:
+            return jsonify({'error': 'File not found', 'details': str(e)}), 404
+
     @app.route('/ingreso', methods=['GET'])
     @app.route('/ingreso.html', methods=['GET'])
     def serve_ingreso():
         parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         try:
             resp = send_from_directory(os.path.join(parent_dir, 'frontend'), 'ingreso.html')
+            resp.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+            resp.headers['Pragma'] = 'no-cache'
+            resp.headers['Expires'] = '0'
+            return resp
+        except Exception as e:
+            return jsonify({'error': 'File not found', 'details': str(e)}), 404
+
+    @app.route('/ingreso_sin_dispositivos', methods=['GET'])
+    def serve_ingreso_sin_dispositivos():
+        parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        try:
+            resp = send_from_directory(os.path.join(parent_dir, 'frontend'), 'ingreso_sin_dispositivos.html')
             resp.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
             resp.headers['Pragma'] = 'no-cache'
             resp.headers['Expires'] = '0'
@@ -151,7 +171,20 @@ def create_app(config_name=None):
     def serve_administracion():
         parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         try:
-            return send_from_directory(os.path.join(parent_dir, 'frontend'), 'administracion.html')
+            resp = send_from_directory(os.path.join(parent_dir, 'frontend'), 'administracion.html')
+            resp.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+            resp.headers['Pragma'] = 'no-cache'
+            resp.headers['Expires'] = '0'
+            return resp
+        except Exception as e:
+            return jsonify({'error': 'File not found', 'details': str(e)}), 404
+
+    @app.route('/test-sesion', methods=['GET'])
+    @app.route('/test-sesion.html', methods=['GET'])
+    def serve_test_sesion():
+        parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        try:
+            return send_from_directory(os.path.join(parent_dir, 'frontend'), 'test_sesion.html')
         except Exception as e:
             return jsonify({'error': 'File not found', 'details': str(e)}), 404
 
@@ -201,6 +234,8 @@ def create_app(config_name=None):
     from websocket_handler import init_websocket, init_actualiza_continuo
     from scheduler import init_scheduler
     from sync_manager import init_sync_manager
+    # Desabilitado: Usar HTTP directo con ESP32
+    # from mqtt_handler import init_mqtt
     
     app.register_blueprint(api_bp)
     app.register_blueprint(db_viewer_bp)
@@ -208,6 +243,13 @@ def create_app(config_name=None):
     
     # Inicializar WebSocket y monitoreo continuo
     init_websocket(app, socketio)
+    
+    # DESABILITADO: Usando HTTP directo con ESP32 via CERRADURA_LOCAL
+    #  Inicializar MQTT para comunicación con ESP32
+    # try:
+    #     init_mqtt()
+    # except Exception as e:
+    #     print(f"[WARNING] MQTT no disponible: {e}")
     init_actualiza_continuo(app)
     
     # Exportación automática a Excel/USB cada hora + sync nube cada 5 min
@@ -236,6 +278,22 @@ def _migrar_columna_vigilante_id():
         print(f'[DB] Migración vigilante_id: {e}')
 
 
+def _migrar_columnas_limpieza_inventario():
+    """Agrega marcas de limpieza independientes para cada panel."""
+    try:
+        from sqlalchemy import inspect as sa_inspect
+        columnas = {c['name'] for c in sa_inspect(db.engine).get_columns('registros_inventario')}
+        with db.engine.begin() as conn:
+            for columna in ('limpiado_vigilancia_at', 'limpiado_admin_at'):
+                if columna not in columnas:
+                    conn.execute(db.text(f'ALTER TABLE registros_inventario ADD COLUMN {columna} DATETIME'))
+            # Versiones anteriores usaban deleted_at para limpiar en Vigilancia.
+            # Recuperar esos registros conserva el historial administrativo.
+            conn.execute(db.text('UPDATE registros_inventario SET deleted_at = NULL WHERE deleted_at IS NOT NULL'))
+    except Exception as e:
+        print(f'[MIGRACION] No se pudieron agregar columnas de limpieza: {e}')
+
+
 def crear_admin_por_defecto():
     admin = Usuario.query.filter_by(email='admin@sena.edu.co').first()
     if not admin:
@@ -251,11 +309,11 @@ def crear_admin_por_defecto():
             print(' Guarda esta contraseña — no se volverá a mostrar.')
             print('=' * 55)
         admin = Usuario(
-            email='admin@sena.edu.co',
-            password_hash=generate_password_hash(password),
-            nombre='Administrador',
-            rol='admin',
-            activo=True
+            email='admin@sena.edu.co',  # type: ignore
+            password_hash=generate_password_hash(password),  # type: ignore
+            nombre='Administrador',  # type: ignore
+            rol='admin',  # type: ignore
+            activo=True  # type: ignore
         )
         db.session.add(admin)
         db.session.commit()
@@ -275,11 +333,11 @@ def crear_vigilante_por_defecto():
             print(' Guarda esta contraseña — no se volverá a mostrar.')
             print('=' * 55)
         vigilante = Usuario(
-            email='vigilante@sena.edu.co',
-            password_hash=generate_password_hash(password),
-            nombre='Vigilante',
-            rol='vigilante',
-            activo=True
+            email='vigilante@sena.edu.co',  # type: ignore
+            password_hash=generate_password_hash(password),  # type: ignore
+            nombre='Vigilante',  # type: ignore
+            rol='vigilante',  # type: ignore
+            activo=True  # type: ignore
         )
         db.session.add(vigilante)
         db.session.commit()
@@ -299,7 +357,7 @@ def registrar_comandos(app):
         """Gestión de usuarios del sistema."""
         pass
 
-    @usuario.command('crear')
+    @usuario.command('crear')  # type: ignore
     @click.option('--email', prompt='Email', help='Correo del usuario')
     @click.option('--password', prompt='Contraseña', hide_input=True,
                   confirmation_prompt=True, help='Contraseña')
@@ -345,17 +403,17 @@ def registrar_comandos(app):
             click.secho(f'[ERROR] Ya existe un usuario con email {email}', fg='red')
             return
         u = Usuario(
-            email=email,
-            password_hash=generate_password_hash(password),
-            nombre=nombre or email.split('@')[0],
-            rol=rol,
-            activo=True
+            email=email,  # type: ignore
+            password_hash=generate_password_hash(password),  # type: ignore
+            nombre=nombre or email.split('@')[0],  # type: ignore
+            rol=rol,  # type: ignore
+            activo=True  # type: ignore
         )
         db.session.add(u)
         db.session.commit()
         click.secho(f'[OK] Usuario creado: {email}  rol={rol}', fg='green')
 
-    @usuario.command('listar')
+    @usuario.command('listar')  # type: ignore
     def listar_usuarios():
         """Lista todos los usuarios activos."""
         usuarios = Usuario.query.filter_by(deleted_at=None).order_by(Usuario.rol).all()
@@ -369,7 +427,7 @@ def registrar_comandos(app):
             click.echo(f'{u.email:<35} {u.rol:<10} {u.nombre:<25} {activo}')
         click.echo()
 
-    @usuario.command('cambiar-password')
+    @usuario.command('cambiar-password')  # type: ignore
     @click.option('--email', prompt='Email del usuario')
     @click.option('--password', prompt='Nueva contraseña', hide_input=True,
                   confirmation_prompt=True)
@@ -392,7 +450,7 @@ def registrar_comandos(app):
         db.session.commit()
         click.secho(f'[OK] Contraseña actualizada para {email}', fg='green')
 
-    @usuario.command('desactivar')
+    @usuario.command('desactivar')  # type: ignore
     @click.option('--email', prompt='Email del usuario')
     def desactivar_usuario(email):
         """Desactiva un usuario (no lo elimina)."""

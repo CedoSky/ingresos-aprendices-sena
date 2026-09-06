@@ -188,6 +188,8 @@ async function hacerLogin(e) {
         });
         if (r.ok) {
             var d = await r.json();
+            localStorage.setItem('token', d.token);
+            localStorage.setItem('usuario', JSON.stringify(d.usuario));
             localStorage.setItem('sena_api_token', d.token);
             localStorage.setItem('sena_rol', d.usuario.rol);
             redirigirSegunRol(d.usuario.rol);

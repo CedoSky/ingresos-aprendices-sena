@@ -9,6 +9,11 @@ import sys
 import subprocess
 from pathlib import Path
 
+# Move to project root first
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(script_dir)  # Go up from scripts/ to root
+os.chdir(project_root)
+
 def print_header(text):
     print(f"\n{'='*60}")
     print(f"  {text}")

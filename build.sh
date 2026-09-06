@@ -13,12 +13,13 @@ echo "[2] Preparando base de datos..."
 cd backend
 # Crear tablas si no existen
 python -c "
-from app import app, db
+from app import create_app
+from models import db
 import os
-from config import DevelopmentConfig, ProductionConfig
 
 # Usar configuración de producción
 os.environ['FLASK_ENV'] = 'production'
+app, _ = create_app('production')
 with app.app_context():
     print('▸ Inicializando base de datos...')
     db.create_all()

@@ -1,8 +1,16 @@
+# ════════════════════════════════════════════════════════════════════════════
+#  .gitignore — Archivos a excluir de compresión/Git
+#  Sistema de Control de Ingresos SENA
+# ════════════════════════════════════════════════════════════════════════════
+
 # Variables de entorno — NUNCA subir a control de versiones
 .env
 .env.local
 .env.*.local
 backend/.env
+.env.production
+.env.docker
+.env.esp32
 
 # Bases de datos locales
 *.db
@@ -10,6 +18,8 @@ backend/.env
 *.sqlite3
 instance/
 sena.db
+*.backup
+*.sql
 
 # Python
 __pycache__/
@@ -24,10 +34,39 @@ dist/
 build/
 .tox/
 .pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
 
-# Logs
+# Logs (excepto documentación)
 *.log
 logs/
+*.out
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node (si existe)
+node_modules/
+npm-debug.log
+
+# Respaldos locales
+RESPALDOS_USB/
+
+# Otros
+.git/
+*.bak
+*.tmp
+.cache/
 
 # Sistema operativo
 .DS_Store

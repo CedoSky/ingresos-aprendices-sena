@@ -191,6 +191,8 @@ class RegistroInventario(BaseModel):
     fecha_salida      = db.Column(db.DateTime, nullable=True)
     observaciones     = db.Column(db.Text, nullable=True)
     registrado_por    = db.Column(db.String(100), nullable=True)
+    limpiado_vigilancia_at = db.Column(db.DateTime, nullable=True)
+    limpiado_admin_at      = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
         return f'<RegistroInventario {self.descripcion} [{self.estado}]>'
@@ -244,6 +246,7 @@ class AperturaAmbiente(BaseModel):
 
     def __repr__(self):
         return f'<AperturaAmbiente {self.ambiente} [{self.origen}]>'
+
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

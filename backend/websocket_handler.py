@@ -13,11 +13,14 @@ from datetime import datetime
 # Blueprint para WebSocket
 websocket_bp = Blueprint('websocket', __name__)
 
-# Variable global para SocketIO
+# Variables globales para SocketIO y Flask app
 socketio = None
+flask_app = None
 
 def init_websocket(app, socketio_instance):
     """Inicializar SocketIO con la instancia pasada desde app.py"""
+    global flask_app
+    flask_app = app
     global socketio
     socketio = socketio_instance
     
@@ -106,17 +109,19 @@ def obtener_estadisticas():
 
 def emitir_actualizacion():
     """Emitir actualización de datos a todos los clientes conectados"""
-    if socketio:
+    if socketio and flask_app:
         try:
-            personas = obtener_personas_cache()
-            stats = obtener_estadisticas()
-            
-            socketio.emit('personas_updated', {
-                'personas': personas,
-                'total': len(personas),
-                'stats': stats,
-                'timestamp': datetime.now().isoformat()
-            }, namespace='/')
+            # Usar contexto de Flask si es necesario
+            with flask_app.app_context():
+                personas = obtener_personas_cache()
+                stats = obtener_estadisticas()
+                
+                socketio.emit('personas_updated', {
+                    'personas': personas,
+                    'total': len(personas),
+                    'stats': stats,
+                    'timestamp': datetime.now().isoformat()
+                }, namespace='/')
         except Exception as e:
             print(f'[ERROR] emitir_actualizacion: {e}')
 
@@ -130,16 +135,18 @@ def init_actualiza_continuo(app):
             try:
                 time.sleep(2)  # Verificar cada 2 segundos
                 
-                # Obtener la persona más reciente usando SQLAlchemy
-                persona_reciente = Persona.query.order_by(Persona.created_at.desc()).first()
-                
-                if persona_reciente:
-                    persona_id = persona_reciente.id
-                    if ultima_persona_id != persona_id:
-                        # Hubo un cambio
-                        ultima_persona_id = persona_id
-                        print(f'[WEBSOCKET] Cambio detectado en BD, emitiendo actualización...')
-                        emitir_actualizacion()
+                # ✅ CONTEXT FIX: Usar app_context para acceder a DB
+                with app.app_context():
+                    # Obtener la persona más reciente usando SQLAlchemy
+                    persona_reciente = Persona.query.order_by(Persona.created_at.desc()).first()
+                    
+                    if persona_reciente:
+                        persona_id = persona_reciente.id
+                        if ultima_persona_id != persona_id:
+                            # Hubo un cambio
+                            ultima_persona_id = persona_id
+                            print(f'[WEBSOCKET] Cambio detectado en BD, emitiendo actualización...')
+                            emitir_actualizacion()
                 
             except Exception as e:
                 print(f'[ERROR] monitorear: {e}')

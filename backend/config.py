@@ -14,6 +14,10 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_RECORD_QUERIES = True
     SQLALCHEMY_ECHO = False
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_pre_ping': True,
+        'connect_args': {'check_same_thread': False}
+    }
     
     AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', '')
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', '')
@@ -47,6 +51,11 @@ class Config:
     # 'network' → Carpeta compartida en otra laptop de la red local (recomendado)
     # 's3'      → Sube a AWS S3 (requiere claves AWS en .env)
     STORAGE_BACKEND = os.getenv('STORAGE_BACKEND', 'usb')
+
+    # ── ESP32 TRIAC CONTROL ───────────────────────────────────────────────────
+    # IP del ESP32 en la red local (ej: 172.20.10.5 en iPhone de AMAT)
+    ESP32_IP = os.getenv('ESP32_IP', '192.168.1.100')
+    ESP32_HTTP_TIMEOUT = 3  # segundos
 
     # Nombre de la carpeta que se crea dentro del pendrive
     USB_BACKUP_FOLDER = os.getenv('USB_BACKUP_FOLDER', 'SENA_RESPALDOS')

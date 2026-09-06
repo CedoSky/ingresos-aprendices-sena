@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagrama de Flujo - Sistema Control de Ingresos SENA</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .metadata {
+            background: #f0f2f5;
+            padding: 20px;
+            border-bottom: 2px solid #ddd;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .metadata-item {
+            padding: 10px;
+        }
+        
+        .metadata-item strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        .section-title {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .feature-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+        
+        .feature-item strong {
+            color: #667eea;
+        }
+        
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .tech-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .tech-item-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+        
+        .tech-item-value {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #fafafa;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:hover {
+            background: #f0f0f0;
+        }
+        
+        .flow-description {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #0288d1;
+        }
+        
+        .flow-description strong {
+            color: #0288d1;
+        }
+        
+        .security-box {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #f57c00;
+        }
+        
+        .security-box strong {
+            color: #f57c00;
+        }
+        
+        .footer {
+            background: #f0f2f5;
+            padding: 20px;
+            text-align: center;
+            border-top: 2px solid #ddd;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+            
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            .mermaid {
+                page-break-inside: avoid;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Sistema Control de Ingresos SENA</h1>
+            <p>Diagrama de Flujo y Arquitectura del Sistema</p>
+        </div>
+        
+        <div class="metadata">
+            <div class="metadata-item">
+                <strong>📅 Fecha:</strong>
+                <span>8 de Abril de 2026</span>
+            </div>
+            <div class="metadata-item">
+                <strong>✅ Estado:</strong>
+                <span>Operacional y Endurecido (v6-WithSecurity)</span>
+            </div>
+            <div class="metadata-item">
+                <strong>🔐 Seguridad:</strong>
+                <span>OWASP / JWT / Encriptación Fernet</span>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- Section 1: Overview -->
+            <div class="section">
+                <h2 class="section-title">📊 Descripción General</h2>
+                <p style="margin-bottom: 15px;">
+                    El Sistema de Control de Ingresos SENA es una aplicación web integral diseñada para gestionar el acceso 
+                    a la institución educativa. Integra control de acceso por cerradura electromagnética, gestión de personas, 
+                    administración de usuarios, procesamiento de pagos y reportes avanzados.
+                </p>
+                
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <strong>👤 Gestión de Personas</strong>
+                        <p>Registro y búsqueda de aprendices, instructores y visitantes</p>
+                    </div>
+                    <div class="feature-item">
+                        <strong>🚪 Control de Acceso</strong>
+                        <p>Control mediante cerradura electromagnética con ESP32 TRIAC</p>
+                    </div>
+                    <div class="feature-item">
+                        <strong>🔐 Seguridad Avanzada</strong>
+                        <p>JWT, Encriptación, Auditoría, Prevención de fuerza bruta</p>
+                    </div>
+                    <div class="feature-item">
+                        <strong>💰 Sistema de Pagos</strong>
+                        <p>Procesamiento de pagos y gestión de créditos</p>
+                    </div>
+                    <div class="feature-item">
+                        <strong>📈 Reportes</strong>
+                        <p>Exportación a Excel de registros y estadísticas</p>
+                    </div>
+                    <div class="feature-item">
+                        <strong>🔄 Sincronización</strong>
+                        <p>Sincronización en tiempo real con WebSocket</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section 2: Architecture -->
+            <div class="section">
+                <h2 class="section-title">🏗️ Tecnologías Utilizadas</h2>
+                
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <div class="tech-item-label">Backend</div>
+                        <div class="tech-item-value">Flask 3.1.3</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-item-label">Database</div>
+                        <div class="tech-item-value">SQLite / PostgreSQL</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-item-label">Frontend</div>
+                        <div class="tech-item-value">HTML5 / JavaScript</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-item-label">IoT</div>
+                        <div class="tech-item-value">ESP32 TRIAC</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-item-label">ORM</div>
+                        <div class="tech-item-value">SQLAlchemy 2.0</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-item-label">Messaging</div>
+                        <div class="tech-item-value">MQTT / WebSocket</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-item-label">Auth</div>
+                        <div class="tech-item-value">JWT / Fernet</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-item-label">Containerización</div>
+                        <div class="tech-item-value">Docker</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section 3: Main Flow Diagram -->
+            <div class="section">
+                <h2 class="section-title">🔄 Diagrama de Flujo Completo del Sistema</h2>
+                
+                <div class="flow-description">
+                    <strong>📌 Descripción:</strong> Este diagrama muestra todos los flujos principales del sistema, desde 
+                    la autenticación de usuarios hasta la sincronización y auditoría. Incluye 6 módulos principales: 
+                    Autenticación, Registro de Personas, Control de Acceso, Administración, Pagos y Reportes.
+                </div>
+                
+                <div class="mermaid">
+graph TB
+    Start([User/Sistema Inicia]) --> Login{¿Autenticado?}
+    
+    Login -->|No| LoginPage["📱 Página de Login<br/>frontend/login.html"]
+    LoginPage --> ValidateInput["🔐 Validar Entrada<br/>InputValidator"]
+    ValidateInput --> CheckBrute["❌ ¿Intento Fuerza Bruta?"]
+    CheckBrute -->|Sí| BlockUser["🔒 Bloquear Cuenta<br/>15 min"]
+    CheckBrute -->|No| HashPassword["🔑 Verificar Password<br/>security_shield.py"]
+    BlockUser --> LoginFail["❌ Login Fallido"]
+    HashPassword --> AuthSuccess{¿Credenciales OK?}
+    
+    AuthSuccess -->|No| LoginFail
+    LoginFail --> Login
+    AuthSuccess -->|Sí| CreateJWT["🎫 Generar JWT<br/>routes.py"]
+    CreateJWT --> CreateSession["🔐 Crear Sesión Segura<br/>SesionSegura"]
+    CreateSession --> LogEvent["📝 Log Evento Seguridad<br/>AuditoriaAdministrativa"]
+    
+    Login -->|Sí| Dashboard["📊 Dashboard Principal"]
+    LogEvent --> Dashboard
+    
+    Dashboard --> Menu{Seleccionar Acción}
+    
+    Menu -->|Registrar Persona| RegisterFlow["👤 Flujo Registro<br/>routes.py: POST /api/personas"]
+    Menu -->|Consultar Registro| ConsultFlow["🔍 Búsqueda Personas<br/>GET /api/personas"]
+    Menu -->|Control Acceso| AccessFlow["🚪 Control de Acceso"]
+    Menu -->|Administración| AdminPanel["⚙️ Panel Administración<br/>panel_routes.py"]
+    Menu -->|Pagos/Servicios| PaymentFlow["💰 Sistema de Pagos<br/>pagos.py"]
+    Menu -->|Reportes| ReportFlow["📈 Generar Reportes<br/>export_excel.py"]
+    
+    RegisterFlow --> ExtractData["📋 Extraer Datos Formulario"]
+    ExtractData --> ValidatePersona["✅ Validar Datos Persona<br/>validaciones.py"]
+    ValidatePersona --> EncryptSensitive["🔐 Encriptar Datos Sensibles<br/>EncriptadorDatos"]
+    EncryptSensitive --> SaveDB1["💾 Guardar en Database<br/>SQLAlchemy ORM"]
+    SaveDB1 --> WebsocketNotify1["📡 Notificar WebSocket"]
+    WebsocketNotify1 --> RegisterSuccess["✅ Persona Registrada"]
+    
+    ConsultFlow --> SearchDB["🔎 Buscar en DB"]
+    SearchDB --> FilterResults["🎯 Filtrar Resultados"]
+    FilterResults --> DisplayData["📺 Mostrar en Tabla"]
+    DisplayData --> UpdateSync["🔄 Sincronizar con Servidor"]
+    UpdateSync --> ConsultSuccess["✅ Búsqueda Completada"]
+    
+    AccessFlow --> RequestAccess["🚪 Solicitud de Acceso<br/>GET /api/registros"]
+    RequestAccess --> ValidateTime["⏰ Validar Horario"]
+    ValidateTime --> CheckBlacklist["⛔ ¿En Blacklist?"]
+    CheckBlacklist -->|Sí| DenyAccess["❌ Acceso Denegado<br/>log_evento_seguridad"]
+    CheckBlacklist -->|No| QueryPerson["🔍 Consultar Persona<br/>models.Persona"]
+    QueryPerson --> CreateRecord["📝 Crear RegistroAcceso"]
+    CreateRecord --> SendMQTT["📡 Publicar MQTT<br/>mqtt_handler.py<br/>Topic: 'control/acceso'"]
+    SendMQTT --> WaitESP32["⏳ Esperar Respuesta ESP32"]
+    WaitESP32 --> ESP32Check{¿ESP32<br/>Disponible?}
+    
+    ESP32Check -->|No| ManualOpen["🖱️ Opción Manual<br/>Abrir Puerta"]
+    ESP32Check -->|Sí| TriacControl["⚡ ESP32 Activa TRIAC<br/>esp32_triac_mqtt.ino"]
+    TriacControl --> LockOpen["🔓 Cerradura Abre"]
+    ManualOpen --> LockOpen
+    LockOpen --> RecordAccess["✍️ Registrar Acceso<br/>RegistroAcceso.entry_time"]
+    RecordAccess --> NotifyApp["🔔 Notificar Aplicación<br/>WebSocket"]
+    NotifyApp --> AccessSuccess["✅ Acceso Concedido"]
+    
+    AdminPanel --> AdminChoose{Opción Admin}
+    AdminChoose -->|Gestionar Usuarios| UserMgmt["👥 Gestionar Usuarios<br/>gestionar_usuarios.py"]
+    AdminChoose -->|Seguridad| SecurityMgmt["🔒 Configurar Seguridad<br/>panel_security.py"]
+    AdminChoose -->|Mantenimiento| Maintenance["🔧 Modo Mantenimiento<br/>mantenimiento_sistemas.py"]
+    AdminChoose -->|Backup/Restore| BackupMgmt["💿 Backup/Restore<br/>backup_to_usb.py"]
+    
+    UserMgmt --> AddUser["➕ Agregar Usuario"]
+    AddUser --> HashNewPass["🔐 Hash Password"]
+    HashNewPass --> SaveUser["💾 Guardar Usuario<br/>Usuario model"]
+    SaveUser --> SendEmail["📧 Enviar Credenciales<br/>correo.py"]
+    SendEmail --> UserCreated["✅ Usuario Creado"]
+    
+    SecurityMgmt --> SetPIN["🔑 Establecer PIN<br/>gestionar_pin_sistemas.py"]
+    SetPIN --> ValidatePIN["✓ Validar PIN<br/>security_advanced.py"]
+    ValidatePIN --> PINSet["✅ PIN Configurado"]
+    
+    Maintenance --> ScheduleTask["⏰ Programar Tarea<br/>scheduler.py"]
+    ScheduleTask --> ExecTask["▶️ Ejecutar Mantenimiento"]
+    ExecTask --> LogMaintenance["📝 Log Mantenimiento"]
+    LogMaintenance --> MaintenanceDone["✅ Mantenimiento Completo"]
+    
+    BackupMgmt --> SelectLocation["💿 Seleccionar USB/Cloud"]
+    SelectLocation --> StartBackup["📦 Iniciar Backup<br/>backup_to_usb.py o<br/>cloud_storage.py"]
+    StartBackup --> CompressDB["📦 Comprimir DB"]
+    CompressDB --> TransferData["📤 Transferir Datos"]
+    TransferData --> VerifyBackup["✓ Verificar Integridad"]
+    VerifyBackup --> BackupDone["✅ Backup Completado"]
+    
+    PaymentFlow --> SelectService["💳 Seleccionar Servicio<br/>pagos.py"]
+    SelectService --> ProcessPayment["💰 Procesar Pago<br/>stripe/paypal"]
+    ProcessPayment --> VerifyPayment{¿Pago OK?}
+    VerifyPayment -->|No| PaymentFailed["❌ Pago Rechazado"]
+    VerifyPayment -->|Sí| RecordPayment["💾 Registrar Pago<br/>Pago model"]
+    RecordPayment --> UpdateCredits["➕ Actualizar Créditos"]
+    UpdateCredits --> PaymentSuccess["✅ Pago Procesado"]
+    PaymentFailed --> PaymentFlow
+    
+    ReportFlow --> SelectReport["📋 Tipo de Reporte"]
+    SelectReport --> BuildReport["🔨 Construir Excel<br/>export_excel.py"]
+    BuildReport --> QueryReportData["🔍 Consultar Datos<br/>RegistroAcceso, Persona"]
+    QueryReportData --> FormatData["🎨 Formatear en Excel"]
+    FormatData --> DownloadReport["📥 Descargar Reporte"]
+    DownloadReport --> ReportComplete["✅ Reporte Completado"]
+    
+    RegisterSuccess --> AuditLog["📊 Guardar Auditoría<br/>AuditoriaAdministrativa.registrar"]
+    ConsultSuccess --> AuditLog
+    AccessSuccess --> AuditLog
+    UserCreated --> AuditLog
+    PINSet --> AuditLog
+    BackupDone --> AuditLog
+    PaymentSuccess --> AuditLog
+    ReportComplete --> AuditLog
+    
+    AuditLog --> WebsocketBroadcast["📡 Broadcast WebSocket<br/>websocket_handler.py"]
+    WebsocketBroadcast --> SyncManager["🔄 Sincronización<br/>sync_manager.py"]
+    SyncManager --> SaveDB2["💾 Sincronizar BD<br/>SQLAlchemy Sessions"]
+    SaveDB2 --> End([✅ Transacción Completa])
+    
+    style Start fill:#90EE90
+    style End fill:#FFB6C6
+    style Dashboard fill:#87CEEB
+    style LoginPage fill:#FFD700
+    style BlockUser fill:#FF6B6B
+    style DenyAccess fill:#FF6B6B
+    style LoginFail fill:#FF6B6B
+    style TriacControl fill:#FFA500
+    style LockOpen fill:#32CD32
+    style WebsocketBroadcast fill:#9370DB
+    style SaveDB2 fill:#4169E1
+                </div>
+            </div>
+            
+            <!-- Section 4: Modules -->
+            <div class="section">
+                <h2 class="section-title">📦 Módulos Principales</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Módulo</th>
+                            <th>Archivo Principal</th>
+                            <th>Función</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Autenticación</strong></td>
+                            <td>routes.py, security_shield.py</td>
+                            <td>Login seguro, validación JWT, prevención de fuerza bruta</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Gestión Personas</strong></td>
+                            <td>routes.py, validaciones.py</td>
+                            <td>CRUD de aprendices, instructores, visitantes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Control Acceso</strong></td>
+                            <td>routes.py, mqtt_handler.py</td>
+                            <td>Registro de acceso, control TRIAC, validación horaria</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Administración</strong></td>
+                            <td>panel_routes.py, gestionar_usuarios.py</td>
+                            <td>Gestión de usuarios, seguridad, configuración sistema</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pagos</strong></td>
+                            <td>pagos.py</td>
+                            <td>Procesamiento pagos, gestión créditos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reportes</strong></td>
+                            <td>export_excel.py</td>
+                            <td>Generación Excel, estadísticas, auditoría</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sincronización</strong></td>
+                            <td>sync_manager.py, websocket_handler.py</td>
+                            <td>Sincronización real-time, notificaciones WebSocket</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Base Datos</strong></td>
+                            <td>models.py</td>
+                            <td>Definición de entidades ORM SQLAlchemy</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Section 5: Security -->
+            <div class="section">
+                <h2 class="section-title">🔐 Medidas de Seguridad Implementadas</h2>
+                
+                <div class="security-box">
+                    <strong>🔑 Autenticación y Autorización</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>JWT (JSON Web Tokens) para autenticación sin estado</li>
+                        <li>Sesiones seguras con cookies HTTP-only</li>
+                        <li>Control de acceso basado en roles (Admin, Vigilante)</li>
+                        <li>Validación JWT en cada endpoint protegido</li>
+                    </ul>
+                </div>
+                
+                <div class="security-box">
+                    <strong>🛡️ Protección contra Ataques</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Fuerza Bruta:</strong> Bloqueo de 15 minutos tras 5 intentos fallidos</li>
+                        <li><strong>CSRF:</strong> Tokens CSRF y validación SameSite=Strict</li>
+                        <li><strong>SQL Injection:</strong> Uso de SQLAlchemy ORM con query parametrizadas</li>
+                        <li><strong>XSS:</strong> Validación de entrada y sanitización</li>
+                        <li><strong>Rate Limiting:</strong> Limitación de tasa de solicitudes</li>
+                    </ul>
+                </div>
+                
+                <div class="security-box">
+                    <strong>🔒 Encriptación y Datos Sensibles</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Fernet encryption para datos sensibles en reposo</li>
+                        <li>Hashing bcrypt para contraseñas</li>
+                        <li>HTTPS/TLS para datos en tránsito (en producción)</li>
+                        <li>Almacenamiento seguro de credenciales en .env</li>
+                    </ul>
+                </div>
+                
+                <div class="security-box">
+                    <strong>📊 Auditoría y Monitoreo</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Sistema de auditoría administrativo completo</li>
+                        <li>Registro de eventos de seguridad y acceso</li>
+                        <li>Validación de configuración de seguridad</li>
+                        <li>Headers HTTP de seguridad OWASP recomendados</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Section 6: Database -->
+            <div class="section">
+                <h2 class="section-title">🗄️ Estructura de Base de Datos</h2>
+                
+                <div class="flow-description">
+                    <strong>📌 Entidades Principales:</strong>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Entidad</th>
+                            <th>Descripción</th>
+                            <th>Campos Clave</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Usuario</strong></td>
+                            <td>Administradores y vigilantes</td>
+                            <td>email, password_hash, rol, activo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Persona</strong></td>
+                            <td>Aprendices, instructores, visitantes</td>
+                            <td>nombre, tipo_doc, numero_doc, perfil, programa</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RegistroAcceso</strong></td>
+                            <td>Log de entradas/salidas</td>
+                            <td>persona_id, entry_time, exit_time, motivo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Foto</strong></td>
+                            <td>Fotografías de personas</td>
+                            <td>persona_id, ruta_archivo, tipo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pago</strong></td>
+                            <td>Transacciones de pago</td>
+                            <td>usuario_id, monto, estado, fecha</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AuditoriaEvento</strong></td>
+                            <td>Registro de acciones administrativas</td>
+                            <td>usuario_id, tipo_evento, detalles, timestamp</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Section 7: Deployment -->
+            <div class="section">
+                <h2 class="section-title">🚀 Despliegue e Instalación</h2>
+                
+                <div class="flow-description">
+                    <strong>📌 Opciones de Despliegue:</strong>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="feature-item">
+                        <strong>🐳 Opción 1: Docker (Recomendado)</strong>
+                        <p style="margin-top: 10px;">
+                            Ejecuta <code>DOCKER_SETUP.bat</code> para desplegar con Docker Compose<br>
+                            <strong>Frontend:</strong> http://localhost<br>
+                            <strong>Backend:</strong> http://localhost:8000
+                        </p>
+                    </div>
+                    <div class="feature-item">
+                        <strong>🖥️ Opción 2: Local (Windows)</strong>
+                        <p style="margin-top: 10px;">
+                            Ejecuta <code>INSTALAR.bat</code> e <code>INICIAR.bat</code><br>
+                            Requiere Python 3.11+ instalado<br>
+                            Requiere Node.js para frontend (opcional)
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flow-description" style="margin-top: 20px;">
+                    <strong>Credenciales de Prueba:</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Email:</strong> admin@sena.edu.co</li>
+                        <li><strong>Contraseña:</strong> admin123</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Section 8: API Endpoints -->
+            <div class="section">
+                <h2 class="section-title">🔌 Principal Endpoints API</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Método</th>
+                            <th>Endpoint</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>POST</strong></td>
+                            <td>/api/login</td>
+                            <td>Autenticación de usuario</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GET</strong></td>
+                            <td>/api/personas</td>
+                            <td>Obtener lista de personas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>POST</strong></td>
+                            <td>/api/personas</td>
+                            <td>Crear nueva persona</td>
+                        </tr>
+                        <tr>
+                            <td><strong>POST</strong></td>
+                            <td>/api/registros</td>
+                            <td>Registrar acceso (entrada/salida)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GET</strong></td>
+                            <td>/api/registros</td>
+                            <td>Obtener registros de acceso</td>
+                        </tr>
+                        <tr>
+                            <td><strong>POST</strong></td>
+                            <td>/api/pagos</td>
+                            <td>Procesar pago</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GET</strong></td>
+                            <td>/api/reportes</td>
+                            <td>Obtener reportes (Excel)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>POST</strong></td>
+                            <td>/panel/usuarios</td>
+                            <td>Gestionar usuarios (admin)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Section 9: IoT Integration -->
+            <div class="section">
+                <h2 class="section-title">⚡ Integración IoT (ESP32)</h2>
+                
+                <div class="flow-description">
+                    <strong>📌 Sistema de Control de Cerradura:</strong>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                    <div class="feature-item">
+                        <strong>📡 Comunicación MQTT</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Broker: mosquitto (puerto 1883)</li>
+                            <li>Topic: control/acceso</li>
+                            <li>QoS: 1 (at least once)</li>
+                            <li>Payload: JSON con comando</li>
+                        </ul>
+                    </div>
+                    <div class="feature-item">
+                        <strong>⚙️ Control TRIAC</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Solenoide electromagnético</li>
+                            <li>Tiempo apertura: 3-5 segundos</li>
+                            <li>Fallback manual si ESP32 offline</li>
+                            <li>Registro de cada apertura</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section 10: Files Structure -->
+            <div class="section">
+                <h2 class="section-title">📂 Estructura de Carpetas del Proyecto</h2>
+                
+                <div style="background: #f5f5f5; padding: 15px; border-radius: 6px; font-family: monospace; white-space: pre-wrap; word-wrap: break-word; overflow-x: auto;">
+<strong>ingresos-aprendices-7/</strong>
+├── <strong>backend/</strong>
+│   ├── app.py                  # Aplicación Flask principal
+│   ├── routes.py               # Rutas API
+│   ├── models.py               # Modelos SQLAlchemy
+│   ├── security_shield.py      # Seguridad básica
+│   ├── security_advanced.py    # Seguridad avanzada
+│   ├── mqtt_handler.py         # Comunicación MQTT
+│   ├── websocket_handler.py    # WebSocket real-time
+│   ├── panel_routes.py         # Rutas administración
+│   ├── pagos.py                # Sistema pagos
+│   ├── export_excel.py         # Generación reportes
+│   ├── validaciones.py         # Validaciones de datos
+│   └── requirements.txt        # Dependencias Python
+├── <strong>frontend/</strong>
+│   ├── login.html              # Página login
+│   ├── panel-security.js       # JavaScript seguro
+│   ├── administracion.html     # Panel admin
+│   └── ...otros archivos HTML
+├── <strong>Arduino/</strong>
+│   ├── esp32_triac_mqtt.ino    # Código ESP32
+│   └── esp32_triac_control/
+├── <strong>docs/</strong>
+│   ├── SEGURIDAD.md
+│   ├── DEPLOYMENT_GUIDE.md
+│   └── ...documentación
+├── <strong>scripts/</strong>
+│   ├── INICIAR.bat             # Script inicio
+│   ├── MANTENIMIENTO.bat
+│   └── ...otros scripts
+├── <strong>tests/</strong>
+│   ├── test_api.py
+│   └── ...casos de prueba
+├── <strong>logs/</strong>       # Archivos de log
+├── <strong>instance/</strong>   # Base de datos SQLite
+└── docker-compose.yml          # Orquestación Docker
+                </div>
+            </div>
+            
+            <!-- Section 11: Workflow Summary -->
+            <div class="section">
+                <h2 class="section-title">📝 Resumen de Flujos Clave</h2>
+                
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">1️⃣ Flujo de Autenticación</h3>
+                <div class="flow-description">
+                    Usuario → Validación Entrada → Verificación Password → Generación JWT → Creación Sesión → Log Auditoría → Dashboard
+                </div>
+                
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">2️⃣ Flujo de Control de Acceso</h3>
+                <div class="flow-description">
+                    Solicitud Acceso → Validación Horaria → Verificación Blacklist → Publicar MQTT → ESP32 Activa TRIAC → Cerradura Abre → Registro en BD → Notificación WebSocket
+                </div>
+                
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">3️⃣ Flujo de Registro de Personas</h3>
+                <div class="flow-description">
+                    Formulario → Validación Datos → Encriptación Sensibles → Guardado BD → Notificación WebSocket → Log Auditoría
+                </div>
+                
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">4️⃣ Flujo de Administración</h3>
+                <div class="flow-description">
+                    Panel Admin → Validación PIN → Acción (Usuarios/Seguridad/Backup) → Ejecución → Log Auditoría → Sincronización BD
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>📄 Diagrama de Flujo del Sistema de Control de Ingresos SENA v6-WithSecurity</p>
+            <p>✅ Documentación completa | 🔐 Sistema endurecido | 🚀 Listo para producción</p>
+            <p style="margin-top: 20px; font-size: 0.85em;">Generado: 8 de Abril de 2026</p>
+        </div>
+    </div>
+    
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        mermaid.contentLoaded();
+    </script>
+</body>
+</html>

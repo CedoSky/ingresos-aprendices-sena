@@ -126,8 +126,6 @@ tbody tr:hover td{background:#f8fafc}
 .btn-lib{padding:5px 12px;background:#c0392b;color:#fff;border:none;border-radius:5px;font-size:.77rem;font-weight:700;cursor:pointer;transition:opacity .15s;white-space:nowrap}
 .btn-lib:hover{opacity:.85}
 .btn-lib:disabled{background:#aaa;cursor:not-allowed}
-.btn-tras{padding:5px 12px;background:#1a3a2a;color:#fff;border:none;border-radius:5px;font-size:.77rem;font-weight:700;cursor:pointer;margin-left:5px;white-space:nowrap;transition:opacity .15s}
-.btn-tras:hover{opacity:.85}
 
 /* Toast traslados */
 .toast-tras{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:9px;pointer-events:none;max-width:380px}
@@ -205,6 +203,9 @@ tbody tr:hover td{background:#f8fafc}
     <button class="tb-btn" id="btn-inventario" onclick="abrirInventario()">
         Objetos <span class="badge-count none" id="cnt-inv">0</span>
     </button>
+    <button class="tb-btn" onclick="abrirAgregarVisitante()" title="Registrar nuevo visitante">
+        &#128101; Agregar Visitante
+    </button>
     <button class="tb-btn" onclick="abrirBusquedaGlobal()">&#128269; Historial</button>
 </div>
 
@@ -272,9 +273,6 @@ tbody tr:hover td{background:#f8fafc}
     </div>
 </div>
 
-<!-- TOAST TRASLADOS -->
-<div class="toast-tras" id="toast-tras"></div>
-
 <!-- MODAL SELECTOR DE EDIFICIO -->
 <div class="overlay show" id="ov-sel-ed">
     <div class="mbox">
@@ -300,36 +298,56 @@ tbody tr:hover td{background:#f8fafc}
     </div>
 </div>
 
-<!-- MODAL TRASLADO -->
-<div class="overlay" id="ov-traslado">
+<!-- Modal de traslado eliminado - Será reimplementado por separado -->
+
+<!-- MODAL AGREGAR VISITANTE -->
+<div class="overlay" id="ov-visitante">
     <div class="mbox">
-        <div class="mhd"><div class="mhd-title">&#x1F504; Trasladar a otro edificio</div><button class="mclose" onclick="cerrarTraslado()">&#x2715;</button></div>
+        <div class="mhd">
+            <div class="mhd-title">&#128101; Registrar Nuevo Visitante</div>
+            <button class="mclose" onclick="cerrarAgregarVisitante()">&#x2715;</button>
+        </div>
         <div class="mbody">
-            <div id="tras-persona-info" style="background:#f5f7fa;border-radius:7px;padding:12px 16px;margin-bottom:16px;font-size:.88rem"></div>
-            <div style="margin-bottom:12px">
-                <label style="display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Edificio destino</label>
-                <select id="tras-sel-ed" onchange="trasSelectorPiso()" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;outline:none">
-                    <option value="">Cargando edificios...</option>
-                </select>
+            <div style="background:#f0fff8;border:1px solid #b2dfdb;border-radius:7px;padding:12px 16px;margin-bottom:16px;font-size:.88rem">
+                <i style="color:#1c4b3a">&#128101;</i> Registra aquí a los visitantes que ingresan a la SENA
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-                <div>
-                    <label style="display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Piso destino</label>
-                    <select id="tras-sel-piso" onchange="trasSelectorAmb()" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;outline:none" disabled>
-                        <option value="">Primero elige edificio</option>
+            <div class="fg" style="margin-bottom:12px">
+                <label>Nombre Completo <span class="req">*</span></label>
+                <input type="text" id="vis-nombre" placeholder="Ej: Juan Pérez García" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+                <div class="fg">
+                    <label>Tipo de Documento <span class="req">*</span></label>
+                    <select id="vis-tipo-doc" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+                        <option value="CC">Cédula (CC)</option>
+                        <option value="TI">Tarjeta de Identidad (TI)</option>
+                        <option value="PP">Pasaporte (PP)</option>
+                        <option value="CE">Cédula de Extranjería (CE)</option>
                     </select>
                 </div>
-                <div>
-                    <label style="display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Ambiente destino</label>
-                    <select id="tras-sel-amb" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;outline:none" disabled>
-                        <option value="">Primero elige piso</option>
-                    </select>
+                <div class="fg">
+                    <label>Número de Documento <span class="req">*</span></label>
+                    <input type="text" id="vis-numero-doc" placeholder="Ej: 1234567890" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
                 </div>
             </div>
-            <div id="tras-msg" style="display:none;padding:9px 14px;border-radius:6px;font-size:.84rem;font-weight:600;margin-bottom:12px"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+                <div class="fg">
+                    <label>Email</label>
+                    <input type="email" id="vis-email" placeholder="Ej: juan@example.com" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+                </div>
+                <div class="fg">
+                    <label>Teléfono</label>
+                    <input type="text" id="vis-telefono" placeholder="Ej: 3001234567" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+                </div>
+            </div>
+            <div class="fg" style="margin-bottom:12px">
+                <label>Empresa / Organización</label>
+                <input type="text" id="vis-empresa" placeholder="Ej: Empresa de mantenimiento" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+            </div>
+            <div id="vis-msg" style="display:none;padding:10px 14px;border-radius:6px;font-size:.84rem;font-weight:600;margin-bottom:12px"></div>
             <div style="display:flex;gap:10px">
-                <button class="btn-cancel-w" onclick="cerrarTraslado()">Cancelar</button>
-                <button id="btn-tras-confirm" onclick="ejecutarTraslado()" style="flex:1;padding:10px;border:none;background:#1a3a2a;color:#fff;border-radius:6px;font-size:.87rem;font-weight:700;cursor:pointer">&#x1F504; Confirmar traslado</button>
+                <button class="btn-cancel-w" onclick="cerrarAgregarVisitante()">Cancelar</button>
+                <button id="btn-vis-save" onclick="guardarVisitante()" style="flex:1;padding:10px;border:none;background:#1a3a2a;color:#fff;border-radius:6px;font-size:.87rem;font-weight:700;cursor:pointer">&#128101; Registrar Visitante</button>
             </div>
         </div>
     </div>
@@ -715,7 +733,7 @@ function renderModalAmb(){
         if(o.desde){var d=new Date(o.desde);desde=p(d.getHours())+":"+p(d.getMinutes())}
         var nombre=o.persona?o.persona.nombre:"N/A";
         var doc=o.persona?o.persona.numero_doc:"";
-        h+='<tr id="erow-'+o.id+'"><td><strong>'+esc(nombre)+'</strong></td><td style="font-family:Courier New,monospace;font-size:.82rem">'+esc(doc)+'</td><td>'+esc(o.ambiente||"\u2014")+'</td><td style="color:#9aabbc;font-size:.82rem">'+desde+'</td><td style="white-space:nowrap"><button class="btn-lib" id="blib-'+o.id+'" onclick="liberarAmb(\''+o.id+'\')">Liberar</button> <button class="btn-tras" onclick="abrirTraslado(\''+o.id+'\')">&#x1F504; Trasladar</button></td></tr>';
+        h+='<tr id="erow-'+o.id+'"><td><strong>'+esc(nombre)+'</strong></td><td style="font-family:Courier New,monospace;font-size:.82rem">'+esc(doc)+'</td><td>'+esc(o.ambiente||"\u2014")+'</td><td style="color:#9aabbc;font-size:.82rem">'+desde+'</td><td style="white-space:nowrap"><button class="btn-lib" id="blib-'+o.id+'" onclick="liberarAmb(\''+o.id+'\')">Liberar</button></td></tr>';
     });
     h+='</tbody></table>';
     cont.innerHTML=h;
@@ -737,91 +755,7 @@ async function liberarAmb(id){
     }catch(e){alert("Error de red");if(btn){btn.disabled=false;btn.textContent="Liberar"}}
 }
 
-// ── TRASLADO ──────────────────────────────────────────────────
-async function abrirTraslado(ocuId){
-    _trasOcuId = ocuId;
-    var ocu = _listaAmb.find(function(x){return x.id===ocuId;});
-    var iEl = document.getElementById('tras-persona-info');
-    if(ocu){
-        iEl.innerHTML='<strong style="color:#1c2b4b">'+(ocu.persona?esc(ocu.persona.nombre):'N/A')+'</strong>'
-            +' <span style="color:#9aabbc;font-size:.8rem">'+esc(ocu.persona&&ocu.persona.numero_doc?ocu.persona.numero_doc:'')+'</span>'
-            +'<br><span style="font-size:.82rem;color:#c4700a">&#128205; En: '+esc(ocu.ambiente||'—')+'</span>';
-    }
-    var sel=document.getElementById('tras-sel-ed');
-    sel.innerHTML='<option>Cargando...</option>'; sel.disabled=true;
-    document.getElementById('tras-sel-piso').innerHTML='<option>Primero elige edificio</option>'; document.getElementById('tras-sel-piso').disabled=true;
-    document.getElementById('tras-sel-amb').innerHTML='<option>Primero elige piso</option>'; document.getElementById('tras-sel-amb').disabled=true;
-    document.getElementById('tras-msg').style.display='none';
-    var btn=document.getElementById('btn-tras-confirm'); btn.disabled=false; btn.textContent='\uD83D\uDD04 Confirmar traslado';
-    document.getElementById('ov-traslado').classList.add('show');
-    try{
-        var resp=await fetch('/api/edificios',{headers:{'Authorization':'Bearer '+token}});
-        var data=await resp.json();
-        var lista=(data.edificios||[]).filter(function(e){return e.activo;});
-        sel.innerHTML='<option value="">Selecciona edificio destino...</option>';
-        lista.forEach(function(e){
-            sel.innerHTML+='<option value="'+e.id+'" data-pisos="'+e.num_pisos+'" data-amb="'+e.num_ambientes_por_piso+'" data-nombre="'+esc(e.nombre)+'">'+esc(e.nombre)+'</option>';
-        });
-        sel.disabled=false;
-    }catch(ex){ sel.innerHTML='<option>Error al cargar edificios</option>'; }
-}
-
-function trasSelectorPiso(){
-    var sel=document.getElementById('tras-sel-ed'); var opt=sel.options[sel.selectedIndex];
-    var pisoSel=document.getElementById('tras-sel-piso'); var ambSel=document.getElementById('tras-sel-amb');
-    pisoSel.innerHTML='<option value="">Selecciona piso...</option>'; ambSel.innerHTML='<option>Primero elige piso</option>'; ambSel.disabled=true;
-    if(!opt||!opt.value){pisoSel.disabled=true;return;}
-    var numPisos=parseInt(opt.getAttribute('data-pisos'))||3;
-    for(var i=1;i<=numPisos;i++) pisoSel.innerHTML+='<option value="'+i+'">Piso '+i+'</option>';
-    pisoSel.disabled=false;
-}
-
-function trasSelectorAmb(){
-    var edSel=document.getElementById('tras-sel-ed'); var pisoSel=document.getElementById('tras-sel-piso'); var ambSel=document.getElementById('tras-sel-amb');
-    var opt=edSel.options[edSel.selectedIndex]; var piso=parseInt(pisoSel.value)||0;
-    ambSel.innerHTML='<option value="">Selecciona ambiente...</option>';
-    if(!piso||!opt||!opt.value){ambSel.disabled=true;return;}
-    var nombreEd=opt.getAttribute('data-nombre')||opt.text;
-    var numAmb=parseInt(opt.getAttribute('data-amb'))||10;
-    var prefix=piso*100;
-    for(var i=1;i<=numAmb;i++){
-        var salaNum=prefix+i;
-        var label=nombreEd+' - PISO '+piso+' - AMBIENTE '+salaNum;
-        ambSel.innerHTML+='<option value="'+label+'">AMBIENTE '+salaNum+'</option>';
-    }
-    ambSel.disabled=false;
-}
-
-function cerrarTraslado(){
-    document.getElementById('ov-traslado').classList.remove('show'); _trasOcuId=null;
-}
-document.getElementById('ov-traslado').addEventListener('click',function(e){if(e.target===this)cerrarTraslado();});
-
-async function ejecutarTraslado(){
-    var ambDest=(document.getElementById('tras-sel-amb').value||'').trim();
-    if(!ambDest||!ambDest.includes('AMBIENTE')){alert('Selecciona un ambiente de destino.');return;}
-    var btn=document.getElementById('btn-tras-confirm'); btn.disabled=true; btn.textContent='Trasladando...';
-    var msgEl=document.getElementById('tras-msg');
-    try{
-        var resp=await fetch('/api/ambientes/trasladar',{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({ocupacion_id:_trasOcuId,ambiente_destino:ambDest})});
-        var data=await resp.json();
-        msgEl.style.display='block';
-        if(resp.ok){
-            Object.assign(msgEl.style,{background:'#edfcee',color:'#1b5e20',border:'1px solid #a5d6a7',padding:'9px 14px',borderRadius:'6px',fontSize:'.84rem',fontWeight:'600',marginBottom:'12px'});
-            msgEl.textContent='\u2705 '+data.mensaje;
-            setTimeout(function(){cerrarTraslado();cargarAmbientes();},1400);
-        } else {
-            Object.assign(msgEl.style,{background:'#fff0f0',color:'#c0392b',border:'1px solid #f5c8c8',padding:'9px 14px',borderRadius:'6px',fontSize:'.84rem',fontWeight:'600',marginBottom:'12px'});
-            msgEl.textContent='\u274c '+(data.error||'Error al trasladar');
-            btn.disabled=false; btn.textContent='\uD83D\uDD04 Confirmar traslado';
-        }
-    }catch(e){
-        msgEl.style.display='block';
-        Object.assign(msgEl.style,{background:'#fff0f0',color:'#c0392b',border:'1px solid #f5c8c8',padding:'9px 14px',borderRadius:'6px',fontSize:'.84rem',fontWeight:'600',marginBottom:'12px'});
-        msgEl.textContent='\u274c Error de red.';
-        btn.disabled=false; btn.textContent='\uD83D\uDD04 Confirmar traslado';
-    }
-}
+// Funciones de traslado eliminadas - Será reimplementado por separado
 
 // ── TOASTS ───────────────────────────────────────────────────
 function mostrarToast(html, tipo){
@@ -942,6 +876,97 @@ async function ejecutarSalidaInv(){
 function abrirBusquedaGlobal(){ document.getElementById('ov-busq').classList.add('show'); }
 function cerrarBusquedaGlobal(){ document.getElementById('ov-busq').classList.remove('show'); }
 document.getElementById('ov-busq').addEventListener('click',function(e){if(e.target===this)cerrarBusquedaGlobal();});
+
+// ── AGREGAR VISITANTE ───────────────────────────────────────
+function abrirAgregarVisitante(){
+    // Limpiar formulario
+    ['vis-nombre','vis-numero-doc','vis-email','vis-telefono','vis-empresa'].forEach(function(id){document.getElementById(id).value='';});
+    document.getElementById('vis-tipo-doc').value='CC';
+    document.getElementById('vis-msg').style.display='none';
+    document.getElementById('btn-vis-save').disabled=false;
+    document.getElementById('btn-vis-save').textContent='&#128101; Registrar Visitante';
+    document.getElementById('ov-visitante').classList.add('show');
+}
+
+function cerrarAgregarVisitante(){
+    document.getElementById('ov-visitante').classList.remove('show');
+}
+document.getElementById('ov-visitante').addEventListener('click',function(e){if(e.target===this)cerrarAgregarVisitante();});
+
+async function guardarVisitante(){
+    var nombre=(document.getElementById('vis-nombre').value||'').trim();
+    var tipoDoc=(document.getElementById('vis-tipo-doc').value||'CC');
+    var numeroDoc=(document.getElementById('vis-numero-doc').value||'').trim();
+    var email=(document.getElementById('vis-email').value||'').trim();
+    var telefono=(document.getElementById('vis-telefono').value||'').trim();
+    var empresa=(document.getElementById('vis-empresa').value||'').trim();
+    var msg=document.getElementById('vis-msg');
+    msg.style.display='none';
+    
+    // Validar campos obligatorios
+    if(!nombre||!numeroDoc){
+        msg.className='inv-msg err';
+        msg.textContent='❌ Nombre y Número de Documento son obligatorios.';
+        msg.style.display='block';
+        return;
+    }
+    
+    var btn=document.getElementById('btn-vis-save');
+    btn.disabled=true;
+    btn.textContent='Registrando...';
+    
+    try{
+        var payload={
+            nombre: nombre,
+            tipo_doc: tipoDoc,
+            numero_doc: numeroDoc,
+            perfil: 'visitante',
+            email: email||undefined,
+            telefono: telefono||undefined,
+            area: empresa||undefined
+        };
+        
+        var r=await fetch('/api/personas',{
+            method:'POST',
+            headers:{
+                'Authorization':'Bearer '+token,
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(payload)
+        });
+        
+        var d=await r.json();
+        
+        if(r.ok){
+            msg.className='inv-msg ok';
+            msg.textContent='✅ Visitante registrado exitosamente. Número de documento: '+esc(numeroDoc);
+            msg.style.display='block';
+            
+            // Limpiar y esperar 1.5 segundos antes de cerrar
+            setTimeout(function(){
+                cerrarAgregarVisitante();
+                // Opcional: recargar lista de personas si hay
+                if(typeof cargarDatos === 'function'){
+                    cargarDatos();
+                }
+            },1500);
+        } else {
+            msg.className='inv-msg err';
+            msg.textContent='❌ '+(d.error||'Error al registrar visitante');
+            msg.style.display='block';
+            btn.disabled=false;
+            btn.textContent='&#128101; Registrar Visitante';
+        }
+    }catch(e){
+        msg.className='inv-msg err';
+        msg.textContent='❌ Error de red: '+esc(e.message||'');
+        msg.style.display='block';
+        btn.disabled=false;
+        btn.textContent='&#128101; Registrar Visitante';
+    }
+}
+
+// ── BUSQUEDA GLOBAL ──────────────────────────────────────────
 async function ejecutarBusquedaGlobal(){
     var doc=(document.getElementById('busq-doc').value||'').trim();
     var nombre=(document.getElementById('busq-nombre').value||'').trim();

@@ -11,20 +11,20 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:#eef5eb;color:#1c2b4b;fo
 h1,h2,h3,p,span,div,label,td,th,small{cursor:default}
 
 /* ── TOPBAR ── */
-.topbar{background:linear-gradient(90deg,#2a8000 0%,#39A900 100%);color:#fff;height:64px;padding:0 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:50;box-shadow:0 3px 12px rgba(0,0,0,.22)}
-.tb-sena-logo{height:38px;width:auto;display:block;filter:brightness(0) invert(1);flex-shrink:0}
-.tb-divider{width:1px;height:32px;background:rgba(255,255,255,.35);flex-shrink:0}
-.tb-logo{font-size:.88rem;font-weight:700;letter-spacing:.3px;white-space:nowrap;line-height:1.3}
-.tb-logo small{display:block;font-size:.72rem;font-weight:400;opacity:.8;letter-spacing:.2px}
+.topbar{background:linear-gradient(90deg,#2a8000 0%,#39A900 100%);color:#fff;height:80px;padding:0 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50;box-shadow:0 3px 12px rgba(0,0,0,.22)}
+.tb-sena-logo{height:32px;width:auto;display:block;filter:brightness(0) invert(1);flex-shrink:0}
+.tb-divider{width:1px;height:28px;background:rgba(255,255,255,.35);flex-shrink:0}
+.tb-logo{font-size:1.15rem;font-weight:700;letter-spacing:.3px;white-space:nowrap;line-height:1.2}
+.tb-logo small{display:block;font-size:.82rem;font-weight:400;opacity:.8;letter-spacing:.2px}
 .tb-spacer{flex:1}
-.tb-clock{font-family:"Courier New",monospace;font-size:1.45rem;font-weight:700;letter-spacing:2px;color:#fff}
+.tb-clock{font-family:"Courier New",monospace;font-size:1.65rem;font-weight:700;letter-spacing:2px;color:#fff}
 .tb-spacer2{flex:1}
-.tb-pill{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.55);border-radius:5px;padding:6px 13px;font-size:.78rem;font-weight:600;cursor:default;white-space:nowrap}
+.tb-pill{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.55);border-radius:5px;padding:8px 14px;font-size:.93rem;font-weight:600;cursor:default;white-space:nowrap}
 #lbl-vig{text-transform:uppercase;letter-spacing:.5px}
 .dot{width:8px;height:8px;border-radius:50%;background:#888;flex-shrink:0}
 .dot.on{background:#3fbf3f;box-shadow:0 0 0 3px rgba(63,191,63,.25)}
 .dot.off{background:#f08c00}
-.tb-btn{border:1.5px solid rgba(255,255,255,.6);background:rgba(0,0,0,.22);color:#fff;border-radius:6px;padding:7px 15px;font-size:.8rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;white-space:nowrap;transition:all .18s;box-shadow:0 2px 6px rgba(0,0,0,.18);letter-spacing:.2px}
+.tb-btn{border:1.5px solid rgba(255,255,255,.6);background:rgba(0,0,0,.22);color:#fff;border-radius:6px;padding:10px 16px;font-size:.96rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;white-space:nowrap;transition:all .18s;box-shadow:0 2px 6px rgba(0,0,0,.18);letter-spacing:.2px}
 .tb-btn:hover{background:rgba(0,0,0,.36);border-color:rgba(255,255,255,.85);transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,.25)}
 .tb-btn:active{transform:translateY(0)}
 .tb-btn.danger{border-color:rgba(255,120,120,.7);background:rgba(160,0,0,.35);color:#ffd0d0}
@@ -103,8 +103,6 @@ tbody tr:hover td{background:#f4faf0}
 .btn-lib{padding:5px 12px;background:#c0392b;color:#fff;border:none;border-radius:5px;font-size:.77rem;font-weight:700;cursor:pointer;transition:opacity .15s;white-space:nowrap}
 .btn-lib:hover{opacity:.85}
 .btn-lib:disabled{background:#aaa;cursor:not-allowed}
-.btn-tras{padding:5px 12px;background:#2a8000;color:#fff;border:none;border-radius:5px;font-size:.77rem;font-weight:700;cursor:pointer;margin-left:5px;white-space:nowrap;transition:opacity .15s}
-.btn-tras:hover{opacity:.85}
 /* Toast traslados */
 .toast-tras{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none;max-width:360px}
 .toast-item{background:#1a3510;color:#fff;border-radius:8px;padding:13px 18px;font-size:.84rem;box-shadow:0 6px 24px rgba(0,0,0,.3);pointer-events:auto;border-left:4px solid #39A900;animation:toastIn .3s ease}
@@ -124,7 +122,7 @@ tbody tr:hover td{background:#f4faf0}
 .btn-confirm-w:disabled{background:#bbb;cursor:not-allowed}
 
 @media(max-width:960px){.grid2{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:520px){.stats{grid-template-columns:1fr}.tb-clock{font-size:1rem}.topbar{gap:10px}}
+@media(max-width:520px){.stats{grid-template-columns:1fr}.tb-clock{font-size:1.15rem;letter-spacing:1px}.topbar{gap:7px;padding:0 10px;height:72px}.tb-btn{padding:7px 11px;font-size:.80rem;gap:4px}.tb-pill{padding:6px 11px;font-size:.78rem}.tb-logo{font-size:.80rem}.tb-logo small{font-size:.60rem}}
 
 /* ── INVENTARIO MODAL ── */
 .mbox-lg{background:#fff;border-radius:10px;width:min(760px,97vw);max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.25)}
@@ -255,38 +253,6 @@ tbody tr:hover td{background:#f4faf0}
 .btn-cer-cerrar:hover{background:#fff3f3;border-color:#c0392b}
 .cer-empty{text-align:center;padding:16px;color:#9aabbc;font-size:.82rem;display:flex;align-items:center;justify-content:center;gap:6px}
 
-/* ── ESP32 PANEL ── */
-.esp32-panel{background:linear-gradient(135deg,#0d1f3c 0%,#1a3a5c 100%);border-radius:10px;margin:14px 20px 18px;padding:14px 18px;border:1.5px solid #2a6aad;box-shadow:0 4px 16px rgba(0,80,180,.2)}
-.esp32-title{font-size:.72rem;font-weight:800;color:#7ec8f7;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;display:flex;align-items:center;gap:7px}
-.esp32-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
-.esp32-lbl{font-size:.68rem;font-weight:700;color:#8cb8d8;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
-.esp32-input{padding:7px 10px;border:1.5px solid #2a6aad;border-radius:6px;background:#0d1f3c;color:#d0e8ff;font-size:.84rem;font-family:monospace;outline:none;flex:1;min-width:0}
-.esp32-input:focus{border-color:#4da8f5;box-shadow:0 0 0 2px rgba(77,168,245,.2)}
-.btn-esp32{padding:7px 14px;border:none;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .15s}
-.btn-esp32.ping{background:#1565c0;color:#d0e8ff;border:1px solid #2a6aad}
-.btn-esp32.ping:hover{background:#1976d2}
-.btn-esp32.open{background:#1b5e20;color:#c8f5ca;border:1px solid #2e7d32}
-.btn-esp32.open:hover{background:#2e7d32}
-.btn-esp32.close{background:#7f1d1d;color:#fecaca;border:1px solid #b91c1c}
-.btn-esp32.close:hover{background:#991b1b}
-.btn-esp32.reg{background:#374151;color:#d1d5db;border:1px solid #4b5563}
-.btn-esp32.reg:hover{background:#4b5563}
-.btn-esp32:disabled{opacity:.5;cursor:not-allowed}
-.esp32-status{display:flex;align-items:center;gap:7px;font-size:.76rem;padding:5px 10px;border-radius:5px;margin-top:4px}
-.esp32-status.online{background:rgba(34,197,94,.12);color:#86efac;border:1px solid rgba(34,197,94,.3)}
-.esp32-status.offline{background:rgba(239,68,68,.1);color:#fca5a5;border:1px solid rgba(239,68,68,.25)}
-.esp32-status.idle{background:rgba(100,116,139,.15);color:#94a3b8;border:1px solid rgba(100,116,139,.3)}
-.esp32-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.esp32-dot.on{background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.25)}
-.esp32-dot.off{background:#ef4444}
-.esp32-dot.idle{background:#64748b}
-.esp32-devices-list{margin-top:8px}
-.esp32-dev-item{display:flex;align-items:center;gap:8px;padding:6px 10px;background:rgba(13,31,60,.7);border:1px solid #1e3a5f;border-radius:6px;margin-bottom:5px;font-size:.75rem}
-.esp32-dev-id{font-family:monospace;color:#7ec8f7;font-weight:700}
-.esp32-dev-ip{color:#94a3b8;font-family:monospace}
-.esp32-dev-amb{color:#86efac;font-size:.68rem}
-.esp32-dev-ping{margin-left:auto;font-size:.68rem;color:#64748b}
-
 </style>
 </head>
 <body>
@@ -301,15 +267,16 @@ tbody tr:hover td{background:#f4faf0}
     <div class="tb-spacer2"></div>
     <div class="tb-pill" id="pill-vig" title="Vigilante de turno"><span>&#128100;</span><span id="lbl-vig">...</span></div>
     <div class="tb-pill"><div class="dot" id="dot-rt"></div><span id="lbl-rt">Iniciando conexión</span></div>
-    <button class="tb-btn" id="btn-ambientes" onclick="abrirModalAmbientes()">
-        Ambientes ocupados <span class="badge-count none" id="cnt-amb">0</span>
+    <button class="tb-btn" id="btn-ambientes" onclick="abrirModalAmbientesConCerraduras()" title="Ver ambientes ocupados e controlar cerraduras">
+        Ambientes <span class="badge-count none" id="cnt-amb">0</span>
     </button>
     <button class="tb-btn" id="btn-inventario" onclick="abrirInventario()">
-        Registro de objetos <span class="badge-count none" id="cnt-inv">0</span>
+        Objetos <span class="badge-count none" id="cnt-inv">0</span>
     </button>
-    <button class="tb-btn" onclick="abrirModalEquipo()" title="Registrar ingreso de persona con computador o laptop" style="background:rgba(0,80,160,.45);border-color:rgba(150,200,255,.7);">&#x1F4BB; Ingreso con Equipo</button>
-    <button class="tb-btn" onclick="abrirModalCerradura()" title="Controlar cerraduras electrónicas de ambientes" style="background:rgba(0,100,60,.45);border-color:rgba(100,220,160,.7);">&#x1F513; Cerraduras</button>
-    <button class="tb-btn" onclick="abrirBusquedaGlobal()" title="Consultar historial de accesos de cualquier persona">&#128269; Consultar historial</button>
+    <button class="tb-btn" onclick="abrirModalEquipo()" title="Registrar ingreso con equipo" style="background:rgba(0,80,160,.45);border-color:rgba(150,200,255,.7);">💻 Equipo</button>
+    <button class="tb-btn" onclick="abrirPersonalAseo()" title="Registrar personal de aseo" style="background:rgba(120,80,0,.45);border-color:rgba(255,200,100,.7);">🧹 Aseo</button>
+    <button class="tb-btn" onclick="abrirAgregarVisitante()" title="Registrar visitante">👤 Visitante</button>
+    <button class="tb-btn" onclick="abrirBusquedaGlobal()" title="Consultar historial">🔍 Historial</button>
     <button class="tb-btn danger" onclick="pedirConfirmRegistros()">Cerrar turno</button>
 </div>
 
@@ -332,11 +299,11 @@ tbody tr:hover td{background:#f4faf0}
 
         <div class="card" style="overflow:visible">
             <div class="card-hd">
-                <div class="card-title">Entradas y salidas en vivo — Mi turno</div>
+                <div class="card-title">📋 Historial de movimientos — Turno actual (Persistente)</div>
                 <div class="filters">
                     <button class="f-btn active" onclick="filtrar('TODOS',this)">Todos</button>
-                    <button class="f-btn" onclick="filtrar('ENTRADA',this)">Entradas</button>
-                    <button class="f-btn" onclick="filtrar('SALIDA',this)">Salidas</button>
+                    <button class="f-btn" onclick="filtrar('ENTRADA',this)">↓ Entradas</button>
+                    <button class="f-btn" onclick="filtrar('SALIDA',this)">↑ Salidas</button>
                 </div>
             </div>
             <div class="tbl-wrap">
@@ -347,16 +314,24 @@ tbody tr:hover td{background:#f4faf0}
     </div>
 </div>
 
-<!-- MODAL AMBIENTES OCUPADOS -->
-<div class="overlay" id="ov-amb">
-    <div class="mbox">
-        <div class="mhd"><div class="mhd-title">Ambientes ocupados — Liberar ambiente</div><button class="mclose" onclick="cerrarOvAmb()">✕</button></div>
-        <div class="mbody" id="mbody-amb"></div>
+<!-- MODAL COMBINADO: AMBIENTES & CERRADURAS -->
+<div class="overlay" id="ov-ambcerr" onclick="if(event.target===this)cerrarOvAmbCerr()">
+    <div class="mbox" style="max-width:900px;max-height:85vh;display:flex;flex-direction:column">
+        <!-- Cabecera con pestañas -->
+        <div class="mhd" style="display:flex;justify-content:space-between;align-items:center;padding:0;border-bottom:2px solid #39A900;background:#f9fafb">
+            <div style="display:flex;gap:0;flex:1">
+                <button class="mhd-tab active" id="tab-amb" onclick="cambiarTabAmbCerr('amb')" style="flex:1;padding:14px 16px;border:none;background:transparent;color:#1c2b4b;font-weight:700;font-size:.9rem;cursor:pointer;border-bottom:3px solid #39A900;transition:all .2s">🏢 AMBIENTES OCUPADOS</button>
+                <button class="mhd-tab" id="tab-cerr" onclick="cambiarTabAmbCerr('cerr')" style="flex:1;padding:14px 16px;border:none;background:transparent;color:#7a8aab;font-weight:700;font-size:.9rem;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s">🔐 CERRADURAS</button>
+            </div>
+            <button class="mclose" onclick="cerrarOvAmbCerr()" style="margin:0;padding:10px 15px">✕</button>
+        </div>
+        <!-- Contenido con scroll -->
+        <div class="mbody" id="mbody-ambcerr" style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px"></div>
     </div>
 </div>
 
-<!-- MODAL CERRADURAS -->
-<div class="overlay" id="ov-cerradura" onclick="if(event.target===this)cerrarModalCerradura()">
+<!-- MODAL CERRADURAS AUXILIAR (oculto - solo para mantener compatibilidad) -->
+<div class="overlay" id="ov-cerradura" onclick="if(event.target===this)cerrarModalCerradura()" style="display:none">
     <div class="mbox-cer">
 
         <!-- Cabecera -->
@@ -397,6 +372,9 @@ tbody tr:hover td{background:#f4faf0}
                     <button class="btn-cer-abrir" id="cer-btn-abrir" onclick="cerAbrirCerradura()">
                         &#x1F513; Abrir cerradura
                     </button>
+                    <button class="btn-cer-abrir" id="cer-btn-cerrar" onclick="cerCerrarCerradura()" style="background:#424242;border-color:#616161">
+                        &#x1F512; Cerrar cerradura
+                    </button>
                 </div>
                 <div class="cer-apertura-msg" id="cer-apertura-msg"></div>
             </div>
@@ -415,50 +393,6 @@ tbody tr:hover td{background:#f4faf0}
                 <div class="cer-section-title">📋 Historial de cerraduras</div>
                 <div class="cer-hist-list" id="cer-hist-lista">
                     <div class="cer-empty">Cargando...</div>
-                </div>
-            </div>
-
-            <!-- PANEL ESP32 ─ Prueba de cerradura física -->
-            <div class="esp32-panel" id="esp32-panel">
-                <div class="esp32-title">
-                    <span>🔌</span> ESP32 — Cerradura eléctrica de prueba
-                </div>
-
-                <!-- Fila 1: IP + Ping -->
-                <div class="esp32-row">
-                    <span class="esp32-lbl">IP del ESP32</span>
-                    <input type="text" id="esp32-ip" class="esp32-input" placeholder="192.168.1.XXX" maxlength="15" value="">
-                    <button class="btn-esp32 ping" onclick="esp32Ping()">📡 Ping</button>
-                </div>
-
-                <!-- Status -->
-                <div class="esp32-status idle" id="esp32-status">
-                    <div class="esp32-dot idle" id="esp32-dot"></div>
-                    <span id="esp32-status-txt">Sin conectar — ingresa la IP y pulsa Ping</span>
-                </div>
-
-                <!-- Fila 2: Comandos directos -->
-                <div class="esp32-row" style="margin-top:10px">
-                    <span class="esp32-lbl">Prueba directa</span>
-                    <button class="btn-esp32 open" id="esp32-btn-open" onclick="esp32AbrirDirecto()" disabled>🔓 Abrir cerradura</button>
-                    <button class="btn-esp32 close" id="esp32-btn-close" onclick="esp32CerrarDirecto()" disabled>🔒 Cerrar cerradura</button>
-                </div>
-
-                <!-- Fila 3: Registrar con servidor -->
-                <div class="esp32-row" style="margin-top:4px">
-                    <span class="esp32-lbl">Device ID</span>
-                    <input type="text" id="esp32-device-id" class="esp32-input" placeholder="esp32-cerradura-01" value="esp32-cerradura-01" style="max-width:180px">
-                    <span class="esp32-lbl">Clave</span>
-                    <input type="text" id="esp32-key" class="esp32-input" placeholder="clave-esp32" value="prueba-esp32-2026" style="max-width:160px">
-                    <span class="esp32-lbl">Pin GPIO</span>
-                    <input type="number" id="esp32-pin" class="esp32-input" value="5" min="0" max="39" title="Pin GPIO del ESP32 conectado al relé (ej: 5 para GPIO5)" style="max-width:52px;text-align:center">
-                    <button class="btn-esp32 reg" onclick="esp32Registrar()">📋 Registrar</button>
-                </div>
-
-                <!-- Dispositivos registrados en servidor -->
-                <div id="esp32-devices-wrap" style="display:none">
-                    <div style="font-size:.68rem;color:#64748b;margin:8px 0 4px;font-weight:700;text-transform:uppercase;letter-spacing:.4px">Dispositivos registrados en servidor</div>
-                    <div class="esp32-devices-list" id="esp32-devices-list"></div>
                 </div>
             </div>
         </div>
@@ -480,38 +414,133 @@ tbody tr:hover td{background:#f4faf0}
 </div>
 
 <!-- TOAST TRASLADOS -->
-<div class="toast-tras" id="toast-tras"></div>
+<!-- Modal de traslado eliminado - Será reimplementado por separado -->
 
-<!-- MODAL TRASLADO -->
-<div class="overlay" id="ov-traslado">
-    <div class="mbox">
-        <div class="mhd"><div class="mhd-title">&#x1F504; Trasladar instructor a otro edificio</div><button class="mclose" onclick="cerrarTraslado()">&#x2715;</button></div>
+<!-- MODAL AGREGAR VISITANTE -->
+<div class="overlay" id="ov-visitante">
+    <div class="mbox" style="max-height:90vh;overflow-y:auto">
+        <div class="mhd">
+            <div class="mhd-title">Gestión de Visitantes</div>
+            <button class="mclose" onclick="cerrarAgregarVisitante()">✕</button>
+        </div>
         <div class="mbody">
-            <div id="tras-persona-info" style="background:#f5f7fa;border-radius:7px;padding:12px 16px;margin-bottom:16px;font-size:.88rem"></div>
-            <div style="margin-bottom:12px">
-                <label style="display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Edificio destino</label>
-                <select id="tras-sel-ed" onchange="trasSelectorPiso()" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;outline:none">
-                    <option value="">Cargando edificios...</option>
-                </select>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-                <div>
-                    <label style="display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Piso destino</label>
-                    <select id="tras-sel-piso" onchange="trasSelectorAmb()" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;outline:none" disabled>
-                        <option value="">Primero elige edificio</option>
-                    </select>
+            <!-- SECCIÓN 1: REGISTRAR ENTRADA DE VISITANTE -->
+            <div style="margin-bottom:20px;border-bottom:2px solid #e8f0f8;padding-bottom:20px">
+                <h3 style="font-size:.95rem;font-weight:700;color:#2a8000;margin-bottom:15px">Registrar Entrada de Visitante</h3>
+                <div style="background:#edfcee;border:1px solid #b2d9b0;border-radius:7px;padding:12px 16px;margin-bottom:16px;font-size:.88rem;color:#2e8b35">
+                    <strong>Completa el formulario para registrar entrada del visitante al edificio</strong>
                 </div>
-                <div>
-                    <label style="display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Ambiente destino</label>
-                    <select id="tras-sel-amb" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;outline:none" disabled>
-                        <option value="">Primero elige piso</option>
-                    </select>
+                <div style="margin-bottom:12px">
+                    <label style="display:block;font-size:.75rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">Nombre Completo <span style="color:#c0392b">*</span></label>
+                    <input type="text" id="vis-nombre" placeholder="Ej: Juan Pérez García" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+                    <div>
+                        <label style="display:block;font-size:.75rem;font-weight:700;color:#7a8aub;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">Tipo de Documento <span style="color:#c0392b">*</span></label>
+                        <select id="vis-tipo-doc" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+                            <option value="CC">Cédula (CC)</option>
+                            <option value="TI">Tarjeta de Identidad (TI)</option>
+                            <option value="PP">Pasaporte (PP)</option>
+                            <option value="CE">Cédula de Extranjería (CE)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:.75rem;font-weight:700;color:#7a8aub;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">Número de Documento <span style="color:#c0392b">*</span></label>
+                        <input type="text" id="vis-numero-doc" placeholder="Ej: 1234567890" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+                    <div>
+                        <label style="display:block;font-size:.75rem;font-weight:700;color:#7a8aub;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">Email</label>
+                        <input type="email" id="vis-email" placeholder="Ej: juan@example.com" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:.75rem;font-weight:700;color:#7a8aub;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">Teléfono</label>
+                        <input type="text" id="vis-telefono" placeholder="Ej: 3001234567" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+                    </div>
+                </div>
+                <div style="margin-bottom:12px">
+                    <label style="display:block;font-size:.75rem;font-weight:700;color:#7a8aub;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">Empresa / Organización</label>
+                    <input type="text" id="vis-empresa" placeholder="Ej: Empresa de mantenimiento" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+                </div>
+                <div style="margin-bottom:12px">
+                    <label style="display:block;font-size:.75rem;font-weight:700;color:#7a8aub;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">Motivo de Ingreso <span style="color:#c0392b">*</span></label>
+                    <textarea id="vis-motivo" placeholder="Ej: Reunión con coordinador, Capacitación, Mantenimiento" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none;resize:vertical;min-height:80px"></textarea>
+                </div>
+                <div id="vis-msg" style="display:none;padding:10px 14px;border-radius:6px;font-size:.84rem;font-weight:600;margin-bottom:12px"></div>
+                <div style="display:flex;gap:10px">
+                    <button onclick="cerrarAgregarVisitante()" style="flex:1;padding:10px;border:1.5px solid #d0d8e8;background:#fff;color:#5a6a80;border-radius:6px;font-size:.87rem;font-weight:700;cursor:pointer">Cancelar</button>
+                    <button id="btn-vis-save" onclick="guardarVisitante()" style="flex:1;padding:10px;border:none;background:#39A900;color:#fff;border-radius:6px;font-size:.87rem;font-weight:700;cursor:pointer">Registrar Entrada</button>
                 </div>
             </div>
-            <div id="tras-msg" style="display:none;padding:9px 14px;border-radius:6px;font-size:.84rem;font-weight:600;margin-bottom:12px"></div>
-            <div style="display:flex;gap:10px">
-                <button class="btn-cancel-w" onclick="cerrarTraslado()">Cancelar</button>
-                <button id="btn-tras-confirm" onclick="ejecutarTraslado()" style="flex:1;padding:10px;border:none;background:linear-gradient(135deg,#2a8000 0%,#39A900 100%);color:#fff;border-radius:6px;font-size:.87rem;font-weight:700;cursor:pointer">&#x1F504; Confirmar traslado</button>
+
+            <!-- SECCIÓN 2: REGISTRAR SALIDA DE VISITANTE -->
+            <div style="margin-bottom:20px;border-bottom:2px solid #e8f0f8;padding-bottom:20px">
+                <h3 style="font-size:.95rem;font-weight:700;color:#c0392b;margin-bottom:15px">Registrar Salida de Visitante</h3>
+                <div style="background:#ffe8e8;border:1px solid #d99;border-radius:7px;padding:12px 16px;margin-bottom:16px;font-size:.88rem;color:#c0392b">
+                    <strong>Busca el visitante para registrar su salida del edificio</strong>
+                </div>
+                <div style="margin-bottom:12px">
+                    <label style="display:block;font-size:.75rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">Buscar por Documento</label>
+                    <input type="text" id="vis-salida-doc" placeholder="Ingresa número de documento" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+                </div>
+                <div id="vis-salida-info" style="display:none;background:#f5f9fc;border:1px solid #d0d8e8;border-radius:6px;padding:12px;margin-bottom:12px;font-size:.85rem">
+                    <p style="margin:0 0 8px 0"><strong>Visitante:</strong> <span id="vis-salida-nombre">-</span></p>
+                    <p style="margin:0"><strong>Documento:</strong> <span id="vis-salida-doc-display">-</span></p>
+                </div>
+                <div id="vis-salida-msg" style="display:none;padding:10px 14px;border-radius:6px;font-size:.84rem;font-weight:600;margin-bottom:12px"></div>
+                <div style="display:flex;gap:10px">
+                    <button onclick="limpiarSalida()" style="flex:1;padding:10px;border:1.5px solid #d0d8e8;background:#fff;color:#5a6a80;border-radius:6px;font-size:.87rem;font-weight:700;cursor:pointer">Limpiar</button>
+                    <button id="btn-vis-salida" onclick="registrarSalidaModal()" style="flex:1;padding:10px;border:none;background:#c0392b;color:#fff;border-radius:6px;font-size:.87rem;font-weight:700;cursor:pointer;opacity:.5;pointer-events:none">Registrar Salida</button>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3: VISITANTES ACTIVOS EN EL EDIFICIO -->
+            <div>
+                <h3 style="font-size:.95rem;font-weight:700;color:#2a8000;margin-bottom:15px">Visitantes Activos en el Edificio</h3>
+                <div id="vis-list" style="background:#f5f9fc;border:1px solid #d0d8e8;border-radius:6px;padding:15px;min-height:100px">
+                    <div style="text-align:center;color:#7a8aab;font-size:.87rem">Cargando visitantes activos...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL PERSONAL DE ASEO -->
+<div class="overlay" id="ov-aseo">
+    <div class="mbox" style="max-height:90vh;overflow-y:auto">
+        <div class="mhd">
+            <div class="mhd-title">🧹 Registro de Personal de Aseo</div>
+            <button class="mclose" onclick="cerrarPersonalAseo()">✕</button>
+        </div>
+        <div class="mbody">
+            <!-- SECCIÓN 1: BUSCAR PERSONAL DE ASEO EXISTENTE -->
+            <div style="margin-bottom:20px;border-bottom:2px solid #e8f0f8;padding-bottom:20px">
+                <h3 style="font-size:.95rem;font-weight:700;color:#2a8000;margin-bottom:15px">Seleccionar del Personal Registrado</h3>
+                <div style="background:#edfcee;border:1px solid #b2d9b0;border-radius:7px;padding:12px 16px;margin-bottom:16px;font-size:.88rem;color:#2e8b35">
+                    <strong>Busca el personal de aseo registrado para hacer su entrada o salida</strong>
+                </div>
+                <div style="margin-bottom:12px">
+                    <label style="display:block;font-size:.75rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">Número de Documento</label>
+                    <input type="text" id="aseo-buscar-doc" placeholder="Ej: 1234567890" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none" onkeydown="if(event.key==='Enter')buscarPersonalAseo()">
+                </div>
+                <div id="aseo-buscar-info" style="display:none;background:#f5f9fc;border:1px solid #d0d8e8;border-radius:6px;padding:12px;margin-bottom:12px;font-size:.85rem">
+                    <p style="margin:0 0 8px 0"><strong>Nombre:</strong> <span id="aseo-nombre-display">-</span></p>
+                    <p style="margin:0"><strong>Documento:</strong> <span id="aseo-doc-display">-</span></p>
+                </div>
+                <div style="display:flex;gap:10px;margin-bottom:12px">
+                    <button onclick="registrarEntradaAseo()" id="btn-aseo-entrada" style="flex:1;padding:10px;border:none;background:#39A900;color:#fff;border-radius:6px;font-size:.87rem;font-weight:700;cursor:pointer;opacity:.5;pointer-events:none">↓ Registrar Entrada</button>
+                    <button onclick="registrarSalidaAseo()" id="btn-aseo-salida" style="flex:1;padding:10px;border:none;background:#c0392b;color:#fff;border-radius:6px;font-size:.87rem;font-weight:700;cursor:pointer;opacity:.5;pointer-events:none">↑ Registrar Salida</button>
+                </div>
+                <div id="aseo-msg" style="display:none;padding:10px 14px;border-radius:6px;font-size:.84rem;font-weight:600;margin-bottom:12px"></div>
+            </div>
+
+            <!-- SECCIÓN 2: PERSONAL DE ASEO ACTIVO EN EL EDIFICIO -->
+            <div>
+                <h3 style="font-size:.95rem;font-weight:700;color:#2a8000;margin-bottom:15px">Personal de Aseo Activo</h3>
+                <div id="aseo-list" style="background:#f5f9fc;border:1px solid #d0d8e8;border-radius:6px;padding:15px;min-height:100px">
+                    <div style="text-align:center;color:#7a8aab;font-size:.87rem">Cargando personal de aseo activo...</div>
+                </div>
             </div>
         </div>
     </div>
@@ -521,22 +550,18 @@ tbody tr:hover td{background:#f4faf0}
 <div class="overlay" id="ov-busq">
     <div class="mbox-lg">
         <div class="mhd">
-            <div class="mhd-title">&#128269; Consultar historial de personas</div>
+            <div class="mhd-title">&#128269; Historial de acceso — Búsqueda por documento</div>
             <button class="mclose" onclick="cerrarBusquedaGlobal()">✕</button>
         </div>
         <div style="padding:18px 22px;border-bottom:1px solid #e8ecf2;display:flex;gap:10px;align-items:flex-end">
             <div class="fg" style="flex:1">
-                <label style="display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Número de documento</label>
-                <input type="text" id="busq-doc" placeholder="Ej: 1234567890" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none" onkeydown="if(event.key==='Enter')ejecutarBusquedaGlobal()">
+                <label style="display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">🆔 Número de documento</label>
+                <input type="text" id="busq-doc" placeholder="Ej: 1234567890" inputmode="numeric" style="width:100%;padding:10px 12px;border:1.5px solid #39A900;border-radius:6px;font-size:.95rem;color:#1c2b4b;background:#fff;outline:none;font-weight:600" onkeydown="if(event.key==='Enter')ejecutarBusquedaGlobal()">
             </div>
-            <div class="fg" style="flex:1">
-                <label style="display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Nombre</label>
-                <input type="text" id="busq-nombre" placeholder="Ej: Juan Perez" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none" onkeydown="if(event.key==='Enter')ejecutarBusquedaGlobal()">
-            </div>
-            <button class="btn-inv-save" id="btn-busq" onclick="ejecutarBusquedaGlobal()" style="width:auto;padding:10px 22px;margin-top:0">Buscar</button>
+            <button class="btn-inv-save" id="btn-busq" onclick="ejecutarBusquedaGlobal()" style="width:auto;padding:10px 22px;margin-top:0">Buscar historial</button>
         </div>
         <div class="inv-pane active" id="busq-resultados" style="padding:18px 22px;overflow-y:auto;flex:1;max-height:440px">
-            <div class="m-empty">Ingresa un documento o nombre para buscar.</div>
+            <div class="m-empty">Ingresa un número de documento para consultar el historial de accesos.</div>
         </div>
     </div>
 </div>
@@ -637,34 +662,63 @@ var socket = null;
 var _accionLimpiar = null;
 var _listaAmb = [];
 var _usuarioActual = null;
+var _inicializado = false;
 
 window.addEventListener("load", async function() {
-    if (!token) {
+    // Validación clara: si NO hay token, redirigir a login
+    if (!token || !token.trim()) {
         window.location.replace('/login');
         return;
     }
-    tickReloj();
-    setInterval(tickReloj,1000);
-    initFloors();
-    await cargarInfoVigilante();
-    cargarDatos();
-    cargarAmbientes();
-    cargarInventario();
-    iniciarRT();
-    setInterval(cargarDatos, 3000);
-    setInterval(cargarAmbientes, 5000);
-    setInterval(cargarInventario, 10000);
+    if (localStorage.getItem('sena_rol') === 'admin' || localStorage.getItem('sena_rol') === 'sistemas') {
+        window.location.replace('/administracion');
+        return;
+    }
+    
+    // Marcar que estamos inicializando
+    _inicializado = true;
+    
+    try {
+        // Cargar información del vigilante
+        await cargarInfoVigilante();
+        
+        // Inicializar UI
+        tickReloj();
+        setInterval(tickReloj, 1000);
+        initFloors();
+        
+        // Cargar datos
+        cargarDatos();
+        cargarAmbientes();
+        cargarInventario();
+        iniciarRT();
+        
+        // Polling
+        setInterval(cargarDatos, 3000);
+        setInterval(cargarAmbientes, 5000);
+        setInterval(cargarInventario, 10000);
+    } catch (e) {
+        console.error('[VIGILANCIA] Error en inicialización:', e);
+    }
 });
 
 async function cargarInfoVigilante(){
     try{
         var resp=await fetch('/api/auth/me',{headers:{'Authorization':'Bearer '+token}});
+        if(resp.status === 401 || resp.status === 403) {
+            // Token inválido
+            localStorage.removeItem('sena_api_token');
+            window.location.replace('/login');
+            return;
+        }
         if(resp.ok){
             _usuarioActual=await resp.json();
             var lbl=document.getElementById('lbl-vig');
             if(lbl) lbl.textContent=_usuarioActual.nombre||_usuarioActual.email;
         }
-    }catch(e){console.warn('auth/me:',e);}
+    }catch(e){
+        console.warn('auth/me error:',e);
+    }
 }
 
 function cerrarSesion() {
@@ -689,6 +743,21 @@ function iniciarRT(){
     socket.on("cerradura_abierta",   cargarEstadoCerraduras);
     socket.on("cerradura_cerrada",   cargarEstadoCerraduras);
     socket.on("cerradura_pendiente", cargarEstadoCerraduras);
+    
+    // ─ Eventos de cerradura automática ─
+    socket.on("cerradura_intento_creado",   cargarIntentosCerradura);
+    socket.on("cerradura_intento_actualizado", cargarIntentosCerradura);
+    socket.on("cerradura_abierta_manual", function(data) {
+        console.log("Cerradura abierta manualmente:", data);
+        cargarIntentosCerradura();
+        mostrarAlertaTexto(`🔓 Cerradura abierta manualmente por ${data.duracion_segundos}s (Vigilante: ${data.vigilante})`);
+    });
+    socket.on("cerradura_cerrada_manual", function(data) {
+        console.log("Cerradura cerrada manualmente:", data);
+        cargarIntentosCerradura();
+        mostrarAlertaTexto(`🔒 Cerradura cerrada por ${data.vigilante}`);
+    });
+    
     socket.on("registros_limpiados",function(){
         flashNext=false;
         todos=[];
@@ -700,7 +769,6 @@ function iniciarRT(){
         flashNext=true;
         cargarDatos();
         cargarAmbientes();
-        mostrarToastTraslado(d);
     });
 }
 function setRT(ok){
@@ -717,12 +785,6 @@ function initFloors(){
 async function cargarDatos(){
     try{
         var resp=await fetch("/api/registros-acceso",{headers:{"Authorization":"Bearer "+token}});
-        if(resp.status===401||resp.status===403){
-            // Token expirado o inválido — redirigir al login
-            localStorage.removeItem('sena_api_token');
-            window.location.replace('/login');
-            return;
-        }
         if(!resp.ok) return;
         var data=await resp.json();
         todos=Array.isArray(data)?data:(data.registros||[]);
@@ -731,29 +793,16 @@ async function cargarDatos(){
         document.getElementById("kpi-total").textContent=todos.length;
         document.getElementById("kpi-ent").textContent=ent;
         document.getElementById("kpi-sal").textContent=sal;
-
-        // Calcular quién sigue ADENTRO: último registro por persona
-        var porPersona={};
-        todos.forEach(function(r){
-            var doc=(r.persona&&r.persona.numero_doc)||r.numero_doc;
-            if(!doc) return;
-            var ts=new Date(r.timestamp||r.created_at||0).getTime();
-            if(!porPersona[doc]||ts>porPersona[doc].ts){
-                porPersona[doc]={tipo:r.tipo,ambiente:r.ambiente||'',ts:ts};
-            }
-        });
-        var adentro=Object.keys(porPersona).filter(function(doc){return porPersona[doc].tipo==="ENTRADA";});
-        document.getElementById("kpi-den").textContent=adentro.length;
-
-        // Pisos: contar solo personas cuyo último registro es ENTRADA
+        document.getElementById("kpi-den").textContent=Math.max(0,ent-sal);
+        // pisos
         var cp={};for(var i=1;i<=6;i++) cp[i]=0;
-        adentro.forEach(function(doc){
-            var m=porPersona[doc].ambiente.match(/PISO\s*(\d)/i);
-            if(m){var pi=parseInt(m[1]);if(pi>=1&&pi<=6) cp[pi]++;}
+        todos.forEach(function(r){
+            var m=(r.ambiente||"").match(/PISO\s*(\d+)/i);
+            if(m){var pi=parseInt(m[1]);if(pi>=1&&pi<=6){cp[pi]+=r.tipo==="ENTRADA"?1:-1}}
         });
         for(var i=1;i<=6;i++){
             var c=document.getElementById("fl-"+i);
-            if(c){c.querySelector(".floor-n").textContent=cp[i]||0;c.classList.toggle("alert",(cp[i]||0)>20)}
+            if(c){c.querySelector(".floor-n").textContent=Math.max(0,cp[i]||0);c.classList.toggle("alert",(cp[i]||0)>15)}
         }
         renderFeed();
     }catch(e){console.warn(e)}
@@ -774,7 +823,8 @@ function renderFeed(){
         else if(perfil==='instructor'||perfil==='instructora') perfilHtml='<span style="background:#f0fdf4;color:#166534;border-radius:5px;padding:2px 8px;font-size:.7rem;font-weight:700">Instructor</span>';
         else if(perfil==='directivo') perfilHtml='<span style="background:#fefce8;color:#854d0e;border-radius:5px;padding:2px 8px;font-size:.7rem;font-weight:700">Directivo</span>';
         else if(perfil==='ejecutivo') perfilHtml='<span style="background:#faf5ff;color:#6b21a8;border-radius:5px;padding:2px 8px;font-size:.7rem;font-weight:700">Ejecutivo</span>';
-        else if(perfil==='visitante') perfilHtml='<span style="background:#f1f5f9;color:#475569;border-radius:5px;padding:2px 8px;font-size:.7rem;font-weight:700">Visitante</span>';
+        else if((perfil||'').toLowerCase()==='visitante') perfilHtml='<span style="background:#f1f5f9;color:#475569;border-radius:5px;padding:2px 8px;font-size:.7rem;font-weight:700">Visitante</span>';
+        else if(perfil==='personal_aseo') perfilHtml='<span style="background:#f4e8f8;color:#7b2cbf;border-radius:5px;padding:2px 8px;font-size:.7rem;font-weight:700">🧹 Aseo</span>';
         else if(perfil)               perfilHtml='<span style="background:#f1f5f9;color:#475569;border-radius:5px;padding:2px 8px;font-size:.7rem;font-weight:700">'+perfil.charAt(0).toUpperCase()+perfil.slice(1)+'</span>';
         else                          perfilHtml='<span style="color:#c8d4e4;font-size:.8rem;font-style:italic">—</span>';
         var eqHtml='<span style="color:#c8d4e4;font-size:.8rem;font-style:italic">—</span>';
@@ -806,34 +856,350 @@ async function cargarAmbientes(){
         cnt.textContent=_listaAmb.length;
         cnt.className="badge-count "+(_listaAmb.length===0?"none":"");
         // si el modal está abierto, actualizar su contenido
-        if(document.getElementById("ov-amb").classList.contains("show")) renderModalAmb();
+        if(document.getElementById("ov-ambcerr").classList.contains("show") && _tabActualAmbCerr === 'amb') {
+            renderModalAmbTabla(document.getElementById("mbody-ambcerr"));
+        }
     }catch(e){console.warn(e)}
 }
 
-function abrirModalAmbientes(){
-    renderModalAmb();
-    document.getElementById("ov-amb").classList.add("show");
-}
-function cerrarOvAmb(){document.getElementById("ov-amb").classList.remove("show")}
-document.getElementById("ov-amb").addEventListener("click",function(e){if(e.target===this)cerrarOvAmb()});
+// ═══ CERRADURA AUTOMÁTICA — INTENTOS Y CONTROL ═══════════════════════════
+var _listaIntentosCerradura=[];
 
-function renderModalAmb(){
-    var cont=document.getElementById("mbody-amb");
-    if(_listaAmb.length===0){
-        cont.innerHTML='<div class="m-empty">No hay ambientes ocupados en este momento.</div>';
-        return;
-    }
-    var h='<table class="env-table"><thead><tr><th>Instructor</th><th>Cédula</th><th>Ambiente de formación</th><th>Hora de ingreso</th><th></th></tr></thead><tbody>';
-    _listaAmb.forEach(function(o){
-        var desde="--";
-        if(o.desde){var d=new Date(o.desde);desde=p(d.getHours())+":"+p(d.getMinutes())}
-        var nombre=o.persona?o.persona.nombre:"N/A";
-        var doc=o.persona?o.persona.numero_doc:"";
-        h+='<tr id="erow-'+o.id+'"><td><strong>'+esc(nombre)+'</strong></td><td style="font-family:Courier New,monospace;font-size:.82rem">'+esc(doc)+'</td><td>'+esc(o.ambiente||"\u2014")+'</td><td style="color:#9aabbc;font-size:.82rem">'+desde+'</td><td style="white-space:nowrap"><button class="btn-lib" id="blib-'+o.id+'" onclick="liberarAmb(\''+o.id+'\')">Liberar</button> <button class="btn-tras" onclick="abrirTraslado(\''+o.id+'\')">&#x1F504; Trasladar</button></td></tr>';
-    });
-    h+='</tbody></table>';
-    cont.innerHTML=h;
+async function cargarIntentosCerradura(){
+    try{
+        var resp=await fetch("/api/cerradura-automatica/estadisticas",{headers:{"Authorization":"Bearer "+token}});
+        if(!resp.ok) return;
+        var data=await resp.json();
+        _listaIntentosCerradura=data.intentos||[];
+    }catch(e){console.warn(e)}
 }
+
+// ═══════════════════════════════════════════════════════════════════════
+// NUEVO: Modal Combinado - Ambientes & Cerraduras con Pestañas
+// ═══════════════════════════════════════════════════════════════════════
+var _tabActualAmbCerr = 'amb'; // 'amb' o 'cerr'
+
+function abrirModalAmbientesConCerraduras(){
+    _tabActualAmbCerr = 'amb'; // Comenzar en pestaña de ambientes
+    cargarIntentosCerradura();
+    cambiarTabAmbCerr('amb');
+    document.getElementById("ov-ambcerr").classList.add("show");
+}
+
+function cerrarOvAmbCerr(){
+    document.getElementById("ov-ambcerr").classList.remove("show");
+    if(_cerTimer){ clearInterval(_cerTimer); _cerTimer = null; }
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+    var ovAmbCerr = document.getElementById("ov-ambcerr");
+    if(ovAmbCerr) ovAmbCerr.addEventListener("click",function(e){if(e.target===this)cerrarOvAmbCerr()});
+});
+
+function cambiarTabAmbCerr(tab){
+    _tabActualAmbCerr = tab;
+    var tabAmb = document.getElementById("tab-amb");
+    var tabCerr = document.getElementById("tab-cerr");
+    var mbody = document.getElementById("mbody-ambcerr");
+    
+    if(tab === 'amb'){
+        tabAmb.classList.add("active");
+        tabAmb.style.color = "#1c2b4b";
+        tabAmb.style.borderBottomColor = "#39A900";
+        tabCerr.classList.remove("active");
+        tabCerr.style.color = "#7a8aab";
+        tabCerr.style.borderBottomColor = "transparent";
+        
+        renderModalAmbTabla(mbody);
+    } else if(tab === 'cerr'){
+        tabCerr.classList.add("active");
+        tabCerr.style.color = "#1c2b4b";
+        tabCerr.style.borderBottomColor = "#39A900";
+        tabAmb.classList.remove("active");
+        tabAmb.style.color = "#7a8aab";
+        tabAmb.style.borderBottomColor = "transparent";
+        
+        _cerEdificio = null; _cerPiso = null; _cerAmbiente = null;
+        cerNavActualizar();
+        cerRenderEdificiosTab(mbody);
+        cargarEstadoCerradurasTab(mbody);
+    }
+}
+
+// Versión de renderizado de ambientes para la pestaña
+function renderModalAmbTabla(cont){
+    var html='';
+    
+    // Sección 1: Ambientes ocupados
+    if(_listaAmb.length>0){
+        html+='<div style="margin-bottom:20px"><h4 style="font-size:.9rem;font-weight:700;color:#1c2b4b;margin-bottom:10px;border-bottom:2px solid #39A900;padding-bottom:6px">🏢 AMBIENTES OCUPADOS</h4>';
+        html+='<table class="env-table"><thead><tr><th>Instructor</th><th>Cédula</th><th>Ambiente</th><th>Ingreso</th><th>Acciones</th></tr></thead><tbody>';
+        _listaAmb.forEach(function(o){
+            var desde="--";
+            if(o.desde){var d=new Date(o.desde);desde=p(d.getHours())+":"+p(d.getMinutes())}
+            var nombre=o.persona?o.persona.nombre:"N/A";
+            var doc=o.persona?o.persona.numero_doc:"";
+            html+='<tr id="erow-'+o.id+'"><td><strong>'+esc(nombre)+'</strong></td><td style="font-family:Courier New,monospace;font-size:.82rem">'+esc(doc)+'</td><td>'+esc(o.ambiente||"—")+'</td><td style="color:#9aabbc;font-size:.82rem">'+desde+'</td><td style="white-space:nowrap"><button class="btn-lib" id="blib-'+o.id+'" onclick="liberarAmb(\''+o.id+'\')">Liberar</button></td></tr>';
+        });
+        html+='</tbody></table></div>';
+    } else {
+        html+='<div style="margin-bottom:20px"><p style="color:#9aabbc;font-size:.9rem;text-align:center;padding:20px">No hay ambientes ocupados en este momento.</p></div>';
+    }
+    
+    // Sección 2: Control manual de cerradura
+    html+='<div><h4 style="font-size:.9rem;font-weight:700;color:#1c2b4b;margin-bottom:10px;border-bottom:2px solid #ff5722;padding-bottom:6px">🔐 CONTROL DE CERRADURA AUTOMÁTICA</h4>';
+    html+='<div style="display:flex;gap:8px;margin-bottom:12px">';
+    html+='<div style="padding:10px;text-align:center;color:#9aabbc;font-size:.85rem">Control de cerradura deshabilitado</div>';
+    html+='</div>';
+    
+    // Tabla de intentos activos
+    var intentosActivos=[];
+    if(intentosActivos.length===0){
+        html+='<div style="background:#f9f3e6;border:1px solid #ffe0b2;border-radius:5px;padding:12px;text-align:center;color:#856404;font-size:.85rem">';
+        html+='<span style="display:block;margin-bottom:4px">⏳ Sin intentos automáticos activos</span>';
+        html+='<span style="font-size:.8rem;opacity:.8">Se activarán cuando un instructor registre entrada</span>';
+        html+='</div>';
+    }
+    html+='</div>';
+    cont.innerHTML=html;
+}
+
+// Funciones auxiliares para la pestaña de cerraduras
+function cerRenderEdificiosTab(mbody){
+    var lista = CER_EDIFICIOS.filter(function(e){ return e.activo; });
+    var html = '<div style="margin-bottom:20px"><h4 style="font-size:.9rem;font-weight:700;color:#1c2b4b;margin-bottom:10px;border-bottom:2px solid #39A900;padding-bottom:6px">🏢 SELECCIONAR EDIFICIO</h4>';
+    html += '<div class="cer-grid-ed">';
+    lista.forEach(function(ed){
+        html += '<div class="cer-card-ed" onclick="cerSelEdificioTab(\''+ed.id+'\')">'
+            +'<div class="cer-card-ed-ico">🏢</div>'
+            +'<div class="cer-card-ed-nombre">'+ed.nombre+'</div>'
+            +'<div class="cer-card-ed-sub">'+ed.num_pisos+' pisos</div>'
+            +'</div>';
+    });
+    html += '</div></div>';
+    mbody.innerHTML = html;
+}
+
+function cerSelEdificioTab(id){
+    _cerEdificio = CER_EDIFICIOS.find(function(e){ return e.id===id; });
+    _cerPiso = null; _cerAmbiente = null;
+    cerNavActualizar(); 
+    cerRenderPisosTab();
+}
+
+function cerRenderPisosTab(){
+    if(!_cerEdificio) return;
+    var mbody = document.getElementById("mbody-ambcerr");
+    var html = '<div style="margin-bottom:20px"><h4 style="font-size:.9rem;font-weight:700;color:#1c2b4b;margin-bottom:10px;border-bottom:2px solid #39A900;padding-bottom:6px">📋 SELECCIONAR PISO</h4>';
+    html += '<div class="cer-grid-piso">';
+    for(var p=1; p<=_cerEdificio.num_pisos; p++){
+        var pp = p;
+        html += '<div class="cer-card-piso" onclick="cerSelPisoTab('+pp+')">'
+            +'<div class="cer-card-piso-ico">📋</div>'
+            +'<div class="cer-card-piso-lbl">Piso</div>'
+            +'<div class="cer-card-piso-num">'+pp+'</div>'
+            +'</div>';
+    }
+    html += '</div></div>';
+    mbody.innerHTML = html;
+}
+
+function cerSelPisoTab(p){
+    _cerPiso = p; _cerAmbiente = null;
+    cerNavActualizar(); 
+    cerRenderAmbientesTab();
+}
+
+async function cerRenderAmbientesTab(){
+    if(!_cerEdificio || !_cerPiso) return;
+    var mbody = document.getElementById("mbody-ambcerr");
+    var estados = {};
+    try{
+        var r = await fetch('/api/ambientes/cerradura/estado',{headers:{'Authorization':'Bearer '+token}});
+        if(r.ok){ var d=await r.json(); d.forEach(function(c){ estados[c.ambiente]=c; }); }
+    }catch(e){}
+
+    var defPiso = _cerEdificio.ambientes_piso ? _cerEdificio.ambientes_piso[_cerPiso] : null;
+    var lista = [];
+    if(Array.isArray(defPiso)){
+        lista = defPiso;
+    } else {
+        var total = typeof defPiso==='number' ? defPiso : (_cerEdificio.num_ambientes_por_piso||10);
+        for(var n=1;n<=total;n++) lista.push(String(_cerPiso*100+n));
+    }
+
+    var html = '<div style="margin-bottom:20px"><h4 style="font-size:.9rem;font-weight:700;color:#1c2b4b;margin-bottom:10px;border-bottom:2px solid #39A900;padding-bottom:6px">🚪 SELECCIONAR AMBIENTE</h4><div class="cer-grid-amb">';
+    lista.forEach(function(amb){
+        var nombreCompleto = _cerEdificio.nombre + ' - PISO ' + _cerPiso + ' - AMBIENTE ' + amb;
+        var estado = estados[nombreCompleto];
+        var estaAbierto = estado && estado.abierto;
+        var sel = (_cerAmbiente === nombreCompleto) ? ' seleccionado' : '';
+        var clases = 'cer-card-amb ' + (estaAbierto ? 'abierto' : 'libre') + sel;
+        var ico = estaAbierto ? '🔓' : '🔒';
+        var tiempoHtml = '';
+        if(estaAbierto && estado.segundos_restantes >= 0){
+            tiempoHtml = '<div class="cer-amb-tiempo">\u23f1 '+cerFormatSeg(estado.segundos_restantes)+'</div>';
+        }
+        var pulso = estaAbierto ? '<div class="cer-amb-pulse"></div>' : '';
+        var matchAmb = String(amb).match(/^AMBIENTE\s+(\S+)$/i);
+        var displayNum = matchAmb ? matchAmb[1] : amb;
+        html += '<div class="'+clases+'" onclick="cerSelAmbienteTab(\''+nombreCompleto.replace(/'/g,"\\'")+'\')" title="'+nombreCompleto+'">'
+            + pulso
+            +'<div class="cer-amb-ico">'+ico+'</div>'
+            +'<div class="cer-amb-badge">AMB.</div>'
+            +'<div class="cer-amb-num">'+displayNum+'</div>'
+            +tiempoHtml
+            +'</div>';
+    });
+    html += '</div></div>';
+    
+    // Panel de apertura
+    if(_cerAmbiente){
+        var mPiso = /PISO\s+(\d+)/i.exec(_cerAmbiente);
+        var pisoN = mPiso ? parseInt(mPiso[1]) : 1;
+        var mins = pisoN <= 2 ? 2 : (pisoN <= 4 ? 4 : 6);
+        html += '<div style="background:#f0f8f4;border:2px solid #39A900;border-radius:8px;padding:16px;margin-bottom:16px">';
+        html += '<div style="font-weight:700;color:#1c2b4b;margin-bottom:10px">🔓 Abrir Cerradura</div>';
+        html += '<div style="font-size:.9rem;color:#2a5730;margin-bottom:12px"><strong>'+_cerAmbiente+'</strong></div>';
+        html += '<div style="display:flex;gap:8px">';
+        html += '<button onclick="cerAbrirCerraduraTab()" style="flex:1;padding:10px;background:#39A900;color:#fff;border:none;border-radius:5px;font-weight:700;cursor:pointer;font-size:.85rem">🔓 Abrir</button>';
+        html += '<button onclick="cerCerrarCerraduraTab()" style="flex:1;padding:10px;background:#ff5722;color:#fff;border:none;border-radius:5px;font-weight:700;cursor:pointer;font-size:.85rem">🔒 Cerrar</button>';
+        html += '</div>';
+        html += '<div id="cer-msg-tab" style="margin-top:10px;padding:10px;border-radius:5px;display:none;font-size:.85rem;font-weight:600"></div>';
+        html += '</div>';
+    }
+    
+    // Estado actual de cerraduras
+    html += '<div><h4 style="font-size:.9rem;font-weight:700;color:#1c2b4b;margin-bottom:10px;border-bottom:2px solid #39A900;padding-bottom:6px">🟢 Cerraduras abiertas ahora</h4>';
+    var visibles = (await cargarEstadosCerradura()).filter(function(c){ return c.abierto || c.pendiente; });
+    if(visibles.length === 0){
+        html += '<div style="text-align:center;color:#9aabbc;padding:20px">🔒 Sin cerraduras activas</div>';
+    } else {
+        html += '<div style="display:flex;flex-direction:column;gap:8px">';
+        visibles.forEach(function(c){
+            var ico = (c.pendiente && !c.abierto) ? '⏳' : '🔓';
+            html += '<div style="background:#f9f3e6;padding:10px;border-radius:5px;border-left:4px solid #ff9800;display:flex;justify-content:space-between;align-items:center">';
+            html += '<div><span style="font-weight:700">'+ico+' '+c.ambiente+'</span><br><span style="font-size:.8rem;color:#9aabbc">Por: '+c.abierto_por+'</span></div>';
+            html += '<button onclick="cerCerrarCerraduraEspecificaTab(\''+c.ambiente.replace(/'/g,"\\'")+'\')" style="padding:6px 12px;background:#ff5722;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.8rem">Cerrar</button>';
+            html += '</div>';
+        });
+        html += '</div>';
+    }
+    html += '</div>';
+    
+    mbody.innerHTML = html;
+}
+
+function cerSelAmbienteTab(nombre){
+    _cerAmbiente = nombre;
+    cerNavActualizar();
+    cerRenderAmbientesTab(); // Recargar para mostrar el panel de apertura
+}
+
+async function cargarEstadosCerradura(){
+    try{
+        var r = await fetch('/api/ambientes/cerradura/estado',{headers:{'Authorization':'Bearer '+token}});
+        if(!r.ok) return [];
+        var data = await r.json();
+        return Array.isArray(data) ? data : (data.cerraduras_abiertas || []);
+    }catch(e){ 
+        console.error('[CER]',e); 
+        return [];
+    }
+}
+
+async function cargarEstadoCerradurasTab(){
+    var estados = await cargarEstadosCerradura();
+    renderCerraduras(estados);
+    if(_cerPiso) cerRenderAmbientesTab();
+}
+
+async function cerAbrirCerraduraTab(){
+    if(!_cerAmbiente){ alert('Selecciona un ambiente primero'); return; }
+    var msg = document.getElementById('cer-msg-tab');
+    var btn = event.target;
+    btn.disabled=true; btn.textContent='⏳ Abriendo...';
+    try{
+        var r = await fetch('/api/vigilancia/triac/iniciar',{
+            method:'POST',
+            headers:{'Content-Type':'application/json', 'Authorization':'Bearer '+token}
+        });
+        var d = await r.json();
+        if(r.ok){
+            msg.style.background='#c8e6c9';
+            msg.style.color='#2e7d32';
+            msg.textContent = '✅ Cerradura '+_cerAmbiente+' abierta';
+            msg.style.display='block';
+            await cargarEstadoCerradura();
+            setTimeout(function(){ cerRenderAmbientesTab(); }, 500);
+        } else {
+            msg.style.background='#ffcdd2';
+            msg.style.color='#c62828';
+            msg.textContent = '❌ '+d.error||d.mensaje||'Error al abrir';
+            msg.style.display='block';
+        }
+    }catch(e){
+        msg.style.background='#ffcdd2';
+        msg.style.color='#c62828';
+        msg.textContent = '❌ Error: '+e.message;
+        msg.style.display='block';
+    }
+    btn.disabled=false; btn.textContent='🔓 Abrir';
+}
+
+async function cerCerrarCerraduraTab(){
+    if(!_cerAmbiente){ alert('Selecciona un ambiente primero'); return; }
+    var msg = document.getElementById('cer-msg-tab');
+    var btn = event.target;
+    btn.disabled=true; btn.textContent='⏳ Cerrando...';
+    try{
+        var r = await fetch('/api/vigilancia/triac/detener',{
+            method:'POST',
+            headers:{'Content-Type':'application/json', 'Authorization':'Bearer '+token}
+        });
+        var d = await r.json();
+        if(r.ok){
+            msg.style.background='#c8e6c9';
+            msg.style.color='#2e7d32';
+            msg.textContent = '✅ Cerradura '+_cerAmbiente+' cerrada';
+            msg.style.display='block';
+            await cargarEstadoCerradura();
+            setTimeout(function(){ cerRenderAmbientesTab(); }, 500);
+        } else {
+            msg.style.background='#ffcdd2';
+            msg.style.color='#c62828';
+            msg.textContent = '❌ '+d.error||d.mensaje||'Error al cerrar';
+            msg.style.display='block';
+        }
+    }catch(e){
+        msg.style.background='#ffcdd2';
+        msg.style.color='#c62828';
+        msg.textContent = '❌ Error: '+e.message;
+        msg.style.display='block';
+    }
+    btn.disabled=false; btn.textContent='🔒 Cerrar';
+}
+
+async function cerCerrarCerraduraEspecificaTab(ambiente){
+    try{
+        var r = await fetch('/api/vigilancia/triac/detener',{
+            method:'POST',
+            headers:{'Content-Type':'application/json', 'Authorization':'Bearer '+token},
+            body:JSON.stringify({ambiente:ambiente})
+        });
+        if(r.ok){
+            await cargarEstadoCerradura();
+            cerRenderAmbientesTab();
+        }
+    }catch(e){ console.error(e); }
+}
+
+// Mantener compatibilidad con la antigua función
+function abrirModalAmbientes(){
+    abrirModalAmbientesConCerraduras();
+}
+
+
 
 async function liberarAmb(id){
     var btn=document.getElementById("blib-"+id);
@@ -851,14 +1217,16 @@ async function liberarAmb(id){
     }catch(e){alert("Error de red");if(btn){btn.disabled=false;btn.textContent="Liberar ambiente"}}
 }
 
+// Control manual de cerradura eliminado - Será reimplementado por separado
+
 // LIMPIAR REGISTROS
 function pedirConfirmRegistros(){
-    document.getElementById("dep-title").textContent="Cerrar turno — Guardar y limpiar";
+    document.getElementById("dep-title").textContent="Cerrar turno — Guardar historial";
     var esTodoAdmin=(_usuarioActual&&_usuarioActual.rol==='admin');
     if(esTodoAdmin){
-        document.getElementById("dep-txt").innerHTML='<strong>(Administrador)</strong> Se exportarán <strong>TODOS los registros</strong> a un archivo Excel antes de eliminarlos.<br>El archivo quedará guardado en disco local, en la memoria USB (si hay una conectada) y en la nube (si está configurada).<br><br>¿Está seguro de continuar?';
+        document.getElementById("dep-txt").innerHTML='<strong>(Administrador)</strong> Se exportarán <strong>TODOS los registros</strong> a un archivo Excel como respaldo.<br>Los registros se guardarán en disco local, en la memoria USB (si hay una conectada) y en la nube (si está configurada).<br><br><strong style="color:green">✅ Los registros se PRESERVARÁN en la BD para que el próximo vigilante pueda registrar salidas.</strong><br><br>¿Está seguro de continuar?';
     } else {
-        document.getElementById("dep-txt").innerHTML='Los registros de <strong>su turno</strong> se guardarán en un archivo Excel antes de eliminarse.<br>El archivo quedará guardado en disco, en la memoria USB (si hay una conectada) y en la nube (si está configurada).<br>Los registros de otros vigilantes no se verán afectados.<br><br>¿Está seguro de continuar?';
+        document.getElementById("dep-txt").innerHTML='<strong>Cerrar turno — Guardar historial</strong><br><br>Los registros de <strong>su turno</strong> se guardarán en un archivo Excel como respaldo.<br>El archivo quedará guardado en disco, en la memoria USB (si hay una conectada) y en la nube (si está configurada).<br><br><strong style="color:green">✅ Los registros se PRESERVARÁN en la BD para que:</strong><br>El próximo vigilante pueda ver el historial completo del día.<br>Los aprendices puedan registrar su salida sin importar cambios de turno.<br><br>¿Está seguro de continuar?';
     }
     var btn=document.getElementById("btn-dep-confirm");
     btn.disabled=false; btn.textContent="Confirmar";
@@ -903,133 +1271,365 @@ async function ejecutarLimpiar(){
 
 function esc(s){return(s||"").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
 
-// ── TRASLADO DE AMBIENTE ─────────────────────────────────────
-var _trasOcuId = null;
+// Funciones de traslado eliminadas - Será reimplementado por separado
 
-async function abrirTraslado(ocuId){
-    _trasOcuId = ocuId;
-    var ocu = _listaAmb.find(function(x){return x.id===ocuId;});
-    var iEl = document.getElementById('tras-persona-info');
-    if(ocu){
-        iEl.innerHTML = '<strong style="color:#1c2b4b">'+(ocu.persona?ocu.persona.nombre:'N/A')+'</strong>'
-            +' <span style="color:#9aabbc;font-size:.8rem">'+esc(ocu.persona&&ocu.persona.numero_doc?ocu.persona.numero_doc:'')+'</span>'
-            +'<br><span style="font-size:.82rem;color:#c4700a">&#128205; Actualmente en: '+esc(ocu.ambiente||'—')+'</span>';
+// ── AGREGAR VISITANTE ───────────────────────────────────────
+function abrirAgregarVisitante(){
+    ['vis-nombre','vis-numero-doc','vis-email','vis-telefono','vis-empresa','vis-motivo'].forEach(function(id){
+        var el=document.getElementById(id);
+        if(el) el.value='';
+    });
+    var tipoEl=document.getElementById('vis-tipo-doc');
+    if(tipoEl) tipoEl.value='CC';
+    var msgEl=document.getElementById('vis-msg');
+    if(msgEl) msgEl.style.display='none';
+    var btnEl=document.getElementById('btn-vis-save');
+    if(btnEl){
+        btnEl.disabled=false;
+        btnEl.textContent='Registrar Entrada';
     }
-    var sel = document.getElementById('tras-sel-ed');
-    sel.innerHTML = '<option value="">Cargando...</option>';
-    sel.disabled = true;
-    document.getElementById('tras-sel-piso').innerHTML='<option>Primero elige edificio</option>';
-    document.getElementById('tras-sel-piso').disabled=true;
-    document.getElementById('tras-sel-amb').innerHTML='<option>Primero elige piso</option>';
-    document.getElementById('tras-sel-amb').disabled=true;
-    document.getElementById('tras-msg').style.display='none';
-    var btn=document.getElementById('btn-tras-confirm');
-    btn.disabled=false; btn.textContent='\uD83D\uDD04 Confirmar traslado';
-    document.getElementById('ov-traslado').classList.add('show');
-    try{
-        var resp = await fetch('/api/edificios',{headers:{'Authorization':'Bearer '+token}});
-        var data = await resp.json();
-        var lista = (data.edificios||[]).filter(function(e){return e.activo;});
-        sel.innerHTML = '<option value="">Selecciona edificio destino...</option>';
-        lista.forEach(function(e){
-            sel.innerHTML += '<option value="'+e.id+'" data-pisos="'+e.num_pisos+'" data-amb="'+e.num_ambientes_por_piso+'" data-nombre="'+esc(e.nombre)+'">'+esc(e.nombre)+'</option>';
-        });
-        sel.disabled = false;
-    }catch(ex){
-        sel.innerHTML = '<option value="">Error al cargar edificios</option>';
-    }
+    limpiarSalida();
+    document.getElementById('ov-visitante').classList.add('show');
+    cargarVisitantesActivos();
 }
 
-function trasSelectorPiso(){
-    var sel = document.getElementById('tras-sel-ed');
-    var opt = sel.options[sel.selectedIndex];
-    var pisoSel = document.getElementById('tras-sel-piso');
-    var ambSel  = document.getElementById('tras-sel-amb');
-    pisoSel.innerHTML='<option value="">Selecciona piso...</option>';
-    ambSel.innerHTML='<option value="">Primero elige piso</option>';
-    ambSel.disabled=true;
-    if(!opt||!opt.value){pisoSel.disabled=true;return;}
-    var numPisos=parseInt(opt.getAttribute('data-pisos'))||3;
-    for(var i=1;i<=numPisos;i++) pisoSel.innerHTML+='<option value="'+i+'">Piso '+i+'</option>';
-    pisoSel.disabled=false;
+function cerrarAgregarVisitante(){
+    document.getElementById('ov-visitante').classList.remove('show');
 }
 
-function trasSelectorAmb(){
-    var edSel  = document.getElementById('tras-sel-ed');
-    var pisoSel= document.getElementById('tras-sel-piso');
-    var ambSel = document.getElementById('tras-sel-amb');
-    var opt    = edSel.options[edSel.selectedIndex];
-    var piso   = parseInt(pisoSel.value)||0;
-    ambSel.innerHTML='<option value="">Selecciona ambiente...</option>';
-    if(!piso||!opt||!opt.value){ambSel.disabled=true;return;}
-    var nombreEd=opt.getAttribute('data-nombre')||opt.text;
-    var numAmb=parseInt(opt.getAttribute('data-amb'))||10;
-    var prefix=piso*100;
-    for(var i=1;i<=numAmb;i++){
-        var salaNum=prefix+i;
-        var label=nombreEd+' - PISO '+piso+' - AMBIENTE '+salaNum;
-        ambSel.innerHTML+='<option value="'+label+'">AMBIENTE '+salaNum+'</option>';
-    }
-    ambSel.disabled=false;
-}
+document.getElementById('ov-visitante').addEventListener('click',function(e){
+    if(e.target.id==='ov-visitante') cerrarAgregarVisitante();
+});
 
-function cerrarTraslado(){
-    document.getElementById('ov-traslado').classList.remove('show');
-    _trasOcuId=null;
-}
-document.getElementById('ov-traslado').addEventListener('click',function(e){if(e.target===this)cerrarTraslado();});
-
-async function ejecutarTraslado(){
-    var ambDest=(document.getElementById('tras-sel-amb').value||'').trim();
-    if(!ambDest||!ambDest.includes('AMBIENTE')){alert('Selecciona un ambiente de destino.');return;}
-    var btn=document.getElementById('btn-tras-confirm');
-    btn.disabled=true; btn.textContent='Trasladando...';
-    var msgEl=document.getElementById('tras-msg');
-    try{
-        var resp=await fetch('/api/ambientes/trasladar',{
-            method:'POST',
-            headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-            body:JSON.stringify({ocupacion_id:_trasOcuId,ambiente_destino:ambDest})
-        });
-        var data=await resp.json();
+async function guardarVisitante(){
+    var nombre=(document.getElementById('vis-nombre').value||'').trim().toUpperCase();
+    var tipoDoc=(document.getElementById('vis-tipo-doc').value||'CC');
+    var numeroDoc=(document.getElementById('vis-numero-doc').value||'').trim();
+    var email=(document.getElementById('vis-email').value||'').trim();
+    var telefono=(document.getElementById('vis-telefono').value||'').trim();
+    var empresa=(document.getElementById('vis-empresa').value||'').trim();
+    var motivo=(document.getElementById('vis-motivo').value||'').trim();
+    var msgEl=document.getElementById('vis-msg');
+    msgEl.style.display='none';
+    
+    if(!nombre||!numeroDoc||!motivo){
+        msgEl.style.background='#fff3cd';
+        msgEl.style.color='#856404';
+        msgEl.textContent='❌ Nombre, Número de Documento y Motivo de Ingreso son obligatorios.';
         msgEl.style.display='block';
+        return;
+    }
+    
+    var btnEl=document.getElementById('btn-vis-save');
+    btnEl.disabled=true;
+    btnEl.textContent='Registrando...';
+    
+    try{
+        // PASO 1: Registrar visitante en /api/personas
+        var personaPayload={
+            nombre: nombre,
+            tipo_doc: tipoDoc,
+            numero_doc: numeroDoc,
+            perfil: 'visitante',
+            email: email||null,
+            telefono: telefono||null,
+            area: empresa||null,
+            observaciones: motivo
+        };
+        
+        var respPersona=await fetch('/api/personas',{
+            method:'POST',
+            headers:{
+                'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||''),
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(personaPayload)
+        });
+        
+        var dataPersona=await respPersona.json();
+        
+        if(!respPersona.ok){
+            msgEl.style.background='#f8d7da';
+            msgEl.style.color='#721c24';
+            
+            // Mensaje específico para acceso denegado
+            if(respPersona.status === 403){
+                msgEl.textContent='⛔ Acceso Denegado: Solo los vigilantes pueden registrar visitantes. Por favor, dirígete al panel del vigilante.';
+            } else {
+                msgEl.textContent='❌ '+(dataPersona.error||'Error al registrar visitante');
+            }
+            
+            msgEl.style.display='block';
+            btnEl.disabled=false;
+            btnEl.textContent='Registrar Entrada';
+            return;
+        }
+        
+        // PASO 2: Registrar entrada en /api/registros-acceso
+        var accesoPayload={
+            numero_doc: numeroDoc,
+            tipo: 'ENTRADA',
+            observaciones: motivo
+        };
+        
+        var respAcceso=await fetch('/api/registros-acceso',{
+            method:'POST',
+            headers:{
+                'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||''),
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(accesoPayload)
+        });
+        
+        var dataAcceso=await respAcceso.json();
+        
+        if(!respAcceso.ok){
+            msgEl.style.background='#f8d7da';
+            msgEl.style.color='#721c24';
+            msgEl.textContent='❌ Error al registrar entrada: '+(dataAcceso.error||'Intente nuevamente');
+            msgEl.style.display='block';
+            btnEl.disabled=false;
+            btnEl.textContent='Registrar Entrada';
+            return;
+        }
+        
+        // ÉXITO: Visitante registrado y entrada realizada
+        msgEl.style.background='#d4edda';
+        msgEl.style.color='#155724';
+        msgEl.textContent='✅ Visitante ingresado exitosamente. Motivo: '+motivo;
+        msgEl.style.display='block';
+        
+        // Limpiar formulario
+        ['vis-nombre','vis-numero-doc','vis-email','vis-telefono','vis-empresa','vis-motivo'].forEach(function(id){
+            var el=document.getElementById(id);
+            if(el) el.value='';
+        });
+        document.getElementById('vis-tipo-doc').value='CC';
+        
+        // Recargar listado de visitantes
+        cargarVisitantesActivos();
+        
+        // Cerrar después de 1.5s
+        setTimeout(function(){
+            cerrarAgregarVisitante();
+        },1500);
+        
+    }catch(e){
+        msgEl.style.background='#f8d7da';
+        msgEl.style.color='#721c24';
+        msgEl.textContent='❌ Error de red: '+e.message;
+        msgEl.style.display='block';
+        btnEl.disabled=false;
+        btnEl.textContent='Registrar Entrada';
+    }
+}
+
+// ── CARGAR VISITANTES ACTIVOS ───────────────────────────────────────
+async function cargarVisitantesActivos(){
+    try{
+        // Obtener TODOS los registros de acceso
+        var resp=await fetch('/api/registros-acceso?limit=10000&sort=-timestamp',{
+            method:'GET',
+            headers:{
+                'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||''),
+                'Content-Type':'application/json'
+            }
+        });
+        
+        if(!resp.ok) throw new Error('Error al obtener registros');
+        
+        var data=await resp.json();
+        var registros=data.registros||[];
+        
+        // Agrupar por número de documento y tomar el ÚLTIMO movimiento
+        var ultimoMovimiento={};
+        registros.forEach(function(reg){
+            if(!ultimoMovimiento[reg.numero_doc]){
+                ultimoMovimiento[reg.numero_doc]=reg;
+            }
+        });
+        
+        // Filtrar solo VISITANTES cuyo último movimiento fue ENTRADA (activos)
+        var visitantesActivos=[];
+        Object.keys(ultimoMovimiento).forEach(function(numDoc){
+            var ultimo=ultimoMovimiento[numDoc];
+            if(ultimo.tipo==='ENTRADA' && (ultimo.perfil||'').toLowerCase()==='visitante'){
+                visitantesActivos.push(ultimo);
+            }
+        });
+        
+        var listEl=document.getElementById('vis-list');
+        
+        if(visitantesActivos.length===0){
+            listEl.innerHTML='<div style="text-align:center;color:#7a8aab;font-size:.87rem;padding:20px">No hay visitantes activos en este momento</div>';
+            return;
+        }
+        
+        // Obtener datos completos de cada visitante (nombre, empresa)
+        var promesas=visitantesActivos.map(function(vis){
+            return fetch('/api/personas/buscar-por-documento?numero_doc='+encodeURIComponent(vis.numero_doc),{
+                headers:{
+                    'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||''),
+                    'Content-Type':'application/json'
+                }
+            })
+            .then(r=>r.json())
+            .then(d=>{
+                if(d.persona){
+                    vis.nombre=d.persona.nombre||'Sin nombre';
+                    vis.area=d.persona.area||'-';
+                }
+                return vis;
+            })
+            .catch(e=>{
+                return vis;
+            });
+        });
+        
+        Promise.all(promesas).then(function(visitantesConDatos){
+            var html='<table style="width:100%;border-collapse:collapse;font-size:.85rem">';
+            html+='<tr style="border-bottom:2px solid #d0d8e8;font-weight:700;color:#2a8000">';
+            html+='<td style="padding:10px;text-align:left">Nombre</td>';
+            html+='<td style="padding:10px;text-align:left">Documento</td>';
+            html+='<td style="padding:10px;text-align:left">Empresa</td>';
+            html+='<td style="padding:10px;text-align:left">Motivo</td>';
+            html+='<td style="padding:10px;text-align:center">Acción</td>';
+            html+='</tr>';
+            
+            visitantesConDatos.forEach(function(vis){
+                html+='<tr style="border-bottom:1px solid #e8f0f8">';
+                html+='<td style="padding:10px">'+(vis.nombre||'-')+'</td>';
+                html+='<td style="padding:10px">'+vis.numero_doc+'</td>';
+                html+='<td style="padding:10px">'+(vis.area||'-')+'</td>';
+                html+='<td style="padding:10px;font-size:.80rem">'+(vis.observaciones||'-')+'</td>';
+                html+='<td style="padding:10px;text-align:center"><button onclick="registrarSalidaVisitante(\''+vis.numero_doc+'\')" style="padding:6px 12px;background:#c0392b;color:#fff;border:none;border-radius:4px;font-size:.80rem;font-weight:600;cursor:pointer">Salida</button></td>';
+                html+='</tr>';
+            });
+            html+='</table>';
+            listEl.innerHTML=html;
+        }).catch(e=>{
+            listEl.innerHTML='<div style="color:#c0392b;font-size:.87rem;padding:10px">Error: '+e.message+'</div>';
+        });
+        
+    }catch(e){
+        document.getElementById('vis-list').innerHTML='<div style="color:#c0392b;font-size:.87rem;padding:10px">Error: '+e.message+'</div>';
+    }
+}
+
+// ── REGISTRAR SALIDA DE VISITANTE ────────────────────────────────────────
+async function registrarSalidaVisitante(numeroDoc){
+    if(!confirm('¿Registrar salida del visitante '+numeroDoc+'?')) return;
+    
+    try{
+        var resp=await fetch('/api/registros-acceso',{
+            method:'POST',
+            headers:{
+                'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||''),
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                numero_doc: numeroDoc,
+                tipo: 'SALIDA'
+            })
+        });
+        
+        var data=await resp.json();
+        
         if(resp.ok){
-            Object.assign(msgEl.style,{background:'#edfcee',color:'#1b5e20',border:'1px solid #a5d6a7'});
-            msgEl.textContent='\u2705 '+data.mensaje;
-            setTimeout(function(){cerrarTraslado();cargarAmbientes();},1400);
+            alert('✅ Salida registrada correctamente para: '+numeroDoc);
+            cargarVisitantesActivos();
         } else {
-            Object.assign(msgEl.style,{background:'#fff0f0',color:'#c0392b',border:'1px solid #f5c8c8'});
-            msgEl.textContent='\u274c '+(data.error||'Error al trasladar');
-            btn.disabled=false; btn.textContent='\uD83D\uDD04 Confirmar traslado';
+            alert('❌ Error: '+(data.error||'No se pudo registrar la salida'));
         }
     }catch(e){
-        msgEl.style.display='block';
-        Object.assign(msgEl.style,{background:'#fff0f0',color:'#c0392b',border:'1px solid #f5c8c8'});
-        msgEl.textContent='\u274c Error de red.';
-        btn.disabled=false; btn.textContent='\uD83D\uDD04 Confirmar traslado';
+        alert('❌ Error de red: '+e.message);
     }
 }
 
-function mostrarToastTraslado(d){
-    var cont=document.getElementById('toast-tras');
-    if(!cont) return;
-    var nombre=(d.persona&&d.persona.nombre)||'N/A';
-    var destAmb=(d.destino&&d.destino.ambiente)||'';
-    var div=document.createElement('div');
-    div.className='toast-item';
-    div.innerHTML='\uD83D\uDD04 <strong>'+esc(nombre)+'</strong> trasladado a <strong>'+esc(destAmb)+'</strong>';
-    cont.appendChild(div);
-    setTimeout(function(){
-        div.style.opacity='0';div.style.transition='opacity .4s';
-        setTimeout(function(){if(cont.contains(div))cont.removeChild(div);},420);
-    },5500);
+function limpiarSalida(){
+    document.getElementById('vis-salida-doc').value='';
+    var infoEl=document.getElementById('vis-salida-info');
+    if(infoEl) infoEl.style.display='none';
+    var msgEl=document.getElementById('vis-salida-msg');
+    if(msgEl) msgEl.style.display='none';
+    var btnEl=document.getElementById('btn-vis-salida');
+    if(btnEl){
+        btnEl.disabled=true;
+        btnEl.style.opacity='0.5';
+        btnEl.style.pointerEvents='none';
+    }
 }
 
-// ── BÚSQUEDA GLOBAL ───────────────────────────────────────
+async function registrarSalidaModal(){
+    var numeroDoc=(document.getElementById('vis-salida-doc').value||'').trim();
+    var msgEl=document.getElementById('vis-salida-msg');
+    
+    if(!numeroDoc){
+        msgEl.textContent='❌ Ingresa un número de documento';
+        msgEl.style.color='#d32f2f';
+        msgEl.style.display='block';
+        return;
+    }
+    
+    try{
+        // Buscar el visitante
+        var searchResp=await fetch('/api/personas/buscar-por-documento?numero_doc='+encodeURIComponent(numeroDoc),{
+            headers:{'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||'')}
+        });
+        var data=await searchResp.json();
+        
+        if(!searchResp.ok || !data || !data.persona || data.error){
+            msgEl.textContent='❌ Visitante no encontrado';
+            msgEl.style.color='#d32f2f';
+            msgEl.style.display='block';
+            return;
+        }
+        
+        var visitante=data.persona;
+        if(visitante.perfil!=='visitante'){
+            msgEl.textContent='❌ Esta persona no es visitante';
+            msgEl.style.color='#d32f2f';
+            msgEl.style.display='block';
+            return;
+        }
+        
+        // Registrar salida
+        var salidaResp=await fetch('/api/registros-acceso',{
+            method:'POST',
+            headers:{
+                'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||''),
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                numero_doc: numeroDoc,
+                tipo: 'SALIDA'
+            })
+        });
+        
+        var salidaData=await salidaResp.json();
+        
+        if(salidaResp.ok){
+            msgEl.textContent='✅ Salida registrada correctamente para: '+visitante.nombre;
+            msgEl.style.color='#4caf50';
+            msgEl.style.display='block';
+            limpiarSalida();
+            cargarVisitantesActivos();
+        } else {
+            msgEl.textContent='❌ Error: '+(salidaData.error||'No se pudo registrar la salida');
+            msgEl.style.color='#d32f2f';
+            msgEl.style.display='block';
+        }
+    }catch(e){
+        msgEl.textContent='❌ Error: '+e.message;
+        msgEl.style.color='#d32f2f';
+        msgEl.style.display='block';
+    }
+}
+
+// ── BÚSQUEDA GLOBAL
 function abrirBusquedaGlobal(){
     document.getElementById('busq-doc').value='';
-    document.getElementById('busq-nombre').value='';
-    document.getElementById('busq-resultados').innerHTML='<div class="m-empty">Ingresa un documento o nombre para buscar.</div>';
+    document.getElementById('busq-resultados').innerHTML='<div class="m-empty">Ingresa un número de documento para consultar el historial de accesos.</div>';
     document.getElementById('ov-busq').classList.add('show');
     document.getElementById('busq-doc').focus();
 }
@@ -1038,44 +1638,92 @@ document.getElementById('ov-busq').addEventListener('click',function(e){if(e.tar
 
 async function ejecutarBusquedaGlobal(){
     var doc=(document.getElementById('busq-doc').value||'').trim();
-    var nombre=(document.getElementById('busq-nombre').value||'').trim();
-    if(!doc&&!nombre){alert('Ingresa un número de documento o nombre para buscar.');return;}
+    if(!doc){alert('Por favor, ingresa un número de documento.');return;}
+    
+    // Validar que sea solo números
+    if(!/^\d+$/.test(doc)){alert('El número de documento debe contener solo dígitos.');return;}
+    
     var btn=document.getElementById('btn-busq');
-    btn.disabled=true;btn.textContent='Buscando...';
     var cont=document.getElementById('busq-resultados');
-    cont.innerHTML='<div class="m-empty">Buscando...</div>';
+    
+    btn.disabled=true;
+    btn.textContent='Buscando...';
+    cont.innerHTML='<div class="m-empty">Buscando registros...</div>';
+    
     try{
-        var params=[];
-        if(doc) params.push('numero_doc='+encodeURIComponent(doc));
-        if(nombre) params.push('nombre='+encodeURIComponent(nombre));
-        var resp=await fetch('/api/registros-acceso/busqueda-global?'+params.join('&'),{headers:{'Authorization':'Bearer '+token}});
+        var resp=await fetch('/api/registros-acceso/busqueda-global?numero_doc='+encodeURIComponent(doc),{
+            headers:{'Authorization':'Bearer '+token}
+        });
+        
+        if(!resp.ok){
+            var data=await resp.json();
+            cont.innerHTML='<div class="m-empty" style="color:#c0392b">❌ Error: '+(data.error||'No se pudo completar la búsqueda')+'</div>';
+            btn.disabled=false;
+            btn.textContent='Buscar historial';
+            return;
+        }
+        
         var data=await resp.json();
-        if(!resp.ok){cont.innerHTML='<div class="m-empty" style="color:#c0392b">'+(data.error||'Error al buscar')+'</div>';return;}
         var lista=data.registros||[];
-        if(lista.length===0){cont.innerHTML='<div class="m-empty">No se encontraron registros.</div>';return;}
-        var h='<p style="font-size:.8rem;color:#7a8aab;margin-bottom:12px">'+lista.length+' resultado(s) en toda la base de datos</p>';
-        h+='<table class="env-table"><thead><tr><th>Fecha y hora</th><th>Tipo de acceso</th><th>Nombre completo</th><th>N.° documento</th><th>Perfil SENA</th><th>Ficha de formación</th><th>Ambiente</th><th>Vigilante de turno</th></tr></thead><tbody>';
+        var persona=data.persona;
+        
+        if(lista.length===0){
+            cont.innerHTML='<div class="m-empty" style="color:#c4700a">⚠️ No se encontraron registros para el documento: <strong>'+esc(doc)+'</strong></div>';
+            btn.disabled=false;
+            btn.textContent='Buscar historial';
+            return;
+        }
+        
+        // Card con info de la persona
+        var h='<div style="background:linear-gradient(135deg,#2a8000,#39A900);color:#fff;border-radius:8px;padding:14px 16px;margin-bottom:16px;box-shadow:0 3px 10px rgba(42,128,0,.2)">';
+        if(persona){
+            h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:.88rem"><div>';
+            h+='<div style="opacity:.8;font-size:.7rem;text-transform:uppercase">Nombre completo</div>';
+            h+='<div style="font-weight:700;font-size:1rem">'+esc(persona.nombre)+'</div>';
+            h+='</div><div>';
+            h+='<div style="opacity:.8;font-size:.7rem;text-transform:uppercase">Documento</div>';
+            h+='<div style="font-weight:700;font-family:monospace;font-size:.99rem">'+esc(persona.numero_doc)+'</div>';
+            h+='</div><div>';
+            h+='<div style="opacity:.8;font-size:.7rem;text-transform:uppercase">Perfil SENA</div>';
+            h+='<div style="font-weight:600">'+esc(persona.perfil||'—')+'</div>';
+            h+='</div><div>';
+            h+='<div style="opacity:.8;font-size:.7rem;text-transform:uppercase">Ficha</div>';
+            h+='<div style="font-weight:600">'+esc(persona.ficha||'—')+'</div>';
+            h+='</div></div>';
+        }else{
+            h+='<strong>Documento: '+esc(doc)+'</strong><br><small style="opacity:.9">No se encontró información adicional de esta persona.</small>';
+        }
+        h+='</div>';
+        
+        // Tabla de registros
+        h+='<div style="margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">';
+        h+='<div style="font-size:.8rem;color:#7a8aab;font-weight:600;text-transform:uppercase;letter-spacing:.3px">📊 Historial completo</div>';
+        h+='<div style="background:#edfcee;color:#2e8b35;padding:4px 10px;border-radius:4px;font-size:.75rem;font-weight:700">'+lista.length+' registros</div>';
+        h+='</div>';
+        h+='<table class="env-table"><thead><tr><th>Fecha y hora</th><th>Tipo</th><th>Ambiente</th><th>Vigilante</th></tr></thead><tbody>';
+        
         lista.forEach(function(r){
-            var ts=new Date(r.timestamp||r.created_at||Date.now());
-            var hora=p(ts.getDate())+'/'+(p(ts.getMonth()+1))+'/'+ts.getFullYear()+' '+p(ts.getHours())+':'+p(ts.getMinutes());
+            var ts=new Date(r.timestamp);
+            var hora=p(ts.getDate())+'/'+(p(ts.getMonth()+1))+'/'+ts.getFullYear()+' '+p(ts.getHours())+':'+p(ts.getMinutes())+':'+p(ts.getSeconds());
             var bc=r.tipo==='ENTRADA'?'badge-e':'badge-s';
-            var per=r.persona||{};
-            var vig=r.vigilante?esc(r.vigilante.nombre):'<span style="color:#ccc">—</span>';
+            var vig=(r.vigilante&&r.vigilante.nombre)?esc(r.vigilante.nombre):'<span style="color:#ccc;opacity:.6">Sin asignar</span>';
             h+='<tr>';
-            h+='<td style="font-size:.79rem;color:#7a8aab;white-space:nowrap">'+hora+'</td>';
+            h+='<td style="font-size:.80rem;color:#7a8aab;white-space:nowrap;font-family:monospace">'+hora+'</td>';
             h+='<td><span class="'+bc+'">'+r.tipo+'</span></td>';
-            h+='<td><strong>'+esc(per.nombre||'N/A')+'</strong></td>';
-            h+='<td class="mono" style="font-size:.82rem">'+esc(per.numero_doc||r.numero_doc||'')+'</td>';
-            h+='<td style="font-size:.8rem;color:#7a8aab">'+esc(per.perfil||'-')+'</td>';
-            h+='<td style="font-size:.8rem;color:#7a8aab">'+esc(per.ficha||'-')+'</td>';
-            h+='<td style="font-size:.8rem;color:#7a8aab">'+esc(r.ambiente||'-')+'</td>';
-            h+='<td style="font-size:.8rem;color:#7a8aab">'+vig+'</td>';
+            h+='<td style="font-size:.82rem;color:#2c3e5a">'+esc(r.ambiente||'—')+'</td>';
+            h+='<td style="font-size:.80rem;color:#7a8aab">'+vig+'</td>';
             h+='</tr>';
         });
         h+='</tbody></table>';
         cont.innerHTML=h;
-    }catch(e){cont.innerHTML='<div class="m-empty" style="color:#c0392b">Error de red al buscar.</div>';console.warn(e);}
-    btn.disabled=false;btn.textContent='Buscar';
+        
+    }catch(e){
+        console.warn(e);
+        cont.innerHTML='<div class="m-empty" style="color:#c0392b">❌ Error de conexión. Por favor intenta de nuevo.</div>';
+    }
+    
+    btn.disabled=false;
+    btn.textContent='Buscar historial';
 }
 
 // ── INVENTARIO ──────────────────────────────────────────
@@ -1159,7 +1807,7 @@ function renderBitacora(){
     var cont=document.getElementById('inv-bitacora-body');
     if(!cont) return;
     if(_invBitacora.length===0){cont.innerHTML='<div class="m-empty">No hay registros en la bitácora.</div>';return;}
-    var h='<table class="env-table"><thead><tr><th>Descripción</th><th>Cant.</th><th>Portador</th><th>Estado</th><th>Entrada</th><th>Salida</th></tr></thead><tbody>';
+    var h='<table class="env-table"><thead><tr><th>Descripción</th><th>Cant.</th><th>Portador</th><th>Estado</th><th>Entrada</th><th>Salida</th><th></th></tr></thead><tbody>';
     _invBitacora.forEach(function(it){
         var bc=it.estado==='EN_SEDE'?'badge-en':'badge-ret';
         var te=it.estado==='EN_SEDE'?'En sede':'Retirado';
@@ -1171,10 +1819,21 @@ function renderBitacora(){
         h+='<td><span class="'+bc+'">'+te+'</span></td>';
         h+='<td style="font-size:.79rem;color:#7a8aab;white-space:nowrap">'+fmtFecha(it.fecha_entrada)+'</td>';
         h+='<td style="font-size:.79rem;color:#7a8aab;white-space:nowrap">'+fmtFecha(it.fecha_salida)+'</td>';
+        h+='<td>'+(it.estado==='RETIRADO'?'<button class="btn-salida" onclick="eliminarRetiradoInv(\''+it.id+'\',\''+esc(it.descripcion)+'\')">Limpiar</button>':'')+'</td>';
         h+='</tr>';
     });
     h+='</tbody></table>';
     cont.innerHTML=h;
+}
+
+async function eliminarRetiradoInv(id, descripcion){
+    if(!confirm('¿Limpiar el registro retirado "'+descripcion+'" del historial?')) return;
+    try{
+        var resp=await fetch('/api/inventario/'+id+'?vista=vigilancia',{method:'DELETE',headers:{'Authorization':'Bearer '+token}});
+        var data=await resp.json();
+        if(!resp.ok){alert(data.error||'No se pudo limpiar el registro.');return;}
+        cargarBitacora();
+    }catch(e){alert('Error de red. Intente nuevamente.');}
 }
 
 async function guardarInvIngreso(){
@@ -1214,6 +1873,7 @@ var _salObjId = null;
 
 function pedirConfirmSalidaInv(id, desc, portador, doc, dest, entrada){
     _salObjId = id;
+    document.getElementById('ov-inv').classList.remove('show');
     // Recuperar la cantidad del item en memoria
     var item = _invEnSede.find(function(it){return it.id===id;});
     document.getElementById('sal-obj-desc').textContent     = desc   || '—';
@@ -1479,7 +2139,9 @@ async function cargarEstadoCerraduras(){
         var r = await fetch('/api/ambientes/cerradura/estado',{headers:{'Authorization':'Bearer '+token}});
         if(!r.ok) return;
         var data = await r.json();
-        renderCerraduras(data);
+        // El endpoint devuelve {ok: true, cerraduras_abiertas: [...], ...} o un array directo
+        var estados = Array.isArray(data) ? data : (data.cerraduras_abiertas || []);
+        renderCerraduras(estados);
         if(_cerPiso) cerRenderAmbientes();
     }catch(e){ console.error('[CER]',e); }
 }
@@ -1536,45 +2198,54 @@ async function cerAbrirCerradura(){
     var msg = document.getElementById('cer-apertura-msg');
     btn.disabled=true; btn.innerHTML='⏳ Abriendo...';
     try{
-        var r = await fetch('/api/ambientes/cerradura/abrir',{
+        // Activar TRIAC directamente
+        var r = await fetch('/api/vigilancia/triac/iniciar',{
             method:'POST',
-            headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
-            body: JSON.stringify({ambiente:_cerAmbiente})
+            headers:{'Content-Type':'application/json', 'Authorization':'Bearer '+token}
         });
         var d = await r.json();
         if(r.ok){
             msg.className = 'cer-apertura-msg ok';
-            msg.textContent = '✅ ' + (d.mensaje || 'Cerradura abierta');
+            msg.textContent = '✅ Cerradura ' + _cerAmbiente + ' abierta (TRIAC activado)';
             cargarEstadoCerraduras();
             if(document.getElementById('cer-hist-panel').style.display !== 'none') cerCargarHistorial();
         } else {
             msg.className = 'cer-apertura-msg err';
-            msg.textContent = '❌ ' + (d.error||'No se pudo abrir la cerradura');
+            msg.textContent = '❌ ' + (d.error||d.mensaje||'No se pudo abrir la cerradura');
         }
     }catch(e){
         msg.className = 'cer-apertura-msg err';
-        msg.textContent = '❌ Error de conexión con el servidor';
+        msg.textContent = '❌ Error: ' + e.message;
     }
     btn.disabled=false; btn.innerHTML='🔓 Abrir cerradura';
 }
 
-async function cerCerrarCerradura(ambiente){
+async function cerCerrarCerradura(){
+    if(!_cerAmbiente){ alert('Selecciona un ambiente primero'); return; }
+    var btn = document.getElementById('cer-btn-cerrar');
+    var msg = document.getElementById('cer-apertura-msg');
+    btn.disabled=true; btn.innerHTML='⏳ Cerrando...';
     try{
-        var r = await fetch('/api/ambientes/cerradura/cerrar',{
+        // Desactivar TRIAC/cerradura
+        var r = await fetch('/api/vigilancia/triac/parar',{
             method:'POST',
-            headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
-            body: JSON.stringify({ambiente:ambiente})
+            headers:{'Content-Type':'application/json', 'Authorization':'Bearer '+token}
         });
+        var d = await r.json();
         if(r.ok){
-            cerMostrarToast('🔒 Cerradura cerrada: '+ambiente, 'ok');
+            msg.className = 'cer-apertura-msg ok';
+            msg.textContent = '✅ Cerradura ' + _cerAmbiente + ' cerrada (TRIAC desactivado)';
             cargarEstadoCerraduras();
-            cerRenderAmbientes();
             if(document.getElementById('cer-hist-panel').style.display !== 'none') cerCargarHistorial();
         } else {
-            var d=await r.json();
-            cerMostrarToast('❌ '+(d.error||'No se pudo cerrar'), 'err');
+            msg.className = 'cer-apertura-msg err';
+            msg.textContent = '❌ ' + (d.error||d.mensaje||'No se pudo cerrar la cerradura');
         }
-    }catch(e){ cerMostrarToast('❌ Error de conexión', 'err'); }
+    }catch(e){
+        msg.className = 'cer-apertura-msg err';
+        msg.textContent = '❌ Error: ' + e.message;
+    }
+    btn.disabled=false; btn.innerHTML='🔒 Cerrar cerradura';
 }
 
 function cerMostrarToast(msg, tipo){
@@ -1606,8 +2277,10 @@ async function cerCargarHistorial(){
         var r = await fetch('/api/ambientes/cerradura/historial?limite=40',{headers:{'Authorization':'Bearer '+token}});
         if(!r.ok){ lista.innerHTML='<div class="cer-empty">Error al cargar historial</div>'; return; }
         var data = await r.json();
-        if(!data.length){ lista.innerHTML='<div class="cer-empty">💭 Sin registros aún</div>'; return; }
-        lista.innerHTML = data.map(function(h){
+        // El endpoint devuelve {ok: true, historial: [...], ...} o un array directo
+        var historial = Array.isArray(data) ? data : (data.historial || []);
+        if(!historial.length){ lista.innerHTML='<div class="cer-empty">💭 Sin registros aún</div>'; return; }
+        lista.innerHTML = historial.map(function(h){
             var ico = h.activo ? '🔓' : '🔒';
             var cls = h.activo ? 'cer-hist-item activo' : 'cer-hist-item';
             var fAbrir = new Date(h.abierto_en).toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'});
@@ -1789,156 +2462,349 @@ async function ceqRegistrar(){
 //  ESP32 — Pruebas de cerradura eléctrica física
 // ══════════════════════════════════════════════════════════════════════════════
 
-function _esp32IP(){
-    return (document.getElementById('esp32-ip').value || '').trim();
-}
-function _esp32DeviceId(){
-    return (document.getElementById('esp32-device-id').value || 'esp32-cerradura-01').trim();
-}
-function _esp32Key(){
-    return (document.getElementById('esp32-key').value || 'prueba-esp32-2026').trim();
-}
-
-function _esp32SetStatus(estado, texto){
-    // estado: 'online' | 'offline' | 'idle'
-    var el  = document.getElementById('esp32-status');
-    var dot = document.getElementById('esp32-dot');
-    var txt = document.getElementById('esp32-status-txt');
-    el.className  = 'esp32-status ' + estado;
-    dot.className = 'esp32-dot ' + (estado === 'online' ? 'on' : estado === 'offline' ? 'off' : 'idle');
-    txt.textContent = texto;
-    var btnOpen  = document.getElementById('esp32-btn-open');
-    var btnClose = document.getElementById('esp32-btn-close');
-    if(btnOpen)  btnOpen.disabled  = (estado !== 'online');
-    if(btnClose) btnClose.disabled = (estado !== 'online');
-}
-
-async function esp32Ping(){
-    var ip = _esp32IP();
-    if(!ip){ _esp32SetStatus('idle', '⚠ Ingresa la IP del ESP32 primero'); return; }
-    _esp32SetStatus('idle', '⏳ Conectando a ' + ip + ' ...');
-    try{
-        var r = await fetch('http://' + ip + '/ping', {mode:'cors', signal: AbortSignal.timeout(4000)});
-        if(r.ok){
-            var d = await r.json();
-            var estado = d.cerradura === 'abierta' ? '🔓 ABIERTA' : '🔒 CERRADA';
-            _esp32SetStatus('online', '✅ ESP32 en línea — Cerradura ' + estado + ' · ' + (d.device_id || ip));
-            localStorage.setItem('esp32_ip_prueba', ip);
-        } else {
-            _esp32SetStatus('offline', '⚠ ESP32 respondió con error HTTP ' + r.status);
-        }
-    }catch(e){
-        _esp32SetStatus('offline', '❌ Sin respuesta desde ' + ip + ' (verifica IP y red WiFi)');
+// ── EVENT LISTENER: Búsqueda de visitante para salida
+document.getElementById('vis-salida-doc').addEventListener('keyup', async function(){
+    var numeroDoc=(this.value||'').trim();
+    var infoEl=document.getElementById('vis-salida-info');
+    var msgEl=document.getElementById('vis-salida-msg');
+    var btnEl=document.getElementById('btn-vis-salida');
+    
+    if(!numeroDoc){
+        infoEl.style.display='none';
+        msgEl.style.display='none';
+        btnEl.disabled=true;
+        btnEl.style.opacity='0.5';
+        btnEl.style.pointerEvents='none';
+        return;
     }
-}
-
-async function esp32AbrirDirecto(){
-    var ip = _esp32IP();
-    if(!ip){ alert('Ingresa la IP del ESP32'); return; }
-    _esp32SetStatus('idle', '⏳ Enviando comando ABRIR...');
+    
     try{
-        var r = await fetch('http://' + ip + '/abrir', {mode:'cors', signal: AbortSignal.timeout(5000)});
-        if(r.ok){
-            var d = await r.json();
-            _esp32SetStatus('online', '✅ CERRADURA ABIERTA · Por ' + (d.segundos || 10) + 's · ' + (d.device_id || ip));
-            cerMostrarToast('🔓 ESP32 activó la cerradura', 'ok');
-        } else {
-            _esp32SetStatus('offline', '⚠ Error al abrir: HTTP ' + r.status);
-        }
-    }catch(e){
-        _esp32SetStatus('offline', '❌ Error de conexión al abrir cerradura');
-    }
-}
-
-async function esp32CerrarDirecto(){
-    var ip = _esp32IP();
-    if(!ip){ alert('Ingresa la IP del ESP32'); return; }
-    _esp32SetStatus('idle', '⏳ Enviando comando CERRAR...');
-    try{
-        var r = await fetch('http://' + ip + '/cerrar', {mode:'cors', signal: AbortSignal.timeout(5000)});
-        if(r.ok){
-            var d = await r.json();
-            _esp32SetStatus('online', '✅ Cerradura cerrada · ' + (d.device_id || ip));
-            cerMostrarToast('🔒 ESP32 cerró la cerradura', 'ok');
-        } else {
-            _esp32SetStatus('offline', '⚠ Error al cerrar: HTTP ' + r.status);
-        }
-    }catch(e){
-        _esp32SetStatus('offline', '❌ Error de conexión al cerrar cerradura');
-    }
-}
-
-async function esp32Registrar(){
-    var ip  = _esp32IP();
-    var did = _esp32DeviceId();
-    var key = _esp32Key();
-    var amb = _cerAmbiente || '';
-    var pin = parseInt(document.getElementById('esp32-pin').value) || 5;
-    if(!did || !key){ alert('Completa Device ID y Clave'); return; }
-    try{
-        var r = await fetch('/api/esp32/registrar', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({device_id: did, ip: ip, key: key, ambiente: amb, pin: pin})
+        var resp=await fetch('/api/personas/buscar-por-documento?numero_doc='+encodeURIComponent(numeroDoc),{
+            headers:{'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||'')}
         });
-        var d = await r.json();
-        if(r.ok){
-            cerMostrarToast('✅ ESP32 "' + did + '" registrado (ambiente: ' + (amb||'todos') + ', GPIO' + pin + ')', 'ok');
-            esp32CargarDispositivos();
+        var data=await resp.json();
+        
+        if(resp.ok && data && data.persona && data.persona.nombre && (data.persona.perfil||'').toLowerCase()==='visitante'){
+            document.getElementById('vis-salida-nombre').textContent=data.persona.nombre;
+            document.getElementById('vis-salida-doc-display').textContent=numeroDoc;
+            infoEl.style.display='block';
+            msgEl.style.display='none';
+            btnEl.disabled=false;
+            btnEl.style.opacity='1';
+            btnEl.style.pointerEvents='auto';
         } else {
-            cerMostrarToast('❌ ' + (d.error || 'Error al registrar'), 'err');
+            infoEl.style.display='none';
+            msgEl.textContent='❌ Visitante no válido o no encontrado';
+            msgEl.style.color='#d32f2f';
+            msgEl.style.display='block';
+            btnEl.disabled=true;
+            btnEl.style.opacity='0.5';
+            btnEl.style.pointerEvents='none';
         }
     }catch(e){
-        cerMostrarToast('❌ Error de red', 'err');
+        infoEl.style.display='none';
+        msgEl.textContent='❌ Error en búsqueda: '+e.message;
+        msgEl.style.color='#d32f2f';
+        msgEl.style.display='block';
+        btnEl.disabled=true;
+        btnEl.style.opacity='0.5';
+        btnEl.style.pointerEvents='none';
     }
+});
+
+// ── PERSONAL DE ASEO ───────────────────────────────────────
+function abrirPersonalAseo(){
+    document.getElementById('aseo-buscar-doc').value='';
+    document.getElementById('aseo-buscar-info').style.display='none';
+    document.getElementById('btn-aseo-entrada').disabled=false;
+    document.getElementById('btn-aseo-entrada').style.opacity='1';
+    document.getElementById('btn-aseo-entrada').style.pointerEvents='auto';
+    document.getElementById('btn-aseo-salida').disabled=false;
+    document.getElementById('btn-aseo-salida').style.opacity='1';
+    document.getElementById('btn-aseo-salida').style.pointerEvents='auto';
+    document.getElementById('aseo-msg').style.display='none';
+    document.getElementById('ov-aseo').classList.add('show');
+    cargarPersonalAseoActivo();
 }
 
-async function esp32CargarDispositivos(){
-    try{
-        var r = await fetch('/api/esp32/dispositivos', {headers:{'Authorization':'Bearer '+token}});
-        if(!r.ok) return;
-        var d = await r.json();
-        var lista = d.dispositivos || [];
-        var wrap = document.getElementById('esp32-devices-wrap');
-        var cont = document.getElementById('esp32-devices-list');
-        if(!lista.length){ if(wrap) wrap.style.display = 'none'; return; }
-        if(wrap) wrap.style.display = 'block';
-        if(cont) cont.innerHTML = lista.map(function(dev){
-            var dot = dev.en_linea
-                ? '<div style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;margin-right:4px;flex-shrink:0"></div>'
-                : '<div style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#ef4444;margin-right:4px;flex-shrink:0"></div>';
-            var pingTxt = dev.en_linea ? ('ping ' + dev.seg_sin_ping + 's') : 'offline';
-            var cmd = dev.cmd_pendiente ? ('<span style="color:#fbbf24;font-size:.65rem;margin-left:4px">⏳ ' + dev.cmd_pendiente + '</span>') : '';
-            return '<div class="esp32-dev-item">'
-                + dot
-                + '<span class="esp32-dev-id">' + esc(dev.device_id) + '</span>'
-                + '<span class="esp32-dev-ip">' + (dev.ip || '?') + '</span>'
-                + '<span class="esp32-dev-amb" style="flex:1">' + (dev.ambiente || 'todos') + '</span>'
-                + '<span style="font-size:.62rem;color:#60a5fa;margin-right:4px">GPIO' + (dev.pin != null ? dev.pin : 26) + '</span>'
-                + cmd
-                + '<span class="esp32-dev-ping">' + pingTxt + '</span>'
-                + '</div>';
-        }).join('');
-    }catch(e){ console.warn('[ESP32 dispositivos]', e); }
+function cerrarPersonalAseo(){
+    document.getElementById('ov-aseo').classList.remove('show');
 }
 
-// Restaurar IP guardada en localStorage al cargar
-(function(){
-    var savedIp = localStorage.getItem('esp32_ip_prueba');
-    if(savedIp){
-        var el = document.getElementById('esp32-ip');
-        if(el) el.value = savedIp;
-    }
-})();
+document.getElementById('ov-aseo').addEventListener('click',function(e){
+    if(e.target.id==='ov-aseo') cerrarPersonalAseo();
+});
 
-// Poll periódico de dispositivos mientras modal de cerradura está abierto
-setInterval(function(){
+async function buscarPersonalAseo(){
+    var doc=(document.getElementById('aseo-buscar-doc').value||'').trim();
+    var msgEl=document.getElementById('aseo-msg');
+    msgEl.style.display='none';
+    
+    // Los botones SIEMPRE están habilitados
+    document.getElementById('btn-aseo-entrada').disabled=false;
+    document.getElementById('btn-aseo-entrada').style.opacity='1';
+    document.getElementById('btn-aseo-entrada').style.pointerEvents='auto';
+    document.getElementById('btn-aseo-salida').disabled=false;
+    document.getElementById('btn-aseo-salida').style.opacity='1';
+    document.getElementById('btn-aseo-salida').style.pointerEvents='auto';
+    
+    // Si no hay documento, no busca
+    if(!doc){
+        document.getElementById('aseo-buscar-info').style.display='none';
+        return;
+    }
+    
     try{
-        if(document.getElementById('ov-cerradura').classList.contains('show')){
-            esp32CargarDispositivos();
+        var resp=await fetch('/api/personas/buscar-por-documento?numero_doc='+encodeURIComponent(doc),{
+            headers:{
+                'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||''),
+                'Content-Type':'application/json'
+            }
+        });
+        
+        var data=await resp.json();
+        
+        if(!resp.ok || !data.persona){
+            // Búsqueda fallida pero LOS BOTONES SIGUEN HABILITADOS
+            msgEl.style.background='#f8d7da';
+            msgEl.style.color='#721c24';
+            msgEl.textContent='⚠️ Personal no encontrado en BD. Intenta registrarlo primero en administración.';
+            msgEl.style.display='block';
+            document.getElementById('aseo-buscar-info').style.display='none';
+            return;
         }
-    }catch(e){}
-}, 8000);
+        
+        var persona=data.persona;
+        if((persona.perfil || '').toLowerCase().trim() !== 'personal_aseo'){
+            // No es personal de aseo pero LOS BOTONES SIGUEN HABILITADOS
+            msgEl.style.background='#f8d7da';
+            msgEl.style.color='#721c24';
+            msgEl.textContent='⚠️ Esta persona no es personal de aseo. Perfil: '+persona.perfil;
+            msgEl.style.display='block';
+            document.getElementById('aseo-buscar-info').style.display='none';
+            return;
+        }
+        
+        // Mostrar información (todo correcto)
+        document.getElementById('aseo-nombre-display').textContent=persona.nombre||'-';
+        document.getElementById('aseo-doc-display').textContent=persona.numero_doc||'-';
+        document.getElementById('aseo-buscar-info').style.display='block';
+        msgEl.style.display='none';
+        
+    }catch(e){
+        msgEl.style.background='#f8d7da';
+        msgEl.style.color='#721c24';
+        msgEl.textContent='⚠️ Error: '+e.message;
+        msgEl.style.display='block';
+    }
+}
+
+async function registrarEntradaAseo(){
+    var doc=(document.getElementById('aseo-buscar-doc').value||'').trim();
+    var msgEl=document.getElementById('aseo-msg');
+    
+    if(!doc){
+        msgEl.style.background='#fff3cd';
+        msgEl.style.color='#856404';
+        msgEl.textContent='❌ Ingresa un número de documento';
+        msgEl.style.display='block';
+        return;
+    }
+    
+    try{
+        var payload={
+            numero_doc: doc,
+            tipo: 'ENTRADA',
+            observaciones: 'Personal de aseo - Entrada'
+        };
+        
+        var resp=await fetch('/api/registros-acceso',{
+            method:'POST',
+            headers:{
+                'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||''),
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(payload)
+        });
+        
+        var data=await resp.json();
+        
+        if(!resp.ok){
+            msgEl.style.background='#f8d7da';
+            msgEl.style.color='#721c24';
+            msgEl.textContent='❌ '+(data.error||'Error al registrar entrada');
+            msgEl.style.display='block';
+            return;
+        }
+        
+        msgEl.style.background='#d4edda';
+        msgEl.style.color='#155724';
+        msgEl.textContent='✅ Entrada registrada exitosamente';
+        msgEl.style.display='block';
+        
+        document.getElementById('aseo-buscar-doc').value='';
+        document.getElementById('aseo-buscar-info').style.display='none';
+        document.getElementById('btn-aseo-entrada').disabled=true;
+        document.getElementById('btn-aseo-entrada').style.opacity='0.5';
+        document.getElementById('btn-aseo-entrada').style.pointerEvents='none';
+        document.getElementById('btn-aseo-salida').disabled=true;
+        document.getElementById('btn-aseo-salida').style.opacity='0.5';
+        document.getElementById('btn-aseo-salida').style.pointerEvents='none';
+        
+        cargarPersonalAseoActivo();
+    }catch(e){
+        msgEl.style.background='#f8d7da';
+        msgEl.style.color='#721c24';
+        msgEl.textContent='❌ Error: '+e.message;
+        msgEl.style.display='block';
+    }
+}
+
+async function registrarSalidaAseo(){
+    var doc=(document.getElementById('aseo-buscar-doc').value||'').trim();
+    var msgEl=document.getElementById('aseo-msg');
+    
+    if(!doc){
+        msgEl.style.background='#fff3cd';
+        msgEl.style.color='#856404';
+        msgEl.textContent='❌ Ingresa un número de documento';
+        msgEl.style.display='block';
+        return;
+    }
+    
+    try{
+        var payload={
+            numero_doc: doc,
+            tipo: 'SALIDA',
+            observaciones: 'Personal de aseo - Salida'
+        };
+        
+        var resp=await fetch('/api/registros-acceso',{
+            method:'POST',
+            headers:{
+                'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||''),
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(payload)
+        });
+        
+        var data=await resp.json();
+        
+        if(!resp.ok){
+            msgEl.style.background='#f8d7da';
+            msgEl.style.color='#721c24';
+            msgEl.textContent='❌ '+(data.error||'Error al registrar salida');
+            msgEl.style.display='block';
+            return;
+        }
+        
+        msgEl.style.background='#d4edda';
+        msgEl.style.color='#155724';
+        msgEl.textContent='✅ Salida registrada exitosamente';
+        msgEl.style.display='block';
+        
+        document.getElementById('aseo-buscar-doc').value='';
+        document.getElementById('aseo-buscar-info').style.display='none';
+        document.getElementById('btn-aseo-entrada').disabled=true;
+        document.getElementById('btn-aseo-entrada').style.opacity='0.5';
+        document.getElementById('btn-aseo-entrada').style.pointerEvents='none';
+        document.getElementById('btn-aseo-salida').disabled=true;
+        document.getElementById('btn-aseo-salida').style.opacity='0.5';
+        document.getElementById('btn-aseo-salida').style.pointerEvents='none';
+        
+        cargarPersonalAseoActivo();
+    }catch(e){
+        msgEl.style.background='#f8d7da';
+        msgEl.style.color='#721c24';
+        msgEl.textContent='❌ Error: '+e.message;
+        msgEl.style.display='block';
+    }
+}
+
+async function cargarPersonalAseoActivo(){
+    try{
+        var resp=await fetch('/api/registros-acceso?limit=10000&sort=-timestamp',{
+            method:'GET',
+            headers:{
+                'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||''),
+                'Content-Type':'application/json'
+            }
+        });
+        
+        if(!resp.ok) throw new Error('Error al obtener registros');
+        
+        var data=await resp.json();
+        var registros=data.registros||[];
+        
+        var ultimoMovimiento={};
+        registros.forEach(function(reg){
+            if(!ultimoMovimiento[reg.numero_doc]){
+                ultimoMovimiento[reg.numero_doc]=reg;
+            }
+        });
+        
+        var aseoActivos=[];
+        Object.keys(ultimoMovimiento).forEach(function(numDoc){
+            var ultimo=ultimoMovimiento[numDoc];
+            if(ultimo.tipo==='ENTRADA' && ultimo.persona && ultimo.persona.perfil==='personal_aseo'){
+                aseoActivos.push(ultimo);
+            }
+        });
+        
+        var listEl=document.getElementById('aseo-list');
+        
+        if(aseoActivos.length===0){
+            listEl.innerHTML='<div style="text-align:center;color:#7a8aab;font-size:.87rem;padding:20px">No hay personal de aseo activo en este momento</div>';
+            return;
+        }
+        
+        var promesas=aseoActivos.map(function(aseo){
+            return fetch('/api/personas/buscar-por-documento?numero_doc='+encodeURIComponent(aseo.numero_doc),{
+                headers:{
+                    'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||''),
+                    'Content-Type':'application/json'
+                }
+            })
+            .then(r=>r.json())
+            .then(d=>{
+                if(d.persona){
+                    aseo.nombre=d.persona.nombre||'Sin nombre';
+                }
+                return aseo;
+            })
+            .catch(e=>{
+                return aseo;
+            });
+        });
+        
+        var aseoConDatos=await Promise.all(promesas);
+        
+        var html='<div style="display:flex;flex-direction:column;gap:8px">';
+        aseoConDatos.forEach(function(aseo){
+            var desde='--';
+            if(aseo.created_at){
+                var d=new Date(aseo.created_at);
+                desde=(d.getHours().toString().padStart(2,'0'))+':'+(d.getMinutes().toString().padStart(2,'0'));
+            }
+            html+='<div style="background:#f0f8f4;padding:12px;border-radius:6px;border-left:4px solid #39A900;display:flex;justify-content:space-between;align-items:center">';
+            html+='<div><span style="font-weight:700;color:#1c2b4b">🧹 '+esc(aseo.nombre||'N/A')+'</span><br><span style="font-size:.8rem;color:#7a8aab">Doc: '+esc(aseo.numero_doc||'')+'</span><br><span style="font-size:.8rem;color:#7a8aab">Desde: '+desde+'</span></div>';
+            html+='<button onclick="buscarParaSalida(\''+aseo.numero_doc.replace(/'/g,"\\'")+'\')" style="padding:8px 14px;background:#c0392b;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:.8rem;font-weight:700">Registrar Salida</button>';
+            html+='</div>';
+        });
+        html+='</div>';
+        
+        listEl.innerHTML=html;
+    }catch(e){
+        console.error(e);
+        var listEl=document.getElementById('aseo-list');
+        listEl.innerHTML='<div style="text-align:center;color:#c0392b;font-size:.87rem;padding:20px">Error al cargar personal de aseo</div>';
+    }
+}
+
+function buscarParaSalida(doc){
+    document.getElementById('aseo-buscar-doc').value=doc;
+    buscarPersonalAseo();
+}
 
 </script>
 

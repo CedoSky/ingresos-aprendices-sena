@@ -6,7 +6,36 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SENA - Acceso (Sin Dispositivos)</title>
+    <title>SENA - Acceso </title>
+
+    <!-- BLOQUEO TEMPRANO DE VISITANTES: Se ejecuta ANTES del DOM -->
+    <script>
+        (function() {
+            var rol = localStorage.getItem('sena_rol');
+            
+            // BLOQUEO TAJANTE: Si el rol es visitante → Bloquear INMEDIATAMENTE
+            if (rol && rol.toLowerCase() === 'visitante') {
+                document.write('');
+                document.write('<html><head><style>');
+                document.write('body { margin: 0; padding: 0; font-family: Arial, sans-serif; background: linear-gradient(135deg, #1a5c00 0%, #2a8000 40%, #39A900 100%); display: flex; align-items: center; justify-content: center; width: 100%; height: 100vh; }');
+                document.write('.bloqueado { background: rgba(200,0,0,0.95); color: white; padding: 40px; border-radius: 10px; text-align: center; max-width: 500px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }');
+                document.write('.bloqueado h1 { font-size: 2.5em; margin-bottom: 10px; }');
+                document.write('.bloqueado p { font-size: 1.1em; margin-bottom: 20px; line-height: 1.5; }');
+                document.write('.bloqueado .icon { font-size: 4em; margin-bottom: 20px; }');
+                document.write('</style></head><body>');
+                document.write('<div class="bloqueado">');
+                document.write('<div class="icon">⛔</div>');
+                document.write('<h1>Acceso Denegado</h1>');
+                document.write('<p>Documento no encontrado en el sistema.</p>');
+                document.write('<p>Si crees que esto es un error, contacta con vigilancia.</p>');
+                document.write('</div>');
+                document.write('</body></html>');
+                document.close();
+                return;
+            }
+        })();
+    </script>
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         input, textarea, select { user-select: text; cursor: text; }
@@ -629,7 +658,7 @@
             <div class="logo-divider"></div>
             <div class="logo-text">
                 <strong>Sistema de Control de Ingresos</strong>
-                <small>Servicio Nacional de Aprendizaje — SENA · Sin Registro de Dispositivos</small>
+                <small>Servicio Nacional de Aprendizaje — SENA </small>
             </div>
         </div>
         <div class="status">● Sistema Activo</div>
@@ -686,8 +715,8 @@
                             <input class="input-modern scan-only" type="text" id="codigo"
                                 placeholder="Esperando escaneo..."
                                 autocomplete="off" autocorrect="off" spellcheck="false"
+                                style="color:transparent; caret-color:transparent; user-select:none;"
                                 oninput="detectarEscaner(this)"
-                                onkeydown="scanGuardKeydown(event,'codigo')"
                                 onkeypress="if(event.key==='Enter') procesarAcceso()">
                             <span class="scan-badge">&#x1F4F7; ESCÁNER</span>
                         </div>
@@ -769,7 +798,7 @@
     </div>
 
     <script>
-        var token = localStorage.getItem('api_token');
+        var token = localStorage.getItem('sena_api_token');
         var modo = '';
         var persona = null;
         var piso = null;
@@ -804,15 +833,51 @@
                 if (resp.ok) {
                     var data = await resp.json();
                     token = data.token;
-                    localStorage.setItem('api_token', token);
+                    localStorage.setItem('sena_api_token', token);
                 }
             } catch(e) {}
         }
 
         window.addEventListener('load', async function() {
             await refrescarTokenSistema();
-            cargarPersonasCache();
-            setInterval(sincronizarRegistros, 10000);
+            
+            // ═══════════════════════════════════════════════════════════════════════════════
+            // VALIDAR: Solo aprendices e instructores pueden usar este panel
+            // RECHAZAR: Visitantes y otros no autorizados
+            // ═══════════════════════════════════════════════════════════════════════════════
+            try {
+                var respValidar = await fetch('/api/auth/validar-acceso-ingreso', {
+                    headers: { 'Authorization': 'Bearer ' + (localStorage.getItem('sena_api_token')||'') }
+                });
+                
+                if (!respValidar.ok) {
+                    if(respValidar.status === 403) {
+                        var dataValidar = await respValidar.json();
+                        // Bloquear visitante
+                        var bloqueado = document.getElementById('p-bloqueado');
+                        document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activo'));
+                        if(bloqueado) {
+                            var msgBlq = bloqueado.querySelector('#blq-mensaje');
+                            msgBlq.textContent = dataValidar.error || 'No tienes permiso para usar este panel.';
+                            bloqueado.classList.add('activo');
+                        }
+                        setTimeout(() => { window.location.href = '/login.html'; }, 5000);
+                        return;
+                    } else if(respValidar.status === 401) {
+                        // Sin token válido → ir a login
+                        window.location.href = '/login.html';
+                        return;
+                    }
+                }
+                
+                // Si llegamos aquí, el usuario está autorizado
+                cargarPersonasCache();
+                setInterval(sincronizarRegistros, 10000);
+            } catch(e) {
+                console.error('Error validando acceso:', e);
+                cargarPersonasCache();
+                setInterval(sincronizarRegistros, 10000);
+            }
         });
 
         async function cargarPersonasCache() {
@@ -903,42 +968,28 @@
             localStorage.removeItem('registros_pendientes');
         }
 
-        // ─── GUARDIÁN DE ESCANEO ──────────────────────────────────────────────────
-        var _scanGuardLast = {};
-        function scanGuardKeydown(e, fieldId) {
-            var skip = ['Enter','Backspace','Tab','Delete','Escape',
-                        'ArrowLeft','ArrowRight','ArrowUp','ArrowDown',
-                        'Shift','Control','Alt','Meta','CapsLock'];
-            if (skip.indexOf(e.key) !== -1 || e.ctrlKey || e.metaKey || e.altKey) return;
-            var now  = Date.now();
-            var last = _scanGuardLast[fieldId] || 0;
-            var gap  = now - last;
-            _scanGuardLast[fieldId] = now;
-            if (e.target.value.length === 0) return;
-            if (gap > 80) {
-                e.preventDefault();
-                e.target.value = '';
-                _scanGuardLast[fieldId] = 0;
-            }
-        }
-
+        // ─── ESCANEO AUTO-SUBMIT ──────────────────────────────────────────────────
         var _scanPersonaTimer = null;
         function detectarEscaner(input) {
             clearTimeout(_scanPersonaTimer);
-            if (input.value.length >= 6) {
-                _scanPersonaTimer = setTimeout(function() { procesarAcceso(); }, 120);
+            if (input.value.length >= 5) {
+                _scanPersonaTimer = setTimeout(function() { procesarAcceso(); }, 200);
             }
         }
 
         async function procesarAcceso() {
-            var cod = document.getElementById('codigo').value.trim();
-            if (!cod) { alert('Escanea o escribe la cédula'); return; }
+            // Dejar solo dígitos (cédula colombiana = solo números)
+            var raw = document.getElementById('codigo').value;
+            var cod = raw.replace(/[^0-9]/g, '');
+            document.getElementById('codigo').value = '';
+            if (!cod) { return; }  // campo vacío: ignorar silenciosamente
             await _ejecutarVerificacion(cod);
         }
 
         async function procesarAccesoManual() {
-            var numero_doc = document.getElementById('manual-numero-doc').value.trim();
-            if (!numero_doc) { alert('Ingresa el número de documento'); return; }
+            var raw = document.getElementById('manual-numero-doc').value;
+            var numero_doc = raw.replace(/[^0-9]/g, '');
+            if (!numero_doc) { return; }  // campo vacío: ignorar silenciosamente
             await _ejecutarVerificacion(numero_doc);
         }
 
@@ -1168,6 +1219,8 @@
         }
 
         var _ocupacionesCache = [];
+        // FLAG para prevenir doble-clic durante procesamiento de acceso
+        var _procesandoAcceso = false;
 
         async function generarMapaSalas() {
             try {
@@ -1187,15 +1240,23 @@
                 for (var n = 1; n <= total; n++) { listaAmb.push(String(piso * 100 + n)); }
             }
 
+            // Solo instructores ven ambientes bloqueados. Aprendices siempre ven disponibles
+            var eresInstructor = persona && persona.perfil &&
+                (persona.perfil.toLowerCase() === 'instructor' || persona.perfil.toLowerCase() === 'instructora');
+
             listaAmb.forEach(function(ambNombre) {
                 var nombreAmbiente = (nombreEdificio ? nombreEdificio + ' - ' : '') + 'PISO ' + piso + ' - AMBIENTE ' + ambNombre;
                 var ocupacion = null;
-                for (var i = 0; i < _ocupacionesCache.length; i++) {
-                    var oc = _ocupacionesCache[i];
-                    if (oc.ambiente === nombreAmbiente && oc.persona.numero_doc !== miDoc) { ocupacion = oc; break; }
+                
+                // Solo buscar ocupación si eres instructor (para bloquear)
+                if (eresInstructor) {
+                    for (var i = 0; i < _ocupacionesCache.length; i++) {
+                        var oc = _ocupacionesCache[i];
+                        if (oc.ambiente === nombreAmbiente && oc.persona.numero_doc !== miDoc) { ocupacion = oc; break; }
+                    }
                 }
 
-                if (ocupacion) {
+                if (ocupacion && eresInstructor) {
                     html += '<div class="mapa-card ocupado" data-sala="' + ambNombre + '" data-bloqueado="true"' +
                         ' data-instructor="' + (ocupacion.persona.nombre || '') + '" title="Ocupado por ' + (ocupacion.persona.nombre || 'otro instructor') + '">' +
                         '<div class="mapa-numero">AMBIENTE</div>' +
@@ -1245,17 +1306,34 @@
         }
 
         function selSala(s) {
+            // Bloquear si ya está procesando para evitar doble-clic
+            if (_procesandoAcceso) {
+                console.warn('[ACCESO] Ya se está procesando un acceso. Ignorando clic duplicado.');
+                return;
+            }
+            
             sala = s;
             var nombreEdificio = edificioData ? edificioData.nombre : '';
             ambienteCompleto = (nombreEdificio ? nombreEdificio + ' - ' : '') + 'PISO ' + piso + ' - AMBIENTE ' + s;
+            _procesandoAcceso = true;  // Establecer flag ANTES de confirmar
             confirmar();
         }
 
-        function volverAPisos() { sala = null; ambienteCompleto = null; irPantalla('p5'); }
+        function volverAPisos() { 
+            _procesandoAcceso = false;
+            sala = null; 
+            ambienteCompleto = null; 
+            irPantalla('p5'); 
+        }
 
         function volverAEdificios() {
-            piso = null; sala = null; ambienteCompleto = null; edificio = null; edificioData = null;
-            generarMapaEdificios();
+            _procesandoAcceso = false;
+            piso = null; 
+            sala = null; 
+            ambienteCompleto = null; 
+            edificio = null; 
+            edificioData = null;
+            irPantalla('p0');
         }
 
         // ─── CONFIRMAR REGISTRO (SIN EQUIPO) ─────────────────────────────────────
@@ -1290,7 +1368,7 @@
                             if (authResp.ok) {
                                 var authData = await authResp.json();
                                 token = authData.token;
-                                localStorage.setItem('api_token', token);
+                                localStorage.setItem('sena_api_token', token);
                                 res = await fetch(endpoint, {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
@@ -1301,13 +1379,34 @@
                     }
 
                     if (res.ok) {
+                        // ── Apertura automática cerradura Ambiente 203 ──────────────
+                        var esCerradura203 = (modo === 'ENTRADA' &&
+                                              sala === '203' &&
+                                              persona.perfil &&
+                                              persona.perfil.toUpperCase() === 'INSTRUCTOR');
+                        var msgCerradura = '';
+                        if (esCerradura203) {
+                            try {
+                                var lockRes = await fetch('/api/esp32/proxy/ambiente/203/abrir/15', {
+                                    method: 'GET',
+                                    signal: AbortSignal.timeout(8000)
+                                });
+                                msgCerradura = lockRes.ok
+                                    ? '<p style="color:#39A900; font-weight:bold; margin-top:10px;">🔓 Cerradura Ambiente 203 abierta</p>'
+                                    : '<p style="color:#FF5800; font-style:italic; margin-top:10px;">⚠️ No se pudo abrir la cerradura</p>';
+                            } catch(_) {
+                                msgCerradura = '<p style="color:#FF5800; font-style:italic; margin-top:10px;">⚠️ Sin respuesta del dispositivo cerradura</p>';
+                            }
+                        }
+                        // ────────────────────────────────────────────────────────────
                         document.getElementById('msg-titulo').textContent = '[OK] ' + titulo;
                         document.getElementById('msg-confirmacion').innerHTML =
                             '<p><strong>' + persona.nombre + '</strong></p>' +
                             '<p>Cedula: ' + persona.numero_doc + '</p>' +
                             '<p>Tipo: <strong>' + modo + '</strong></p>' +
                             '<p>Ubicacion: Piso ' + piso + ' - Ambiente ' + sala + '</p>' +
-                            '<p style="color: #39A900; font-weight: bold; margin-top: 15px;">Registrado en servidor</p>';
+                            '<p style="color: #39A900; font-weight: bold; margin-top: 15px;">Registrado en servidor</p>' +
+                            msgCerradura;
                     } else if (res.status === 403) {
                         var data = await res.json();
                         document.getElementById('msg-titulo').textContent = '[BLOQUEADO] Acción no permitida';

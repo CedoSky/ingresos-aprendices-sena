@@ -125,6 +125,35 @@ CAMBIOS = {
         "endpoint_prioridad": "/acceso/verificar (recibe 100+ requests/min)",
         "resultado": "✅ Endpoint crítico endurecido y testeado",
     },
+    
+    "5_INTEGRACION_HERRAMIENTAS_MANTENIMIENTO": {
+        "descripcion": "Integración del sistema existente MANTENIMIENTO.bat en el Panel Admin",
+        "modificaciones": [
+            "frontend/administracion.html → Modal de bloqueo para herramientas",
+            "frontend/administracion.html → Funciones verificarCodigoMantenimiento()",
+            "frontend/administracion.html → Funciones inicializarHerramientas()",
+            "backend/routes.py → POST /api/admin/verificar-codigo-mantenimiento (integración con TOTP)",
+        ],
+        "sistema_usado": "MANTENIMIENTO.bat (existente) + gestionar_pin_sistemas.py",
+        "caracteristicas": {
+            "generacion_pin": "TOTP (Time-based One-Time Password) válido 5 minutos",
+            "autenticacion": "PIN dinámico HMAC-SHA1 con secreto en backend/.env",
+            "auditoría": "Log de ingreso y acceso concedido",
+            "restriccion": "Solo para usuarios rol 'administrador' y 'sysadmin'",
+            "sesion": "Desbloqueado por sesión de usuario (se pierde al cerrar navegador)",
+        },
+        "herramientas_protegidas": [
+            "Limpiar Registros de Acceso",
+            "Restaurar Base de Datos",
+            "Optimizar",
+        ],
+        "herramientas_publicas": [
+            "Descargar BD (información)",
+            "Health Check (diagnóstico)",
+            "Estado (información del sistema)",
+        ],
+        "resultado": "✅ Herramientas críticas protegidas con PIN dinámico (sistema existente TOTP)",
+    },
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════

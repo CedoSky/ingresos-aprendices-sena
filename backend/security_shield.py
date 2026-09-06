@@ -58,11 +58,6 @@ class InputValidator:
         if not re.match(InputValidator.PATTERNS['numero_doc'], doc):
             return False, 'Documento debe contener 6-11 dígitos'
         
-        # Validación dígito de verificación (cédula colombiana)
-        if len(doc) == 10:
-            if not _validar_digito_verificacion_cedula(doc):
-                return False, 'Cédula inválida (dígito verificador fallido)'
-        
         return True, ''
     
     @staticmethod
