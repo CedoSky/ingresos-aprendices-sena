@@ -98,6 +98,9 @@ class ProductionConfig(Config):
     """Configuración producción"""
     DEBUG = False
     SQLALCHEMY_ECHO = False
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_pre_ping': True,
+    }
     
     # En producción, esperamos DATABASE_URL en formato PostgreSQL
     # Ejemplo: postgresql://user:password@host:5432/dbname
