@@ -2,7 +2,7 @@ services:
   # Aplicación Web
   - type: web
     name: sena-ingresos
-    runtime: python310
+    runtime: python
     buildCommand: "./build.sh"
     startCommand: "cd backend && gunicorn -w 1 -b 0.0.0.0:$PORT wsgi:app --timeout 60 --keep-alive 5"
     
@@ -31,8 +31,5 @@ services:
   # Base de datos PostgreSQL
   - type: pserv
     name: sena-db
-    runtime: postgresql15
+    runtime: postgres
     plan: free
-    
-    # Variables de conexión
-    ipAllowList: []  # Permitir desde todas partes (Render maneja esto)
