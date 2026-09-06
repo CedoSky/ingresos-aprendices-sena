@@ -1,4 +1,5 @@
 from app import create_app
+import os
 
 # create_app devuelve la aplicación Flask y la instancia Socket.IO.
 # Gunicorn necesita exponer únicamente la aplicación Flask.
