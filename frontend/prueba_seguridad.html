@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PRUEBA SEGURIDAD - ENTRADA/SALIDA</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        h1 { color: #333; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        input { padding: 10px; margin: 5px; font-size: 16px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #0056b3; }
+        .success { color: #39A900; font-weight: bold; padding: 10px; background: #e8f5e9; border-radius: 5px; margin: 10px 0; }
+        .error { color: #D32F2F; font-weight: bold; padding: 10px; background: #ffebee; border-radius: 5px; margin: 10px 0; }
+        .info { color: #1976d2; padding: 10px; background: #e3f2fd; border-radius: 5px; margin: 10px 0; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        .blocked { background: #ffcdd2; border: 3px solid #D32F2F; padding: 20px; border-radius: 10px; text-align: center; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 PRUEBA DE SEGURIDAD - ENTRADA/SALIDA</h1>
+        
+        <div class="test-section">
+            <h2>Configuración</h2>
+            <label>Email: <input type="text" id="email" placeholder="correo@sena.edu.co"></label>
+            <label>Contraseña: <input type="password" id="password" placeholder="Ingresa tu contraseña"></label>
+            <button onclick="login()">1. LOGIN</button>
+            <div id="token-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Prueba 1: Primera ENTRADA</h2>
+            <label>Documento: <input type="text" id="doc1" value="5432109876"></label>
+            <label>Nombre: <input type="text" id="name1" value="Test Entrada 1"></label>
+            <button onclick="testEntrada1()">Registrar ENTRADA</button>
+            <div id="result1"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Prueba 2: Segunda ENTRADA (DEBE BLOQUEARSE) ⚠️</h2>
+            <p>Sin hacer SALIDA primero. Si el sistema funciona, esto debería mostrar error 403.</p>
+            <button onclick="testEntrada2()">Registrar ENTRADA Nuevamente (BLOQUEADO)</button>
+            <div id="result2"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Prueba 3: SALIDA</h2>
+            <button onclick="testSalida()">Registrar SALIDA</button>
+            <div id="result3"></div>
+        </div>
+    </div>
+
+    <script>
+        let token = null;
+        const BASE_URL = 'http://localhost:8000/api';
+        const doc = '5432109876';
+        const name = 'Test Entrada 1';
+
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const r = await fetch(BASE_URL + '/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                if (!r.ok) throw new Error(`Login failed: ${r.status}`);
+                
+                const data = await r.json();
+                token = data.token;
+                
+                document.getElementById('token-result').innerHTML = 
+                    '<div class="success">✓ Token obtenido: ' + token.substring(0, 40) + '...</div>';
+                    
+            } catch (e) {
+                document.getElementById('token-result').innerHTML = 
+                    '<div class="error">❌ Error: ' + e.message + '</div>';
+            }
+        }
+
+        async function testEntrada1() {
+            if (!token) {
+                alert('Primero haz LOGIN');
+                return;
+            }
+            
+            try {
+                const r = await fetch(BASE_URL + '/registros-acceso/manual', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        nombre: name,
+                        tipo_doc: 'CC',
+                        numero_doc: doc,
+                        tipo: 'ENTRADA',
+                        ambiente: 'PRUEBA'
+                    })
+                });
+
+                const data = await r.json();
+                
+                if (r.ok) {
+                    document.getElementById('result1').innerHTML = 
+                        '<div class="success">✅ ENTRADA REGISTRADA (201)<br>' +
+                        'ID: ' + data.id + '<br>' +
+                        'Hora: ' + data.timestamp + '</div>';
+                } else {
+                    document.getElementById('result1').innerHTML = 
+                        '<div class="error">❌ Error ' + r.status + ': ' + data.error + '</div>';
+                }
+            } catch (e) {
+                document.getElementById('result1').innerHTML = 
+                    '<div class="error">❌ Error: ' + e.message + '</div>';
+            }
+        }
+
+        async function testEntrada2() {
+            if (!token) {
+                alert('Primero haz LOGIN');
+                return;
+            }
+            
+            try {
+                const r = await fetch(BASE_URL + '/registros-acceso/manual', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        nombre: name,
+                        tipo_doc: 'CC',
+                        numero_doc: doc,
+                        tipo: 'ENTRADA',
+                        ambiente: 'PRUEBA'
+                    })
+                });
+
+                const data = await r.json();
+                
+                if (r.ok) {
+                    document.getElementById('result2').innerHTML = 
+                        '<div class="blocked">❌ FALLO EN LA SEGURIDAD<br>' +
+                        'Segunda ENTRADA fue PERMITIDA cuando debería estar BLOQUEADA!<br>' +
+                        'ID: ' + data.id + '</div>';
+                } else if (r.status === 403) {
+                    document.getElementById('result2').innerHTML = 
+                        '<div class="success">✅ BLOQUEADO CORRECTAMENTE (403)<br><br>' +
+                        '<strong>Mensaje:</strong> ' + data.error + '<br><br>' +
+                        '¡Sistema de seguridad funcionando! ✓</div>';
+                } else {
+                    document.getElementById('result2').innerHTML = 
+                        '<div class="error">❌ Error ' + r.status + ': ' + data.error + '</div>';
+                }
+            } catch (e) {
+                document.getElementById('result2').innerHTML = 
+                    '<div class="error">❌ Error: ' + e.message + '</div>';
+            }
+        }
+
+        async function testSalida() {
+            if (!token) {
+                alert('Primero haz LOGIN');
+                return;
+            }
+            
+            try {
+                const r = await fetch(BASE_URL + '/registros-acceso/manual', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        nombre: name,
+                        tipo_doc: 'CC',
+                        numero_doc: doc,
+                        tipo: 'SALIDA',
+                        ambiente: 'PRUEBA'
+                    })
+                });
+
+                const data = await r.json();
+                
+                if (r.ok) {
+                    document.getElementById('result3').innerHTML = 
+                        '<div class="success">✅ SALIDA REGISTRADA (201)<br>' +
+                        'ID: ' + data.id + '<br>' +
+                        'Hora: ' + data.timestamp + '</div>';
+                } else {
+                    document.getElementById('result3').innerHTML = 
+                        '<div class="error">❌ Error ' + r.status + ': ' + data.error + '</div>';
+                }
+            } catch (e) {
+                document.getElementById('result3').innerHTML = 
+                    '<div class="error">❌ Error: ' + e.message + '</div>';
+            }
+        }
+    </script>
+</body>
+</html>

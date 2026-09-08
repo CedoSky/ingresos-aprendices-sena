@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENA - Acceso </title>
+
+    <!-- BLOQUEO TEMPRANO DE VISITANTES: Se ejecuta ANTES del DOM -->
+    <script>
+        (function() {
+            var rol = localStorage.getItem('sena_rol');
+            
+            // BLOQUEO TAJANTE: Si el rol es visitante → Bloquear INMEDIATAMENTE
+            if (rol && rol.toLowerCase() === 'visitante') {
+                document.write('');
+                document.write('<html><head><style>');
+                document.write('body { margin: 0; padding: 0; font-family: Arial, sans-serif; background: linear-gradient(135deg, #1a5c00 0%, #2a8000 40%, #39A900 100%); display: flex; align-items: center; justify-content: center; width: 100%; height: 100vh; }');
+                document.write('.bloqueado { background: rgba(200,0,0,0.95); color: white; padding: 40px; border-radius: 10px; text-align: center; max-width: 500px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }');
+                document.write('.bloqueado h1 { font-size: 2.5em; margin-bottom: 10px; }');
+                document.write('.bloqueado p { font-size: 1.1em; margin-bottom: 20px; line-height: 1.5; }');
+                document.write('.bloqueado .icon { font-size: 4em; margin-bottom: 20px; }');
+                document.write('</style></head><body>');
+                document.write('<div class="bloqueado">');
+                document.write('<div class="icon">⛔</div>');
+                document.write('<h1>Acceso Denegado</h1>');
+                document.write('<p>Documento no encontrado en el sistema.</p>');
+                document.write('<p>Si crees que esto es un error, contacta con vigilancia.</p>');
+                document.write('</div>');
+                document.write('</body></html>');
+                document.close();
+                return;
+            }
+        })();
+    </script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        input, textarea, select { user-select: text; cursor: text; }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a5c00 0%, #2a8000 40%, #39A900 100%);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(10px);
+            padding: 14px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            flex-shrink: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo img {
+            height: 64px;
+            width: auto;
+            filter: brightness(0) invert(1);
+            display: block;
+        }
+
+        .logo-text {
+            color: white;
+            line-height: 1.3;
+        }
+
+        .logo-text strong {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+        }
+
+        .logo-text small {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 400;
+            opacity: 0.85;
+            letter-spacing: 0.2px;
+        }
+
+        .logo-divider {
+            width: 1px;
+            height: 40px;
+            background: rgba(255,255,255,0.35);
+        }
+
+        .status {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px 20px;
+            border-radius: 50px;
+            color: rgba(255,255,255,0.95);
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .content {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .pantalla {
+            display: none;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .pantalla.activo {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== PANTALLA 1 ===== */
+        .hero-section {
+            text-align: center;
+            color: white;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 60px;
+            font-weight: 300;
+        }
+
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 50px;
+            justify-items: center;
+            place-content: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .btn-card {
+            aspect-ratio: auto;
+            width: 220px;
+            height: 220px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: left 0.6s ease;
+            z-index: -1;
+        }
+
+        .btn-card:hover::before {
+            left: 100%;
+        }
+
+        .entrada-btn {
+            background: linear-gradient(135deg, #39A900 0%, #2a8000 100%);
+            color: white;
+        }
+
+        .entrada-btn:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 40px 60px rgba(57, 169, 0, 0.4);
+        }
+
+        .salida-btn {
+            background: linear-gradient(135deg, #FF5800 0%, #cc4600 100%);
+            color: white;
+        }
+
+        .salida-btn:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 40px 60px rgba(255, 88, 0, 0.4);
+        }
+
+        .btn-icon {
+            font-size: clamp(3rem, 8vw, 5rem);
+            line-height: 1;
+        }
+
+        .btn-label {
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            letter-spacing: 1px;
+        }
+
+        /* ===== PANTALLA 2 ===== */
+        .card-modern {
+            background: white;
+            border-radius: 30px;
+            padding: clamp(30px, 5vw, 50px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-modern h2 {
+            color: #003087;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .input-modern {
+            width: 100%;
+            padding: 18px 20px;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            border: 2px solid #E0E0E0;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .input-modern:focus {
+            outline: none;
+            border-color: #00AEEF;
+            box-shadow: 0 0 0 4px rgba(0, 174, 239, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .input-modern::placeholder {
+            color: #aaa;
+        }
+
+        .btn-modern {
+            width: 100%;
+            padding: 16px 24px;
+            font-size: 1.05rem;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-modern::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+            z-index: -1;
+        }
+
+        .btn-modern:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00AEEF 0%, #0084bf 100%);
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 174, 239, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 174, 239, 0.5);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #003087;
+            font-weight: 600;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        /* === SCAN ONLY INPUT === */
+        .scan-field-wrap { position:relative; }
+        .scan-field-wrap .scan-badge {
+            position:absolute; right:12px; top:50%; transform:translateY(-50%);
+            background:#e3f2fd; color:#1565c0; border-radius:6px;
+            padding:3px 8px; font-size:.68rem; font-weight:700;
+            pointer-events:none; white-space:nowrap;
+        }
+        .scan-only { caret-color: transparent !important; }
+
+        /* ===== MAPAS FULLSCREEN ===== */
+        .mapa-screen {
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+            padding: 0;
+            background: #f5f5f5;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .mapa-header {
+            background: #003087;
+            padding: clamp(20px, 3vw, 35px);
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 48, 135, 0.25);
+            border-bottom: none;
+            flex-shrink: 0;
+        }
+
+        .mapa-header h2 {
+            font-size: clamp(1.8rem, 5vw, 2.4rem);
+            margin-bottom: 12px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .mapa-info {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 500;
+        }
+
+        .mapa-back-btn {
+            margin-top: 18px;
+            border: none;
+            border-radius: 12px;
+            padding: 11px 18px;
+            background: rgba(255, 255, 255, 0.18);
+            color: white;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .mapa-back-btn:hover {
+            background: rgba(255, 255, 255, 0.28);
+            transform: translateY(-1px);
+        }
+
+        .mapa-grid {
+            flex: 1 1 0;
+            min-height: 0;
+            overflow-y: auto !important;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding: clamp(12px, 2vw, 24px);
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-auto-rows: 1fr;
+            gap: clamp(10px, 1.5vw, 18px);
+            align-content: center;
+            justify-items: stretch;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .mapa-grid::-webkit-scrollbar { width: 10px; }
+        .mapa-grid::-webkit-scrollbar-track { background: #f5f5f5; }
+        .mapa-grid::-webkit-scrollbar-thumb { background: #003087; border-radius: 5px; }
+        .mapa-grid::-webkit-scrollbar-thumb:hover { background: #0052a3; }
+
+        /* Ambiente ocupado por otro instructor */
+        .mapa-card.ocupado {
+            background: linear-gradient(135deg, #fff3f3 0%, #ffe5e5 100%) !important;
+            border-color: #e53935 !important;
+            cursor: not-allowed !important;
+            opacity: 0.85;
+        }
+        .mapa-card.ocupado:hover {
+            transform: none !important;
+            box-shadow: 0 4px 12px rgba(229,57,53,0.25) !important;
+            border-color: #e53935 !important;
+        }
+        .mapa-card.ocupado::after {
+            background: #e53935 !important;
+            transform: scaleX(1) !important;
+        }
+        .mapa-card.ocupado .mapa-numero {
+            background: rgba(229,57,53,0.12);
+            border-color: rgba(229,57,53,0.4);
+            color: #c62828 !important;
+        }
+        .mapa-card.ocupado .mapa-valor { color: #c62828 !important; }
+        .mapa-ocupado-label {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: #e53935;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            line-height: 1.2;
+            padding: 0 8px;
+        }
+
+        .mapa-card {
+            width: 100%;
+            max-width: 100%;
+            aspect-ratio: 1 / 1;
+            background: #ffffff;
+            border-radius: 14px;
+            cursor: grab;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 2px 8px rgba(0, 48, 135, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #c5d3e8;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .mapa-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.5) 50%, transparent 100%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+            pointer-events: none;
+        }
+
+        .mapa-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #003087 0%, #0052a3 50%, #003087 100%);
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .mapa-card:hover::before { transform: translateX(100%); }
+        .mapa-card:hover::after  { transform: scaleX(1); }
+
+        .mapa-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 52, 163, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border: 1px solid #0052a3;
+            background: #fafbfc;
+            transform: translateY(-8px);
+            cursor: grab;
+        }
+
+        .mapa-card:active, .mapa-card.dragging {
+            box-shadow: 0 6px 16px rgba(0, 48, 135, 0.2);
+            transform: translateY(-4px) scale(1.02);
+            cursor: grabbing;
+        }
+
+        .mapa-numero {
+            color: #003087;
+            font-weight: 800;
+            font-size: clamp(0.7rem, 1.4vw, 0.95rem);
+            line-height: 1;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1;
+            background: rgba(0, 94, 184, 0.1);
+            border: 1px solid rgba(0, 94, 184, 0.25);
+            border-radius: 999px;
+            padding: 5px 12px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .mapa-card:hover .mapa-numero {
+            color: #0052a3;
+            transform: scale(1.04) translateY(-2px);
+            font-weight: 800;
+        }
+
+        .mapa-valor {
+            font-size: clamp(2rem, 5.5vw, 3rem);
+            font-weight: 900;
+            color: #003087;
+            line-height: 1;
+            text-align: center;
+        }
+
+        @media (max-width: 900px) { .mapa-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 600px) { .mapa-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        /* ===== PANTALLA DE BLOQUEO ===== */
+        #p-bloqueado {
+            background: linear-gradient(135deg, #7b0000 0%, #c62828 40%, #b71c1c 100%) !important;
+            animation: pulseRed 2s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        #p-bloqueado::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 30%, rgba(255,100,100,0.25) 0%, transparent 70%);
+            animation: radialPulse 1.8s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes pulseRed { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.1); } }
+        @keyframes radialPulse { 0%, 100% { opacity: 0.4; transform: scale(1); } 50% { opacity: 1; transform: scale(1.08); } }
+        @keyframes shakeIcon {
+            0%,100% { transform: translateX(0) rotate(0deg); }
+            10%      { transform: translateX(-8px) rotate(-4deg); }
+            20%      { transform: translateX(8px)  rotate(4deg); }
+            30%      { transform: translateX(-6px) rotate(-2deg); }
+            40%      { transform: translateX(6px)  rotate(2deg); }
+            50%      { transform: translateX(0) rotate(0); }
+        }
+        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes countdownBar { from { width: 100%; } to { width: 0%; } }
+
+        .blq-icon {
+            font-size: clamp(5rem, 15vw, 7rem);
+            display: block;
+            animation: shakeIcon 1s ease-in-out infinite;
+            filter: drop-shadow(0 0 30px rgba(255,180,180,0.7));
+            margin-bottom: 8px;
+        }
+        .blq-titulo { font-size: clamp(1.6rem, 5vw, 2.8rem); font-weight: 900; letter-spacing: 3px; text-shadow: 0 0 30px rgba(255,100,100,0.8), 0 3px 0 rgba(0,0,0,0.3); color: #fff; margin-bottom: 6px; animation: fadeSlideUp 0.4s ease both; }
+        .blq-subtitulo { font-size: clamp(0.85rem, 2vw, 1rem); color: rgba(255,255,255,0.7); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 28px; animation: fadeSlideUp 0.5s ease 0.1s both; }
+        .blq-card { background: rgba(0,0,0,0.45); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: clamp(20px,4vw,36px) clamp(24px,5vw,48px); max-width: min(600px, 92vw); width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); animation: fadeSlideUp 0.5s ease 0.15s both; }
+        .blq-persona-nombre { font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 800; color: #fff; margin-bottom: 4px; }
+        .blq-persona-doc { font-size: clamp(0.85rem, 2vw, 1rem); color: rgba(255,255,255,0.6); margin-bottom: 18px; letter-spacing: 1px; }
+        .blq-estado-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 22px; border-radius: 999px; font-weight: 700; font-size: clamp(0.9rem, 2.2vw, 1.05rem); margin-bottom: 20px; border: 2px solid rgba(255,255,255,0.3); }
+        .blq-estado-dentro  { background: rgba(46,125,50,0.7);  color: #a5d6a7; }
+        .blq-estado-afuera  { background: rgba(183,28,28,0.5);  color: #ef9a9a; }
+        .blq-estado-ninguno { background: rgba(80,80,80,0.6);   color: #ccc; }
+        .blq-divider { height: 1px; background: rgba(255,255,255,0.15); margin: 16px 0; }
+        .blq-mensaje { font-size: clamp(0.95rem, 2.5vw, 1.15rem); color: #ffcdd2; font-weight: 600; line-height: 1.6; margin-bottom: 8px; }
+        .blq-timestamp { font-size: 0.82rem; color: rgba(255,255,255,0.45); }
+        .blq-footer { margin-top: 28px; animation: fadeSlideUp 0.6s ease 0.3s both; }
+        .blq-countdown-label { font-size: 0.82rem; color: rgba(255,255,255,0.55); letter-spacing: 1px; margin-bottom: 8px; }
+        .blq-bar-track { width: min(340px, 80vw); height: 5px; background: rgba(255,255,255,0.15); border-radius: 999px; overflow: hidden; margin: 0 auto; }
+        .blq-bar-fill { height: 100%; background: rgba(255,255,255,0.7); border-radius: 999px; animation: countdownBar 5s linear forwards; }
+
+        /* ===== CONFIRMACIÓN ===== */
+        .success-container { text-align: center; color: white; }
+
+        .success-icon {
+            font-size: clamp(4rem, 12vw, 6rem);
+            margin-bottom: 20px;
+            animation: bounce 0.8s ease infinite;
+        }
+
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        .success-title { font-size: clamp(1.8rem, 5vw, 2.5rem); margin-bottom: 25px; font-weight: 700; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); }
+
+        .success-details {
+            background: rgba(255, 255, 255, 0.95);
+            padding: clamp(25px, 4vw, 40px);
+            border-radius: 25px;
+            color: #333;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .success-details p { margin: 12px 0; font-size: clamp(0.95rem, 2.5vw, 1.1rem); line-height: 1.6; }
+        .success-details strong { color: #003087; }
+
+        .spinner {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <img src="https://betowa.sena.edu.co/assets/logos/sena-logo.svg" alt="SENA">
+            <div class="logo-divider"></div>
+            <div class="logo-text">
+                <strong>Sistema de Control de Ingresos</strong>
+                <small>Servicio Nacional de Aprendizaje — SENA </small>
+            </div>
+        </div>
+        <div class="status">● Sistema Activo</div>
+    </div>
+
+    <div class="content">
+        <!-- PANTALLA 0: BIENVENIDA -->
+        <div id="p0" class="pantalla activo">
+            <div class="hero-section">
+                <div class="hero-title">¡Bienvenido!</div>
+                <div class="hero-subtitle">Sistema de Control de Acceso SENA</div>
+                <div style="margin-top: 40px; font-size: clamp(1.3rem, 4vw, 1.8rem); color: white; margin-bottom: 60px; font-weight: 600;">¿Vas a entrar o salir?</div>
+                <div class="buttons-grid">
+                    <button class="btn-card entrada-btn" onclick="selModo('ENTRADA')">
+                        <span class="btn-icon">↓</span>
+                        <span class="btn-label">ENTRADA</span>
+                    </button>
+                    <button class="btn-card salida-btn" onclick="selModo('SALIDA')">
+                        <span class="btn-icon">↑</span>
+                        <span class="btn-label">SALIDA</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANTALLA 2: IDENTIFICACIÓN -->
+        <div id="p2" class="pantalla">
+            <div class="card-modern">
+                <h2>Identifica tu Cédula</h2>
+                <div style="margin-bottom: 30px; text-align: center;">
+                    <div id="offline-indicator" style="display: none; background: #FF5800; color: white; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-weight: bold;">
+                        [SIN CONEXION] Modo Offline Activo
+                    </div>
+                </div>
+
+                <!-- TAB BUTTONS -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                    <button class="tab-btn active" id="tab-barcode" onclick="cambiarTab('barcode')" style="padding: 12px; background: #00AEEF; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600;">
+                        Codigo de Barras
+                    </button>
+                    <button class="tab-btn" id="tab-manual" onclick="cambiarTab('manual')" style="padding: 12px; background: #ccc; color: #333; border: none; border-radius: 10px; cursor: pointer; font-weight: 600;">
+                        Registro Manual
+                    </button>
+                </div>
+
+                <!-- OPCIONES ESPECIFICAS -->
+                <div id="tab-content">
+                    <!-- BARCODE -->
+                    <div id="content-barcode" style="display: block;">
+                        <p style="color: #666; text-align: center; margin-bottom: 18px; font-size: 0.95rem;">
+                            Pasa el carné por el lector
+                        </p>
+                        <div class="scan-field-wrap" style="margin-bottom:15px;">
+                            <input class="input-modern scan-only" type="text" id="codigo"
+                                placeholder="Esperando escaneo..."
+                                autocomplete="off" autocorrect="off" spellcheck="false"
+                                style="color:transparent; caret-color:transparent; user-select:none;"
+                                oninput="detectarEscaner(this)"
+                                onkeypress="if(event.key==='Enter') procesarAcceso()">
+                            <span class="scan-badge">&#x1F4F7; ESCÁNER</span>
+                        </div>
+                        <button class="btn-modern btn-primary" id="btn-verificar" onclick="procesarAcceso()" style="margin-bottom: 10px;">&#x2192; REGISTRAR ACCESO</button>
+                    </div>
+
+                    <!-- MANUAL -->
+                    <div id="content-manual" style="display: none;">
+                        <p style="color: #666; text-align: center; margin-bottom: 15px; font-size: 0.95rem;">
+                            Ingresa el número de documento manualmente
+                        </p>
+                        <input class="input-modern" type="text" id="manual-numero-doc" placeholder="Número de documento" style="margin-bottom: 15px;" onkeypress="if(event.key=='Enter') procesarAccesoManual()">
+                        <button class="btn-modern btn-primary" onclick="procesarAccesoManual()" style="margin-bottom: 10px;">&#x2192; REGISTRAR ACCESO</button>
+                    </div>
+                </div>
+
+                <button class="btn-modern btn-secondary" onclick="irPantalla('p0')">Volver Atras</button>
+            </div>
+        </div>
+
+        <!-- PANTALLA 5: SELECCIÓN DE EDIFICIO -->
+        <div id="p4b" class="pantalla mapa-screen">
+            <div class="mapa-header">
+                <h2>🏛️ Selecciona tu Edificio</h2>
+                <div class="mapa-info">Toca el edificio al que vas a ingresar</div>
+            </div>
+            <div class="mapa-grid" id="mapa-edificios"></div>
+        </div>
+
+        <!-- PANTALLA 5: SELECCIÓN DE PISO -->
+        <div id="p5" class="pantalla mapa-screen">
+            <div class="mapa-header">
+                <h2>📍 Selecciona tu Piso</h2>
+                <div class="mapa-info" id="info-piso">Toca el piso donde estás ubicado</div>
+                <button class="mapa-back-btn" onclick="volverAEdificios()">← Volver a edificio</button>
+            </div>
+            <div class="mapa-grid" id="mapa-pisos"></div>
+        </div>
+
+        <!-- PANTALLA 6: SELECCIÓN DE AMBIENTE -->
+        <div id="p6" class="pantalla mapa-screen">
+            <div class="mapa-header">
+                <h2>🏢 Selecciona tu Ambiente</h2>
+                <div class="mapa-info" id="info-sala">Toca el ambiente en el Piso <span id="sala-piso-num"></span></div>
+                <button class="mapa-back-btn" onclick="volverAPisos()">← Volver a piso</button>
+            </div>
+            <div class="mapa-grid" id="mapa-salas"></div>
+        </div>
+
+        <!-- PANTALLA DE BLOQUEO -->
+        <div id="p-bloqueado" class="pantalla">
+            <span class="blq-icon">⛔</span>
+            <div class="blq-titulo">ACCESO DENEGADO</div>
+            <div class="blq-subtitulo">Operación bloqueada por seguridad</div>
+            <div class="blq-card">
+                <div class="blq-persona-nombre" id="blq-nombre"></div>
+                <div class="blq-persona-doc"   id="blq-doc"></div>
+                <div id="blq-estado-badge" class="blq-estado-badge"></div>
+                <div class="blq-divider"></div>
+                <div class="blq-mensaje"   id="blq-mensaje"></div>
+                <div class="blq-timestamp" id="blq-timestamp"></div>
+            </div>
+            <div class="blq-footer">
+                <div class="blq-countdown-label">Volviendo al inicio automáticamente...</div>
+                <div class="blq-bar-track"><div class="blq-bar-fill" id="blq-bar"></div></div>
+            </div>
+        </div>
+
+        <!-- PANTALLA 7: CONFIRMACIÓN -->
+        <div id="p7" class="pantalla">
+            <div class="success-container">
+                <div class="success-icon">✓</div>
+                <div class="success-title" id="msg-titulo">ACCESO REGISTRADO</div>
+                <div class="success-details" id="msg-confirmacion"></div>
+                <div class="spinner"></div>
+                <p style="font-size: 0.95rem;">Reiniciando en 4 segundos...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var token = localStorage.getItem('sena_api_token');
+        var modo = '';
+        var persona = null;
+        var piso = null;
+        var sala = null;
+        var edificio = null;
+        var edificioData = null;
+        var ambienteCompleto = null;
+
+        // ─── EDIFICIOS FIJOS ──────────────────────────────────────────────────────
+        var EDIFICIOS_FIJOS = [
+            {
+                id: 'sede-principal',
+                nombre: 'SEDE PRINCIPAL',
+                num_pisos: 5,
+                activo: true,
+                ambientes_piso: {
+                    1: ['101', '102', 'AMBIENTE 1', 'AMBIENTE 2', 'AMBIENTE 3', 'AMBIENTE 4'],
+                    2: ['201','202','203','204','205','206','207','208','209','210'],
+                    3: ['301','302','303','304','305','306','307','308','309','310','311'],
+                    4: ['401','402','403','404','405','406','407','408','409','410','411'],
+                    5: ['501','502','503','504','505','506','507','508','509','510']
+                }
+            }
+        ];
+        // ─────────────────────────────────────────────────────────────────────────
+
+        var _verificacionOk = false;
+
+        async function refrescarTokenSistema() {
+            try {
+                var resp = await fetch('/api/auth/token-sistema');
+                if (resp.ok) {
+                    var data = await resp.json();
+                    token = data.token;
+                    localStorage.setItem('sena_api_token', token);
+                }
+            } catch(e) {}
+        }
+
+        window.addEventListener('load', async function() {
+            await refrescarTokenSistema();
+            
+            // ═══════════════════════════════════════════════════════════════════════════════
+            // VALIDAR: Solo aprendices e instructores pueden usar este panel
+            // RECHAZAR: Visitantes y otros no autorizados
+            // ═══════════════════════════════════════════════════════════════════════════════
+            try {
+                var respValidar = await fetch('/api/auth/validar-acceso-ingreso', {
+                    headers: { 'Authorization': 'Bearer ' + (localStorage.getItem('sena_api_token')||'') }
+                });
+                
+                if (!respValidar.ok) {
+                    if(respValidar.status === 403) {
+                        var dataValidar = await respValidar.json();
+                        // Bloquear visitante
+                        var bloqueado = document.getElementById('p-bloqueado');
+                        document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activo'));
+                        if(bloqueado) {
+                            var msgBlq = bloqueado.querySelector('#blq-mensaje');
+                            msgBlq.textContent = dataValidar.error || 'No tienes permiso para usar este panel.';
+                            bloqueado.classList.add('activo');
+                        }
+                        setTimeout(() => { window.location.href = '/login.html'; }, 5000);
+                        return;
+                    } else if(respValidar.status === 401) {
+                        // Sin token válido → ir a login
+                        window.location.href = '/login.html';
+                        return;
+                    }
+                }
+                
+                // Si llegamos aquí, el usuario está autorizado
+                cargarPersonasCache();
+                setInterval(sincronizarRegistros, 10000);
+            } catch(e) {
+                console.error('Error validando acceso:', e);
+                cargarPersonasCache();
+                setInterval(sincronizarRegistros, 10000);
+            }
+        });
+
+        async function cargarPersonasCache() {
+            if (!navigator.onLine) return;
+            try {
+                var resp = await fetch('/api/personas/cache', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (resp.ok) {
+                    var data = await resp.json();
+                    localStorage.setItem('personas_cache', JSON.stringify(data.personas));
+                }
+            } catch (e) {}
+        }
+
+        function irPantalla(id) {
+            var REQUIEREN_VERIFICACION = ['p5','p6','p4b','p7'];
+            if (REQUIEREN_VERIFICACION.indexOf(id) !== -1 && !_verificacionOk) {
+                document.querySelectorAll('.pantalla').forEach(function(p) { p.classList.remove('activo'); });
+                var pb = document.getElementById('p-bloqueado');
+                if (pb) {
+                    var t  = pb.querySelector('.blq-titulo');
+                    var m  = pb.querySelector('#blq-mensaje');
+                    if (t) t.textContent = 'ACCESO NO AUTORIZADO';
+                    if (m) m.textContent = 'Verifica tu cédula antes de continuar.';
+                    pb.classList.add('activo');
+                }
+                setTimeout(function() { location.reload(); }, 3500);
+                return;
+            }
+            if (id === 'p0' || id === 'p2') { _verificacionOk = false; }
+            document.querySelectorAll('.pantalla').forEach(function(p) { p.classList.remove('activo'); });
+            document.getElementById(id).classList.add('activo');
+            if (id === 'p2') setTimeout(function() { var el = document.getElementById('codigo'); if(el) el.focus(); }, 100);
+        }
+
+        function verificarConexion() {
+            var offline = navigator.onLine === false;
+            var indicator = document.getElementById('offline-indicator');
+            if (offline && indicator) { indicator.style.display = 'block'; }
+            else if (indicator) { indicator.style.display = 'none'; }
+            return !offline;
+        }
+
+        window.addEventListener('online', verificarConexion);
+        window.addEventListener('offline', verificarConexion);
+
+        function cambiarTab(tab) {
+            document.getElementById('content-barcode').style.display = tab === 'barcode' ? 'block' : 'none';
+            document.getElementById('content-manual').style.display  = tab === 'manual'  ? 'block' : 'none';
+            document.getElementById('tab-barcode').style.background  = tab === 'barcode' ? '#00AEEF' : '#ccc';
+            document.getElementById('tab-barcode').style.color       = tab === 'barcode' ? 'white'   : '#333';
+            document.getElementById('tab-manual').style.background   = tab === 'manual'  ? '#00AEEF' : '#ccc';
+            document.getElementById('tab-manual').style.color        = tab === 'manual'  ? 'white'   : '#333';
+            if (tab === 'barcode') setTimeout(function() { var el = document.getElementById('codigo'); if (el) { el.value = ''; el.focus(); } }, 100);
+            if (tab === 'manual')  setTimeout(function() { var el = document.getElementById('manual-numero-doc'); if (el) el.focus(); }, 100);
+        }
+
+        function selModo(m) {
+            modo = m;
+            document.getElementById('codigo').value = '';
+            cambiarTab('barcode');
+            irPantalla('p2');
+            verificarConexion();
+        }
+
+        // OFFLINE
+        function guardarRegistroLocal(registro) {
+            var pendientes = JSON.parse(localStorage.getItem('registros_pendientes') || '[]');
+            registro.timestamp = new Date().toISOString();
+            pendientes.push(registro);
+            localStorage.setItem('registros_pendientes', JSON.stringify(pendientes));
+        }
+
+        async function sincronizarRegistros() {
+            if (!navigator.onLine) return;
+            var pendientes = JSON.parse(localStorage.getItem('registros_pendientes') || '[]');
+            if (pendientes.length === 0) return;
+            for (var i = 0; i < pendientes.length; i++) {
+                try {
+                    await fetch('/api/registros-acceso-offline', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                        body: JSON.stringify(pendientes[i])
+                    });
+                } catch (e) {}
+            }
+            localStorage.removeItem('registros_pendientes');
+        }
+
+        // ─── ESCANEO AUTO-SUBMIT ──────────────────────────────────────────────────
+        var _scanPersonaTimer = null;
+        function detectarEscaner(input) {
+            clearTimeout(_scanPersonaTimer);
+            if (input.value.length >= 5) {
+                _scanPersonaTimer = setTimeout(function() { procesarAcceso(); }, 200);
+            }
+        }
+
+        async function procesarAcceso() {
+            // Dejar solo dígitos (cédula colombiana = solo números)
+            var raw = document.getElementById('codigo').value;
+            var cod = raw.replace(/[^0-9]/g, '');
+            document.getElementById('codigo').value = '';
+            if (!cod) { return; }  // campo vacío: ignorar silenciosamente
+            await _ejecutarVerificacion(cod);
+        }
+
+        async function procesarAccesoManual() {
+            var raw = document.getElementById('manual-numero-doc').value;
+            var numero_doc = raw.replace(/[^0-9]/g, '');
+            if (!numero_doc) { return; }  // campo vacío: ignorar silenciosamente
+            await _ejecutarVerificacion(numero_doc);
+        }
+
+        // ─── VERIFICACIÓN CENTRAL ─────────────────────────────────────────────────
+        async function _ejecutarVerificacion(numero_doc) {
+            _verificacionOk = false;
+            if (!modo) { alert('Selecciona ENTRADA o SALIDA primero'); irPantalla('p0'); return; }
+            var btn = document.getElementById('btn-verificar');
+            if (btn) { btn.textContent = 'Verificando...'; btn.disabled = true; }
+
+            var data = null;
+            var fetchOk = false;
+
+            try {
+                var resp = await fetch(
+                    '/api/acceso/verificar?numero_doc=' + encodeURIComponent(numero_doc) + '&tipo=' + modo,
+                    { headers: { 'Authorization': 'Bearer ' + token } }
+                );
+                data = await resp.json();
+                fetchOk = true;
+            } catch (e) {
+                console.error('[VERIFICACION] Error de red:', e);
+            } finally {
+                if (btn) { btn.textContent = '\u2192 REGISTRAR ACCESO'; btn.disabled = false; }
+            }
+
+            if (!fetchOk || !data) {
+                alert('Sin conexión con el servidor. No se puede verificar el acceso.');
+                return;
+            }
+
+            if (!data.found) {
+                alert('Persona no encontrada. Documento: ' + numero_doc);
+                return;
+            }
+
+            persona = data;
+
+            if (!data.permitido) {
+                var msg = '';
+                if (modo === 'ENTRADA') {
+                    msg = 'Ya registró ENTRADA y aún NO ha salido. Debe registrar SALIDA primero.';
+                } else {
+                    msg = !data.estado_actual
+                        ? 'Nunca ha registrado ENTRADA. No puede registrar SALIDA sin haber entrado.'
+                        : 'Ya registró SALIDA. Debe registrar ENTRADA primero.';
+                }
+                mostrarBloqueado(data.nombre, numero_doc, msg, data.ultimo_registro);
+                return;
+            }
+
+            // Acceso permitido → ir directamente al mapa (sin registro de dispositivo)
+            _verificacionOk = true;
+            generarMapaEdificios();
+        }
+
+        function mostrarBloqueado(nombre, numero_doc, mensaje, ultimoRegistro) {
+            _verificacionOk = false;
+            try {
+                document.getElementById('blq-nombre').textContent = nombre || 'Persona desconocida';
+                document.getElementById('blq-doc').textContent    = 'C.C. ' + (numero_doc || '');
+                var badge = document.getElementById('blq-estado-badge');
+                if (ultimoRegistro) {
+                    var tipo = ultimoRegistro.tipo.toUpperCase();
+                    if (tipo === 'ENTRADA') {
+                        badge.className = 'blq-estado-badge blq-estado-dentro';
+                        badge.innerHTML = '🟢&nbsp; Actualmente DENTRO';
+                    } else {
+                        badge.className = 'blq-estado-badge blq-estado-afuera';
+                        badge.innerHTML = '🔴&nbsp; Actualmente AFUERA';
+                    }
+                    var ts = new Date(ultimoRegistro.timestamp).toLocaleString('es-CO',
+                        { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+                    document.getElementById('blq-timestamp').textContent = 'Último registro: ' + tipo + ' — ' + ts;
+                } else {
+                    badge.className = 'blq-estado-badge blq-estado-ninguno';
+                    badge.innerHTML = '⚪&nbsp; Sin registros previos';
+                    document.getElementById('blq-timestamp').textContent = '';
+                }
+                document.getElementById('blq-mensaje').textContent = mensaje;
+                var bar = document.getElementById('blq-bar');
+                bar.style.animation = 'none';
+                bar.offsetHeight;
+                bar.style.animation = 'countdownBar 5s linear forwards';
+            } catch(e) {}
+            document.querySelectorAll('.pantalla').forEach(function(p) { p.classList.remove('activo'); });
+            document.getElementById('p-bloqueado').classList.add('activo');
+            setTimeout(function() { location.reload(); }, 5000);
+        }
+
+        // ─── LECTOR SERIAL (Web Serial API) ──────────────────────────────────────
+        var _serialPort   = null;
+        var _serialReader = null;
+        var _serialBuf    = '';
+        var _serialBaud   = 9600;
+
+        async function _autoConectarSerial() {
+            if (!('serial' in navigator)) return;
+            if (_serialPort) return;
+            try {
+                var ports = await navigator.serial.getPorts();
+                if (ports.length > 0) {
+                    _serialPort = ports[0];
+                    await _serialPort.open({ baudRate: _serialBaud, dataBits: 8, stopBits: 1, parity: 'none' });
+                    _serialBuf = '';
+                    _leerSerial();
+                }
+            } catch(e) { _serialPort = null; }
+        }
+
+        if ('serial' in navigator) {
+            window.addEventListener('load', _autoConectarSerial);
+            navigator.serial.addEventListener('connect', function() { setTimeout(_autoConectarSerial, 800); });
+        }
+
+        async function _leerSerial() {
+            var decoder = new TextDecoder();
+            try {
+                _serialReader = _serialPort.readable.getReader();
+                while (true) {
+                    var result = await _serialReader.read();
+                    if (result.done) break;
+                    _serialBuf += decoder.decode(result.value, { stream: true });
+                    var lines = _serialBuf.split(/[\r\n]+/);
+                    _serialBuf = lines.pop();
+                    for (var i = 0; i < lines.length; i++) {
+                        var linea = lines[i].trim();
+                        if (linea.length >= 4) _onSerialScan(linea);
+                    }
+                }
+            } catch(e) {
+            } finally {
+                try { if (_serialReader) { _serialReader.releaseLock(); _serialReader = null; } } catch(e2) {}
+                if (_serialPort) { try { await _serialPort.close(); } catch(e2) {} _serialPort = null; }
+                setTimeout(_autoConectarSerial, 2000);
+            }
+        }
+
+        function _onSerialScan(codigo) {
+            var codInput = document.getElementById('codigo');
+            if (codInput) codInput.value = codigo;
+            _ejecutarVerificacion(codigo);
+        }
+
+        // ─── MAPAS ────────────────────────────────────────────────────────────────
+        function generarMapaEdificios() {
+            var lista = EDIFICIOS_FIJOS.filter(function(e){ return e.activo; });
+            if (lista.length === 1) {
+                edificioData = lista[0];
+                edificio = lista[0].id;
+                generarMapaPisos();
+                irPantalla('p5');
+                return;
+            }
+            var mapael = document.getElementById('mapa-edificios');
+            if (!mapael) return;
+            var html = '';
+            lista.forEach(function(ed) {
+                html += '<div class="mapa-card" data-edificio-id="' + ed.id + '">' +
+                    '<div class="mapa-numero">EDIFICIO</div>' +
+                    '<div class="mapa-valor" style="font-size:1rem">' + ed.nombre + '</div>' +
+                    '<div style="font-size:.72rem;color:#9aabbc;margin-top:4px">' + ed.num_pisos + ' piso(s)</div>' +
+                    '</div>';
+            });
+            mapael.innerHTML = html;
+            inicializarTouchEdificios(mapael);
+            irPantalla('p4b');
+        }
+
+        function inicializarTouchEdificios(container) {
+            var cards = container.querySelectorAll('.mapa-card');
+            var touchStartX, touchStartY;
+            cards.forEach(function(card) {
+                card.addEventListener('touchstart', function(e) { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; card.classList.add('dragging'); }, false);
+                card.addEventListener('touchmove', function(e) { e.preventDefault(); }, false);
+                card.addEventListener('touchend', function(e) {
+                    var dx = e.changedTouches[0].clientX - touchStartX;
+                    var dy = e.changedTouches[0].clientY - touchStartY;
+                    card.classList.remove('dragging');
+                    if (Math.abs(dx) < 10 && Math.abs(dy) < 10) selEdificio(card);
+                }, false);
+                card.addEventListener('click', function() { selEdificio(card); }, false);
+            });
+        }
+
+        function selEdificio(card) {
+            var edId = card.getAttribute('data-edificio-id');
+            edificioData = EDIFICIOS_FIJOS.find(function(e){ return e.id === edId; }) || null;
+            edificio = edId;
+            generarMapaPisos();
+            irPantalla('p5');
+        }
+
+        function generarMapaPisos() {
+            var html = '';
+            var numPisos = (edificioData && edificioData.num_pisos) ? edificioData.num_pisos : 5;
+            for (var p = 1; p <= numPisos; p++) {
+                html += '<div class="mapa-card" data-piso="' + p + '" title="Piso ' + p + '">' +
+                    '<div class="mapa-numero">PISO</div>' +
+                    '<div class="mapa-valor">' + p + '</div>' +
+                    '</div>';
+            }
+            var mapaPisosEl = document.getElementById('mapa-pisos');
+            if (mapaPisosEl) { mapaPisosEl.innerHTML = html; inicializarTouchPisos(mapaPisosEl); }
+        }
+
+        function selPiso(p) {
+            piso = p;
+            document.getElementById('sala-piso-num').textContent = p;
+            generarMapaSalas();
+            irPantalla('p6');
+        }
+
+        function inicializarTouchPisos(container) {
+            var cards = container.querySelectorAll('.mapa-card');
+            var touchStartX, touchStartY;
+            cards.forEach(function(card) {
+                card.addEventListener('touchstart', function(e) { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; card.classList.add('dragging'); }, false);
+                card.addEventListener('touchend', function(e) {
+                    var dx = e.changedTouches[0].clientX - touchStartX;
+                    var dy = e.changedTouches[0].clientY - touchStartY;
+                    card.classList.remove('dragging');
+                    if (Math.abs(dx) < 10 && Math.abs(dy) < 10) selPiso(parseInt(card.getAttribute('data-piso')));
+                }, false);
+                card.addEventListener('click', function() { selPiso(parseInt(card.getAttribute('data-piso'))); }, false);
+            });
+        }
+
+        var _ocupacionesCache = [];
+        // FLAG para prevenir doble-clic durante procesamiento de acceso
+        var _procesandoAcceso = false;
+
+        async function generarMapaSalas() {
+            try {
+                var resp = await fetch('/api/ambientes/ocupados', { headers: { 'Authorization': 'Bearer ' + token } });
+                if (resp.ok) { var data = await resp.json(); _ocupacionesCache = data.ocupaciones || []; }
+            } catch (e) { _ocupacionesCache = []; }
+
+            var html = '';
+            var miDoc = persona ? persona.numero_doc : null;
+            var nombreEdificio = edificioData ? edificioData.nombre : '';
+            var defPiso = edificioData && edificioData.ambientes_piso ? edificioData.ambientes_piso[piso] : null;
+            var listaAmb = [];
+            if (Array.isArray(defPiso)) {
+                listaAmb = defPiso;
+            } else {
+                var total = (typeof defPiso === 'number') ? defPiso : ((edificioData && edificioData.num_ambientes_por_piso) ? edificioData.num_ambientes_por_piso : 10);
+                for (var n = 1; n <= total; n++) { listaAmb.push(String(piso * 100 + n)); }
+            }
+
+            // Solo instructores ven ambientes bloqueados. Aprendices siempre ven disponibles
+            var eresInstructor = persona && persona.perfil &&
+                (persona.perfil.toLowerCase() === 'instructor' || persona.perfil.toLowerCase() === 'instructora');
+
+            listaAmb.forEach(function(ambNombre) {
+                var nombreAmbiente = (nombreEdificio ? nombreEdificio + ' - ' : '') + 'PISO ' + piso + ' - AMBIENTE ' + ambNombre;
+                var ocupacion = null;
+                
+                // Solo buscar ocupación si eres instructor (para bloquear)
+                if (eresInstructor) {
+                    for (var i = 0; i < _ocupacionesCache.length; i++) {
+                        var oc = _ocupacionesCache[i];
+                        if (oc.ambiente === nombreAmbiente && oc.persona.numero_doc !== miDoc) { ocupacion = oc; break; }
+                    }
+                }
+
+                if (ocupacion && eresInstructor) {
+                    html += '<div class="mapa-card ocupado" data-sala="' + ambNombre + '" data-bloqueado="true"' +
+                        ' data-instructor="' + (ocupacion.persona.nombre || '') + '" title="Ocupado por ' + (ocupacion.persona.nombre || 'otro instructor') + '">' +
+                        '<div class="mapa-numero">AMBIENTE</div>' +
+                        '<div class="mapa-valor">' + ambNombre + '</div>' +
+                        '<div class="mapa-ocupado-label">🔒 Ocupado<br>' + (ocupacion.persona.nombre || '') + '</div>' +
+                        '</div>';
+                } else {
+                    html += '<div class="mapa-card" data-sala="' + ambNombre + '" title="Ambiente ' + ambNombre + '">' +
+                        '<div class="mapa-numero">AMBIENTE</div>' +
+                        '<div class="mapa-valor">' + ambNombre + '</div>' +
+                        '</div>';
+                }
+            });
+
+            var mapaSalasEl = document.getElementById('mapa-salas');
+            if (mapaSalasEl) { mapaSalasEl.innerHTML = html; inicializarTouchCards(mapaSalasEl); }
+        }
+
+        function inicializarTouchCards(container) {
+            var cards = container.querySelectorAll('.mapa-card');
+            var touchStartX, touchStartY;
+            cards.forEach(function(card) {
+                card.addEventListener('touchstart', function(e) { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; card.classList.add('dragging'); }, false);
+                card.addEventListener('touchmove', function(e) { e.preventDefault(); }, false);
+                card.addEventListener('touchend', function(e) {
+                    var dx = e.changedTouches[0].clientX - touchStartX;
+                    var dy = e.changedTouches[0].clientY - touchStartY;
+                    card.classList.remove('dragging');
+                    if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+                        if (card.getAttribute('data-bloqueado') === 'true') {
+                            var inst = card.getAttribute('data-instructor') || 'otro instructor';
+                            alert('⛔ Ambiente ocupado\nEste ambiente está siendo utilizado por: ' + inst);
+                            return;
+                        }
+                        selSala(card.getAttribute('data-sala'));
+                    }
+                }, false);
+                card.addEventListener('click', function() {
+                    if (card.getAttribute('data-bloqueado') === 'true') {
+                        var inst = card.getAttribute('data-instructor') || 'otro instructor';
+                        alert('⛔ Ambiente ocupado\nEste ambiente está siendo utilizado por: ' + inst);
+                        return;
+                    }
+                    selSala(card.getAttribute('data-sala'));
+                }, false);
+            });
+        }
+
+        function selSala(s) {
+            // Bloquear si ya está procesando para evitar doble-clic
+            if (_procesandoAcceso) {
+                console.warn('[ACCESO] Ya se está procesando un acceso. Ignorando clic duplicado.');
+                return;
+            }
+            
+            sala = s;
+            var nombreEdificio = edificioData ? edificioData.nombre : '';
+            ambienteCompleto = (nombreEdificio ? nombreEdificio + ' - ' : '') + 'PISO ' + piso + ' - AMBIENTE ' + s;
+            _procesandoAcceso = true;  // Establecer flag ANTES de confirmar
+            confirmar();
+        }
+
+        function volverAPisos() { 
+            _procesandoAcceso = false;
+            sala = null; 
+            ambienteCompleto = null; 
+            irPantalla('p5'); 
+        }
+
+        function volverAEdificios() {
+            _procesandoAcceso = false;
+            piso = null; 
+            sala = null; 
+            ambienteCompleto = null; 
+            edificio = null; 
+            edificioData = null;
+            irPantalla('p0');
+        }
+
+        // ─── CONFIRMAR REGISTRO (SIN EQUIPO) ─────────────────────────────────────
+        async function confirmar() {
+            var online = verificarConexion();
+            var titulo = modo === 'ENTRADA' ? 'ENTRADA' : 'SALIDA';
+
+            var endpoint = persona.manual === true ? '/api/registros-acceso/manual' : '/api/registros-acceso';
+
+            var payload = {
+                numero_doc: persona.numero_doc,
+                nombre: persona.nombre,
+                tipo_doc: persona.tipo_doc || 'CC',
+                tipo: modo,
+                ambiente: ambienteCompleto || ('PISO ' + piso + ' - AMBIENTE ' + sala),
+                timestamp: new Date().toISOString(),
+                manual: persona.manual === true
+                // Sin campo codigo_barras_equipo — versión sin dispositivos
+            };
+
+            if (online) {
+                try {
+                    var res = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (res.status === 401) {
+                        try {
+                            var authResp = await fetch('/api/auth/token-sistema');
+                            if (authResp.ok) {
+                                var authData = await authResp.json();
+                                token = authData.token;
+                                localStorage.setItem('sena_api_token', token);
+                                res = await fetch(endpoint, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                                    body: JSON.stringify(payload)
+                                });
+                            }
+                        } catch(e) {}
+                    }
+
+                    if (res.ok) {
+                        // ── Apertura automática cerradura Ambiente 203 ──────────────
+                        var esCerradura203 = (modo === 'ENTRADA' &&
+                                              sala === '203' &&
+                                              persona.perfil &&
+                                              persona.perfil.toUpperCase() === 'INSTRUCTOR');
+                        var msgCerradura = '';
+                        if (esCerradura203) {
+                            try {
+                                var lockRes = await fetch('/api/esp32/proxy/ambiente/203/abrir/15', {
+                                    method: 'GET',
+                                    signal: AbortSignal.timeout(8000)
+                                });
+                                msgCerradura = lockRes.ok
+                                    ? '<p style="color:#39A900; font-weight:bold; margin-top:10px;">🔓 Cerradura Ambiente 203 abierta</p>'
+                                    : '<p style="color:#FF5800; font-style:italic; margin-top:10px;">⚠️ No se pudo abrir la cerradura</p>';
+                            } catch(_) {
+                                msgCerradura = '<p style="color:#FF5800; font-style:italic; margin-top:10px;">⚠️ Sin respuesta del dispositivo cerradura</p>';
+                            }
+                        }
+                        // ────────────────────────────────────────────────────────────
+                        document.getElementById('msg-titulo').textContent = '[OK] ' + titulo;
+                        document.getElementById('msg-confirmacion').innerHTML =
+                            '<p><strong>' + persona.nombre + '</strong></p>' +
+                            '<p>Cedula: ' + persona.numero_doc + '</p>' +
+                            '<p>Tipo: <strong>' + modo + '</strong></p>' +
+                            '<p>Ubicacion: Piso ' + piso + ' - Ambiente ' + sala + '</p>' +
+                            '<p style="color: #39A900; font-weight: bold; margin-top: 15px;">Registrado en servidor</p>' +
+                            msgCerradura;
+                    } else if (res.status === 403) {
+                        var data = await res.json();
+                        document.getElementById('msg-titulo').textContent = '[BLOQUEADO] Acción no permitida';
+                        document.getElementById('msg-confirmacion').innerHTML =
+                            '<p><strong>' + persona.nombre + '</strong></p>' +
+                            '<p>Cedula: ' + persona.numero_doc + '</p>' +
+                            '<p style="color: #D32F2F; font-weight: bold; margin-top: 20px; font-size: 1.1rem;">⚠️ ' + data.error + '</p>' +
+                            '<p style="font-size: 0.95rem; color: #666; margin-top: 15px;">Debes completar el ciclo: ENTRADA → SALIDA</p>';
+                        irPantalla('p7');
+                        setTimeout(function() { location.reload(); }, 5000);
+                        return;
+                    } else {
+                        var errTxt = '';
+                        try { var errData = await res.json(); errTxt = errData.error || errData.message || ''; } catch(_) {}
+                        document.getElementById('msg-titulo').textContent = '⛔ Error al registrar';
+                        document.getElementById('msg-confirmacion').innerHTML =
+                            '<p><strong>' + persona.nombre + '</strong></p>' +
+                            '<p>Cédula: ' + persona.numero_doc + '</p>' +
+                            '<p style="color:#D32F2F; font-weight:bold; margin-top:15px;">No se pudo registrar: ' + (errTxt || 'Código ' + res.status) + '</p>' +
+                            '<p style="font-size:0.9rem; color:#666; margin-top:10px;">Reiniciando automáticamente...</p>';
+                        irPantalla('p7');
+                        setTimeout(function() { location.reload(); }, 5000);
+                        return;
+                    }
+                } catch (e) {
+                    if (!navigator.onLine || (e && e.name === 'TypeError')) {
+                        guardarRegistroLocal(payload);
+                        document.getElementById('msg-titulo').textContent = '[OFFLINE] ' + titulo;
+                        document.getElementById('msg-confirmacion').innerHTML =
+                            '<p><strong>' + persona.nombre + '</strong></p>' +
+                            '<p>Cedula: ' + persona.numero_doc + '</p>' +
+                            '<p>Tipo: <strong>' + modo + '</strong></p>' +
+                            '<p>Ubicacion: Piso ' + piso + ' - Ambiente ' + sala + '</p>' +
+                            '<p style="color: #FF5800; font-weight: bold; margin-top: 15px;">Guardado en dispositivo</p>' +
+                            '<p style="font-size: 0.9rem; color: #666;">Se sincronizara cuando vuelva conexion</p>';
+                    } else {
+                        document.getElementById('msg-titulo').textContent = '⛔ Error al registrar';
+                        document.getElementById('msg-confirmacion').innerHTML =
+                            '<p><strong>' + persona.nombre + '</strong></p>' +
+                            '<p>Cédula: ' + persona.numero_doc + '</p>' +
+                            '<p style="color:#D32F2F; font-weight:bold; margin-top:15px;">Error inesperado al registrar el acceso.</p>' +
+                            '<p style="font-size:0.9rem; color:#666; margin-top:10px;">Reiniciando automáticamente...</p>';
+                        irPantalla('p7');
+                        setTimeout(function() { location.reload(); }, 5000);
+                        return;
+                    }
+                }
+            } else {
+                guardarRegistroLocal(payload);
+                document.getElementById('msg-titulo').textContent = '[OFFLINE] ' + titulo;
+                document.getElementById('msg-confirmacion').innerHTML =
+                    '<p><strong>' + persona.nombre + '</strong></p>' +
+                    '<p>Cedula: ' + persona.numero_doc + '</p>' +
+                    '<p>Tipo: <strong>' + modo + '</strong></p>' +
+                    '<p>Ubicacion: Piso ' + piso + ' - Ambiente ' + sala + '</p>' +
+                    '<p style="color: #FF5800; font-weight: bold; margin-top: 15px;">Guardado en dispositivo</p>' +
+                    '<p style="font-size: 0.9rem; color: #666;">Se sincronizara cuando vuelva conexion</p>';
+            }
+
+            irPantalla('p7');
+            setTimeout(function() { location.reload(); }, 4000);
+        }
+    </script>
+
+    <!-- CONEXION EN TIEMPO REAL - WEBSOCKETS -->
+    <script src="/js/realtime.js"></script>
+
+    <!-- ═══ MODO MANTENIMIENTO ═══ -->
+    <div id="_mantOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(8,18,60,0.97);z-index:99999;align-items:center;justify-content:center;flex-direction:column;text-align:center">
+        <div style="padding:40px 24px;max-width:680px">
+            <div style="font-size:88px;margin-bottom:14px">&#x1F527;</div>
+            <div style="font-size:2.6rem;font-weight:900;color:#fff;letter-spacing:4px;text-transform:uppercase;line-height:1.2;margin-bottom:18px">Sistema en<br>Mantenimiento</div>
+            <div id="_mantMsg" style="font-size:1.2rem;color:#9bbce0;margin-bottom:24px">El sistema está siendo actualizado. Por favor espere.</div>
+            <div style="font-size:.9rem;color:#5b7a99;line-height:1.7">Si tiene urgencia, contacte al personal de soporte técnico.<br>El servicio será restablecido en breve.</div>
+            <div style="margin-top:44px;display:flex;gap:12px;justify-content:center">
+                <div style="width:10px;height:10px;border-radius:50%;background:#3a7bd5;animation:_mp .8s 0s infinite alternate"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:#f39c12;animation:_mp .8s .2s infinite alternate"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:#3a7bd5;animation:_mp .8s .4s infinite alternate"></div>
+            </div>
+        </div>
+    </div>
+    <style>@keyframes _mp{from{opacity:.2;transform:translateY(4px)}to{opacity:1;transform:translateY(-4px)}}</style>
+    <script>(function(){function _chkMant(){fetch('/api/sistema/mantenimiento').then(function(r){return r.json();}).then(function(d){var ov=document.getElementById('_mantOverlay');if(!ov)return;if(d.activo){ov.style.display='flex';var msg=document.getElementById('_mantMsg');if(msg&&d.mensaje)msg.textContent=d.mensaje;}else{ov.style.display='none';}}).catch(function(){});}_chkMant();setInterval(_chkMant,20000);})();</script>
+</body>
+</html>

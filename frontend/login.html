@@ -1,0 +1,232 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acceso Personal — SENA</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Segoe UI",Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column;cursor:default;background:linear-gradient(135deg,#f0fae6 0%,#e0f5cc 50%,#f0fae6 100%)}
+h1,p,label,small,footer,span,div{cursor:default;user-select:none}
+
+/* TOPBAR */
+.topbar{background:linear-gradient(90deg,#2a8000 0%,#39A900 100%);color:#fff;height:64px;padding:0 28px;display:flex;align-items:center;gap:14px;box-shadow:0 3px 12px rgba(0,0,0,.22);flex-shrink:0}
+.tb-sena-logo{height:38px;width:auto;display:block;filter:brightness(0) invert(1)}
+.tb-divider{width:1px;height:32px;background:rgba(255,255,255,.35)}
+.tb-logo{font-size:.88rem;font-weight:700;letter-spacing:.3px;line-height:1.3}
+.tb-logo small{display:block;font-size:.72rem;font-weight:400;opacity:.8;letter-spacing:.2px}
+
+/* HERO BAND — cubre toda la página */
+.hero-band{
+  flex:1;
+  padding:40px 24px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+/* Patrón de puntos decorativo (igual que betowa) */
+.hero-band::after{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(57,169,0,.15) 1.5px,transparent 1.5px);
+  background-size:30px 30px;pointer-events:none;
+}
+
+.hero-inner{
+  display:flex;align-items:center;justify-content:center;gap:48px;
+  max-width:1000px;width:100%;position:relative;z-index:2;
+}
+
+/* Imagen */
+.hero-img{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  min-width:0;
+}
+.hero-img img{
+  width:min(500px,100%);display:block;
+  mix-blend-mode:multiply;
+  filter:drop-shadow(0 16px 40px rgba(57,169,0,.22));
+  animation:lp-float 5.5s ease-in-out infinite;
+}
+@keyframes lp-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* Card formulario */
+.hero-card{
+  width:380px;flex-shrink:0;
+  background:#fff;
+  border-radius:18px;
+  box-shadow:0 4px 16px rgba(0,0,0,.07),0 20px 56px rgba(0,0,0,.12);
+  padding:44px 40px 38px;
+  border-top:4px solid #39A900;
+  position:relative;z-index:3;
+}
+
+/* Avatar */
+.card-avatar{
+  width:60px;height:60px;
+  background:linear-gradient(135deg,#d4f0c0,#e8f7e0);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;
+  box-shadow:0 4px 14px rgba(57,169,0,.20);border:2px solid rgba(57,169,0,.18);
+}
+.card-avatar svg{width:30px;height:30px;fill:#2a8000}
+
+h1{font-size:1.4rem;font-weight:800;text-align:center;color:#0d1f0d;margin-bottom:5px;letter-spacing:-.3px}
+.sub{font-size:.79rem;color:#8a9ab8;text-align:center;margin-bottom:26px;font-weight:500;letter-spacing:.3px;text-transform:uppercase}
+.sub::before{content:'';display:block;width:36px;height:2px;background:#39A900;border-radius:2px;margin:0 auto 9px}
+
+/* Formulario */
+.form-group{margin-bottom:16px}
+label{display:block;font-size:.75rem;font-weight:700;color:#5a6a8a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+input{
+  width:100%;cursor:text;
+  border:1.5px solid #d4dce8;border-radius:8px;
+  padding:11px 13px;font-size:.93rem;color:#1c2b4b;background:#f8fafc;
+  outline:none;transition:border-color .18s,box-shadow .18s,background .18s;
+}
+input:focus{border-color:#39A900;background:#fff;box-shadow:0 0 0 3px rgba(57,169,0,.12)}
+input::placeholder{color:#b0bcc8}
+
+.btn{
+  width:100%;background:linear-gradient(135deg,#2a8000 0%,#39A900 100%);
+  color:#fff;border:none;border-radius:8px;padding:13px;
+  font-size:.97rem;font-weight:700;cursor:pointer;margin-top:6px;
+  letter-spacing:.2px;transition:all .18s ease;box-shadow:0 4px 14px rgba(57,169,0,.35);
+}
+.btn:hover{background:linear-gradient(135deg,#237000 0%,#2e9800 100%);box-shadow:0 6px 20px rgba(57,169,0,.45);transform:translateY(-1px)}
+.btn:active{transform:translateY(0);box-shadow:0 3px 10px rgba(57,169,0,.30)}
+.btn:disabled{background:#a8c89a;box-shadow:none;cursor:not-allowed;transform:none}
+
+.error{background:#fff4f4;border:1px solid #f5c6cb;color:#c0392b;border-radius:8px;padding:10px 13px;font-size:.83rem;margin-top:14px;display:none}
+.error.on{display:block}
+
+/* FOOTER */
+footer{text-align:center;padding:14px;font-size:.72rem;color:#6a8a5a;letter-spacing:.5px;text-transform:uppercase;font-weight:500;border-top:1px solid rgba(57,169,0,.18);flex-shrink:0;background:rgba(255,255,255,.5);backdrop-filter:blur(4px)}
+
+/* RESPONSIVO */
+@media(max-width:820px){
+  .hero-inner{flex-direction:column;align-items:center;gap:20px}
+  .hero-img img{max-width:260px}
+  .hero-card{width:100%;max-width:420px}
+  .hero-band{padding:28px 16px 28px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img src="https://betowa.sena.edu.co/assets/logos/sena-logo.svg" alt="SENA" class="tb-sena-logo">
+  <div class="tb-divider"></div>
+  <span class="tb-logo">Sistema de Control de Ingresos<small>Servicio Nacional de Aprendizaje — SENA</small></span>
+</div>
+
+<div class="hero-band">
+  <div class="hero-inner">
+
+    <!-- Imagen -->
+    <div class="hero-img">
+      <img src="/frontend/ChatGPT%20Image%208%20mar%202026%2C%2023_50_13.png" alt="Personal SENA">
+    </div>
+
+    <!-- Card login -->
+    <div class="hero-card">
+      <div class="card-avatar">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+      </div>
+      <h1>Acceso Personal</h1>
+      <p class="sub">Vigilancia &amp; Administración</p>
+      <form id="form" onsubmit="hacerLogin(event)" autocomplete="off">
+        <div class="form-group">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" placeholder="usuario@sena.edu.co" autocomplete="off" required autofocus>
+        </div>
+        <div class="form-group">
+          <label for="pwd">Contraseña</label>
+          <input type="password" id="pwd" placeholder="Ingresa tu contraseña" autocomplete="new-password" required>
+        </div>
+        <button class="btn" id="btn" type="submit">Ingresar</button>
+      </form>
+      <div class="error" id="err"></div>
+    </div>
+
+  </div>
+</div>
+
+<footer>SENA &mdash; Sistema de Control de Ingresos</footer>
+
+<script>
+/* NO hay auto-redireccion al cargar.
+   Despues del login se redirige segun el rol devuelto por la API. */
+
+window.addEventListener('load', function() {
+    document.getElementById('email').value = '';
+    document.getElementById('pwd').value = '';
+});
+
+function redirigirSegunRol(rol) {
+    if (rol === 'admin' || rol === 'sistemas') {
+        window.location.replace('/administracion');
+    } else {
+        window.location.replace('/vigilancia');
+    }
+}
+
+async function hacerLogin(e) {
+    e.preventDefault();
+    var btn = document.getElementById('btn');
+    var err = document.getElementById('err');
+    btn.disabled = true;
+    btn.textContent = 'Verificando...';
+    err.classList.remove('on');
+
+    try {
+        var r = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('pwd').value
+            })
+        });
+        if (r.ok) {
+            var d = await r.json();
+            localStorage.setItem('token', d.token);
+            localStorage.setItem('usuario', JSON.stringify(d.usuario));
+            localStorage.setItem('sena_api_token', d.token);
+            localStorage.setItem('sena_rol', d.usuario.rol);
+            redirigirSegunRol(d.usuario.rol);
+        } else {
+            var d2 = await r.json().catch(function(){return {};});
+            mostrarError(d2.error || 'Credenciales incorrectas.');
+        }
+    } catch(ex) {
+        mostrarError('No se pudo conectar con el servidor.');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Ingresar';
+    }
+}
+
+function mostrarError(msg) {
+    var el = document.getElementById('err');
+    el.textContent = msg;
+    el.classList.add('on');
+}
+</script>
+
+<!-- ═══ MODO MANTENIMIENTO ═══ -->
+<div id="_mantOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(8,18,60,0.97);z-index:99999;align-items:center;justify-content:center;flex-direction:column;text-align:center">
+    <div style="padding:40px 24px;max-width:680px">
+        <div style="font-size:88px;margin-bottom:14px">&#x1F527;</div>
+        <div style="font-size:2.6rem;font-weight:900;color:#fff;letter-spacing:4px;text-transform:uppercase;line-height:1.2;margin-bottom:18px">Sistema en<br>Mantenimiento</div>
+        <div id="_mantMsg" style="font-size:1.2rem;color:#9bbce0;margin-bottom:24px">El sistema est&aacute; siendo actualizado. Por favor espere.</div>
+        <div style="font-size:.9rem;color:#5b7a99;line-height:1.7">Si tiene urgencia, contacte al personal de soporte t&eacute;cnico.<br>El servicio ser&aacute; restablecido en breve.</div>
+        <div style="margin-top:44px;display:flex;gap:12px;justify-content:center">
+            <div style="width:10px;height:10px;border-radius:50%;background:#3a7bd5;animation:_mp .8s 0s infinite alternate"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#f39c12;animation:_mp .8s .2s infinite alternate"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#3a7bd5;animation:_mp .8s .4s infinite alternate"></div>
+        </div>
+    </div>
+</div>
+<style>@keyframes _mp{from{opacity:.2;transform:translateY(4px)}to{opacity:1;transform:translateY(-4px)}}</style>
+<script>(function(){function _chkMant(){fetch('/api/sistema/mantenimiento').then(function(r){return r.json();}).then(function(d){var ov=document.getElementById('_mantOverlay');if(!ov)return;if(d.activo){ov.style.display='flex';var msg=document.getElementById('_mantMsg');if(msg&&d.mensaje)msg.textContent=d.mensaje;}else{ov.style.display='none';}}).catch(function(){});}_chkMant();setInterval(_chkMant,20000);})();</script>
+</body>
+</html>

@@ -1,0 +1,2541 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control de Accesos — SENA</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;user-select:none}
+input,select,textarea{user-select:text;cursor:text}
+body{font-family:"Segoe UI",Arial,sans-serif;background:#eef5eb;color:#1c2b4b;font-size:14px;cursor:default}
+h1,h2,h3,p,span,div,label,td,th,small{cursor:default}
+
+/* ── TOPBAR ── */
+.topbar{background:linear-gradient(90deg,#2a8000 0%,#39A900 100%);color:#fff;height:80px;padding:0 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50;box-shadow:0 3px 12px rgba(0,0,0,.22)}
+.tb-sena-logo{height:32px;width:auto;display:block;filter:brightness(0) invert(1);flex-shrink:0}
+.tb-divider{width:1px;height:28px;background:rgba(255,255,255,.35);flex-shrink:0}
+.tb-logo{font-size:1.15rem;font-weight:700;letter-spacing:.3px;white-space:nowrap;line-height:1.2}
+.tb-logo small{display:block;font-size:.82rem;font-weight:400;opacity:.8;letter-spacing:.2px}
+.tb-spacer{flex:1}
+.tb-clock{font-family:"Courier New",monospace;font-size:1.65rem;font-weight:700;letter-spacing:2px;color:#fff}
+.tb-spacer2{flex:1}
+.tb-pill{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.55);border-radius:5px;padding:8px 14px;font-size:.93rem;font-weight:600;cursor:default;white-space:nowrap}
+#lbl-vig{text-transform:uppercase;letter-spacing:.5px}
+.dot{width:8px;height:8px;border-radius:50%;background:#888;flex-shrink:0}
+.dot.on{background:#3fbf3f;box-shadow:0 0 0 3px rgba(63,191,63,.25)}
+.dot.off{background:#f08c00}
+.tb-btn{border:1.5px solid rgba(255,255,255,.6);background:rgba(0,0,0,.22);color:#fff;border-radius:6px;padding:10px 16px;font-size:.96rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;white-space:nowrap;transition:all .18s;box-shadow:0 2px 6px rgba(0,0,0,.18);letter-spacing:.2px}
+.tb-btn:hover{background:rgba(0,0,0,.36);border-color:rgba(255,255,255,.85);transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,.25)}
+.tb-btn:active{transform:translateY(0)}
+.tb-btn.danger{border-color:rgba(255,120,120,.7);background:rgba(160,0,0,.35);color:#ffd0d0}
+.tb-btn.danger:hover{background:rgba(180,0,0,.55);border-color:rgba(255,120,120,.9)}
+.badge-count{background:#c0392b;color:#fff;border-radius:999px;padding:1px 7px;font-size:.72rem;font-weight:700;min-width:20px;text-align:center}
+.badge-count.none{background:#3fbf3f}
+
+/* ── LAYOUT ── */
+.page{padding:22px 22px 30px;max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat{background:#fff;border-radius:8px;padding:18px 20px;display:flex;align-items:center;gap:16px;box-shadow:0 1px 4px rgba(0,0,0,.08);border-top:3px solid #39A900}
+.stat-ico{width:44px;height:44px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.stat-ico.gray{background:#f0f2f5}
+.stat-ico.green{background:#edfcee;color:#2e8b35}
+.stat-ico.orange{background:#fff8ee;color:#c4700a}
+.stat-ico.blue{background:#eff7ff;color:#1563c5}
+.stat-label{font-size:.72rem;color:#7a8aab;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.stat-val{font-size:1.85rem;font-weight:800;color:#1c2b4b;line-height:1}
+
+/* ── MAIN GRID ── */
+.grid2{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start}
+.left{display:flex;flex-direction:column;gap:18px}
+
+/* ── CARD ── */
+.card{background:#fff;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);overflow:hidden;border-top:3px solid #39A900}
+.card-hd{padding:13px 18px;border-bottom:1px solid #cde8b8;background:#f0f9ea;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card-title{font-size:.82rem;font-weight:700;color:#1a4a00;text-transform:uppercase;letter-spacing:.5px}
+.card-body{padding:14px 18px}
+
+/* ── PISOS ── */
+.floors{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.floor{background:#f5f7fa;border:1px solid #dde3ef;border-radius:7px;padding:12px 6px;text-align:center;transition:border-color .2s}
+.floor:hover{border-color:#39A900;background:#f4faf0}
+.floor.alert{background:#fff8ee;border-color:#f0aa40}
+.floor-lbl{font-size:.65rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.floor-n{font-size:1.6rem;font-weight:800;color:#1c2b4b}
+.floor.alert .floor-n{color:#c4700a}
+.floor.alert .floor-lbl{color:#c4700a}
+
+/* ── FEED ── */
+.filters{display:flex;gap:6px}
+.f-btn{padding:5px 12px;border:1px solid #d0d8e8;border-radius:5px;background:#fff;color:#5a6a80;font-size:.77rem;font-weight:600;cursor:pointer;transition:all .15s}
+.f-btn:hover,.f-btn.active{background:#39A900;color:#fff;border-color:#39A900}
+
+.tbl-wrap{overflow-y:auto;max-height:580px}
+.tbl-wrap::-webkit-scrollbar{width:5px}
+.tbl-wrap::-webkit-scrollbar-thumb{background:#8ed46a;border-radius:3px}
+table{width:100%;border-collapse:collapse;font-size:.86rem}
+thead th{background:#f0f9ea;padding:10px 14px;text-align:left;font-size:.7rem;font-weight:700;color:#3a6020;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid #39A900;position:sticky;top:0}
+tbody td{padding:9px 14px;border-bottom:1px solid #f0f3f8;color:#2c3e5a;background:#fff}
+tbody tr:hover td{background:#f4faf0}
+.badge-e,.badge-s{padding:3px 9px;border-radius:4px;font-size:.7rem;font-weight:700;text-transform:uppercase}
+.badge-e{background:#edfcee;color:#2e8b35}
+.badge-s{background:#fff3ee;color:#c4700a}
+.mono{font-family:"Courier New",monospace;font-size:.82rem;color:#3d6294}
+@keyframes rowIn{from{background:#dff7e0}to{background:#fff}}
+.row-new td{animation:rowIn 1.6s ease}
+
+/* ── MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.overlay.show{display:flex}
+.mbox{background:#fff;border-radius:10px;width:min(580px,96vw);max-height:85vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.mhd{padding:16px 22px;border-bottom:1px solid #e8ecf2;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(90deg,#2a8000 0%,#39A900 100%);color:#fff;border-radius:10px 10px 0 0}
+.mhd-title{font-size:.95rem;font-weight:700}
+.mclose{background:none;border:none;color:rgba(255,255,255,.7);font-size:1.1rem;cursor:pointer;padding:2px 6px;border-radius:4px}
+.mclose:hover{background:rgba(255,255,255,.15);color:#fff}
+.mbody{padding:18px 22px;overflow-y:auto;flex:1}
+.m-empty{text-align:center;padding:32px 16px;color:#9aabbc;font-size:.9rem}
+
+.env-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.env-table th{background:#f5f7fa;padding:9px 12px;text-align:left;font-size:.7rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;border-bottom:2px solid #e8ecf2}
+.env-table td{padding:10px 12px;border-bottom:1px solid #f0f3f8;vertical-align:middle}
+.env-table tr:last-child td{border-bottom:none}
+.btn-lib{padding:5px 12px;background:#c0392b;color:#fff;border:none;border-radius:5px;font-size:.77rem;font-weight:700;cursor:pointer;transition:opacity .15s;white-space:nowrap}
+.btn-lib:hover{opacity:.85}
+.btn-lib:disabled{background:#aaa;cursor:not-allowed}
+/* Toast traslados */
+.toast-tras{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none;max-width:360px}
+.toast-item{background:#1a3510;color:#fff;border-radius:8px;padding:13px 18px;font-size:.84rem;box-shadow:0 6px 24px rgba(0,0,0,.3);pointer-events:auto;border-left:4px solid #39A900;animation:toastIn .3s ease}
+@keyframes toastIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* modal CONFIRMACION LIMPIAR */
+.mbox-sm{background:#fff;border-radius:10px;width:min(420px,96vw);box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.mhd-warn{padding:16px 22px;border-bottom:1px solid #e8ecf2;display:flex;align-items:center;justify-content:space-between;background:#8b1e1e;color:#fff;border-radius:10px 10px 0 0}
+.mbody-warn{padding:22px}
+.warn-txt{font-size:.9rem;color:#3a2222;margin-bottom:16px;line-height:1.6}
+.warn-txt strong{color:#8b1e1e}
+.mfoot{display:flex;gap:10px;margin-top:18px}
+.btn-cancel-w{flex:1;padding:10px;border:1px solid #ccc;background:#fff;border-radius:6px;font-size:.85rem;font-weight:600;cursor:pointer}
+.btn-cancel-w:hover{background:#f5f5f5}
+.btn-confirm-w{flex:1;padding:10px;border:none;background:#8b1e1e;color:#fff;border-radius:6px;font-size:.85rem;font-weight:700;cursor:pointer}
+.btn-confirm-w:hover{background:#a52222}
+.btn-confirm-w:disabled{background:#bbb;cursor:not-allowed}
+
+@media(max-width:960px){.grid2{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.stats{grid-template-columns:1fr}.tb-clock{font-size:1.15rem;letter-spacing:1px}.topbar{gap:7px;padding:0 10px;height:72px}.tb-btn{padding:7px 11px;font-size:.80rem;gap:4px}.tb-pill{padding:6px 11px;font-size:.78rem}.tb-logo{font-size:.80rem}.tb-logo small{font-size:.60rem}}
+
+/* ── INVENTARIO MODAL ── */
+.mbox-lg{background:#fff;border-radius:10px;width:min(760px,97vw);max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.inv-tabs{display:flex;border-bottom:2px solid #e8ecf2;padding:0 22px;background:#f8fafc;border-radius:0}
+.inv-tab{padding:12px 20px;border:none;background:none;cursor:pointer;font-size:.82rem;font-weight:700;color:#7a8aab;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s;white-space:nowrap}
+.inv-tab.active{color:#2a8000;border-bottom-color:#39A900}
+.inv-tab:hover{color:#2a8000}
+.inv-pane{display:none;padding:20px 22px;overflow-y:auto;flex:1}
+.inv-pane.active{display:block}
+.inv-form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.inv-form .full{grid-column:1/-1}
+.fg label{display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+.fg input,.fg select,.fg textarea{width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none;transition:border-color .15s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#39A900;box-shadow:0 0 0 2px rgba(57,169,0,.12)}
+.fg textarea{resize:vertical;min-height:62px;font-family:inherit}
+.fg .req{color:#c0392b}
+.badge-en{display:inline-block;padding:2px 9px;border-radius:4px;font-size:.7rem;font-weight:700;background:#edfcee;color:#2a7f30}
+.badge-ret{display:inline-block;padding:2px 9px;border-radius:4px;font-size:.7rem;font-weight:700;background:#f0f3f8;color:#7a8aab}
+.btn-salida{padding:5px 12px;background:#39A900;color:#fff;border:none;border-radius:5px;font-size:.77rem;font-weight:700;cursor:pointer;transition:opacity .15s;white-space:nowrap}
+.btn-salida:hover{opacity:.8}
+.btn-salida:disabled{background:#aaa;cursor:not-allowed}
+.btn-inv-save{width:100%;padding:11px;background:linear-gradient(135deg,#2a8000 0%,#39A900 100%);color:#fff;border:none;border-radius:7px;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:6px;transition:all .15s;box-shadow:0 3px 10px rgba(57,169,0,.28)}
+.btn-inv-save:hover{background:linear-gradient(135deg,#237000 0%,#2e9800 100%);box-shadow:0 5px 16px rgba(57,169,0,.38)}
+.btn-inv-save:disabled{background:#aaa;cursor:not-allowed}
+.inv-msg{padding:10px 14px;border-radius:6px;font-size:.84rem;font-weight:600;margin-top:10px;display:none}
+.inv-msg.ok{background:#edfcee;color:#2a7f30;display:block}
+.inv-msg.err{background:#fff3f3;color:#c0392b;display:block}
+
+/* ── CERRADURAS ── */
+.mbox-cer{background:#fff;border-radius:12px;width:min(700px,97vw);max-height:90vh;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.28);overflow:hidden}
+.cer-header{background:linear-gradient(135deg,#1a4a00 0%,#2a8000 50%,#39A900 100%);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;border-radius:12px 12px 0 0}
+.cer-header-icon{width:42px;height:42px;background:rgba(255,255,255,.18);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.cer-header-text{flex:1;margin-left:14px}
+.cer-header-title{font-size:1rem;font-weight:800;color:#fff;letter-spacing:.3px}
+.cer-header-sub{font-size:.72rem;color:rgba(255,255,255,.75);margin-top:2px}
+.cer-close{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:7px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.9rem;transition:all .15s}
+.cer-close:hover{background:rgba(255,255,255,.28);border-color:rgba(255,255,255,.6)}
+
+.cer-nav{display:flex;align-items:center;gap:6px;padding:10px 20px;background:#f0f9ea;border-bottom:1px solid #cde8b8;font-size:.78rem;flex-wrap:wrap}
+.cer-nav-crumb{color:#2a8000;cursor:pointer;font-weight:600;text-decoration:underline;text-underline-offset:2px}
+.cer-nav-sep{color:#8cc865;font-weight:700}
+.cer-nav-active{color:#1a4a00;font-weight:800}
+
+.cer-body{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+
+.cer-section-title{font-size:.68rem;font-weight:800;color:#3a6020;text-transform:uppercase;letter-spacing:.8px;padding:14px 20px 6px;border-top:1px solid #e8f0e0}
+
+/* Tarjetas edificio */
+.cer-grid-ed{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;padding:14px 20px}
+.cer-card-ed{background:linear-gradient(135deg,#f4faf0 0%,#edf7e5 100%);border:2px solid #cde8b8;border-radius:12px;padding:20px 14px;cursor:pointer;text-align:center;transition:all .2s;box-shadow:0 2px 8px rgba(57,169,0,.08)}
+.cer-card-ed:hover{border-color:#39A900;background:linear-gradient(135deg,#edf7e5 0%,#dff0d4 100%);transform:translateY(-3px);box-shadow:0 8px 20px rgba(57,169,0,.18)}
+.cer-card-ed-ico{font-size:2.2rem;margin-bottom:8px}
+.cer-card-ed-nombre{font-size:.82rem;font-weight:800;color:#1a4a00;text-transform:uppercase;letter-spacing:.3px}
+.cer-card-ed-sub{font-size:.7rem;color:#5a8a3a;margin-top:3px}
+
+/* Tarjetas piso */
+.cer-grid-piso{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;padding:14px 20px}
+.cer-card-piso{background:linear-gradient(135deg,#f4faf0 0%,#edf7e5 100%);border:2px solid #cde8b8;border-radius:12px;padding:16px 8px;cursor:pointer;text-align:center;transition:all .2s;box-shadow:0 2px 6px rgba(57,169,0,.07)}
+.cer-card-piso:hover{border-color:#39A900;background:linear-gradient(135deg,#edf7e5 0%,#dff0d4 100%);transform:translateY(-3px);box-shadow:0 8px 18px rgba(57,169,0,.18)}
+.cer-card-piso-ico{font-size:1.4rem;margin-bottom:4px}
+.cer-card-piso-lbl{font-size:.63rem;font-weight:700;color:#5a8a3a;text-transform:uppercase;letter-spacing:.5px}
+.cer-card-piso-num{font-size:1.9rem;font-weight:900;color:#1a4a00;line-height:1.1}
+
+/* Cubículos de ambientes */
+.cer-grid-amb{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;padding:16px 20px;justify-items:center;align-items:stretch}
+@media(max-width:520px){.cer-grid-amb{grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}}
+.cer-card-amb{border-radius:12px;aspect-ratio:1/1;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;transition:all .22s;position:relative;overflow:hidden;border:2px solid;box-shadow:0 2px 6px rgba(0,0,0,.07);width:100%;min-width:0}
+.cer-card-amb.libre{background:linear-gradient(145deg,#ffffff 0%,#f4faf0 100%);border-color:#cde8b8}
+.cer-card-amb.libre:hover{border-color:#39A900;background:linear-gradient(145deg,#edf7e5 0%,#dff0d4 100%);transform:translateY(-4px);box-shadow:0 10px 22px rgba(57,169,0,.18)}
+.cer-card-amb.abierto{background:linear-gradient(145deg,#edfcee 0%,#d4f4db 100%);border-color:#39A900;box-shadow:0 4px 14px rgba(57,169,0,.25)}
+.cer-card-amb.abierto:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(57,169,0,.35)}
+.cer-card-amb.seleccionado{border-color:#2a8000;box-shadow:0 0 0 3px rgba(57,169,0,.25)}
+.cer-amb-ico{font-size:1.15rem}
+.cer-amb-badge{font-size:.57rem;font-weight:800;text-transform:uppercase;letter-spacing:.7px;border-radius:999px;padding:2px 7px;white-space:nowrap}
+.cer-card-amb.libre .cer-amb-badge{background:rgba(0,100,0,.1);color:#2a8000}
+.cer-card-amb.abierto .cer-amb-badge{background:rgba(57,169,0,.2);color:#1a4a00}
+.cer-amb-num{font-size:1.05rem;font-weight:900;line-height:1}
+.cer-card-amb.libre .cer-amb-num{color:#1a4a00}
+.cer-card-amb.abierto .cer-amb-num{color:#1a4a00}
+.cer-card-amb.pendiente{background:linear-gradient(145deg,#fff9e6,#fef0c0);border-color:#f0a500;box-shadow:0 4px 14px rgba(240,165,0,.22)}
+.cer-card-amb.pendiente:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(240,165,0,.35)}
+.cer-card-amb.pendiente .cer-amb-badge{background:rgba(240,165,0,.2);color:#966400}
+.cer-card-amb.pendiente .cer-amb-num{color:#7a5000}
+.cer-amb-tiempo{font-size:.58rem;font-weight:700;color:#2a8000;background:rgba(57,169,0,.15);border-radius:999px;padding:1px 6px;margin-top:1px}
+.cer-amb-tiempo.pendiente-tiempo{color:#b06000;background:rgba(240,165,0,.18)}
+.cer-amb-pulse{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:#39A900;box-shadow:0 0 0 0 rgba(57,169,0,.5);animation:cerPulse 1.4s infinite}
+@keyframes cerPulse{0%{box-shadow:0 0 0 0 rgba(57,169,0,.5)}70%{box-shadow:0 0 0 7px rgba(57,169,0,0)}100%{box-shadow:0 0 0 0 rgba(57,169,0,0)}}
+
+/* Panel apertura */
+.cer-apertura-panel{background:linear-gradient(135deg,#f0f9ea 0%,#e4f4d8 100%);border-top:2px solid #39A900;padding:16px 20px}
+.cer-apertura-titulo{font-size:.72rem;font-weight:800;color:#2a8000;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.cer-apertura-nombre{font-size:.88rem;font-weight:700;color:#1a4a00;background:#fff;border:1.5px solid #cde8b8;border-radius:7px;padding:7px 12px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.cer-apertura-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.cer-apertura-min label{font-size:.68rem;font-weight:700;color:#5a8a3a;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px}
+.cer-apertura-min input{width:90px;padding:9px 12px;border:1.5px solid #cde8b8;border-radius:7px;font-size:.9rem;font-weight:700;color:#1a4a00;background:#fff;outline:none;text-align:center}
+.cer-apertura-min input:focus{border-color:#39A900;box-shadow:0 0 0 3px rgba(57,169,0,.15)}
+.cer-tiempo-display{width:90px;padding:9px 12px;border:1.5px solid #cde8b8;border-radius:7px;font-size:.95rem;font-weight:800;color:#1a4a00;background:#f0faf0;text-align:center;min-height:38px;display:flex;align-items:center;justify-content:center}
+.btn-cer-hist{padding:10px 16px;border:1.5px solid #cde8b8;border-radius:8px;font-size:.82rem;font-weight:700;color:#2a8000;background:#f0faf0;cursor:pointer;transition:all .2s}
+.btn-cer-hist:hover{background:#e0f5d0;border-color:#39A900}
+.cer-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:10px;font-size:.9rem;font-weight:700;z-index:9999;box-shadow:0 4px 18px rgba(0,0,0,.18);display:none}
+.cer-toast-ok{background:#edfcee;color:#1a4a00;border:1.5px solid #39A900}
+.cer-toast-err{background:#fff3f3;color:#c0392b;border:1.5px solid #f5c5c5}
+.cer-hist-list{padding:0 16px 14px}
+.cer-hist-item{display:flex;gap:8px;align-items:flex-start;padding:10px 14px;border-radius:8px;margin-bottom:6px;border:1px solid #e0edd8;background:#fafff8}
+.cer-hist-item.activo{border-color:#39A900;background:#edfcee}
+.cer-hist-ico{font-size:1.1rem;flex-shrink:0;margin-top:1px}
+.cer-hist-info{flex:1;min-width:0}
+.cer-hist-amb{font-size:.82rem;font-weight:800;color:#1a4a00;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cer-hist-meta{font-size:.72rem;color:#5a8a3a;margin-top:2px}
+.cer-hist-meta strong{color:#2a8000}
+.btn-cer-abrir{padding:10px 24px;background:linear-gradient(135deg,#2a8000 0%,#39A900 100%);color:#fff;border:none;border-radius:8px;font-size:.9rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(57,169,0,.35);transition:all .18s;white-space:nowrap}
+.btn-cer-abrir:hover{background:linear-gradient(135deg,#237000 0%,#2e9800 100%);transform:translateY(-2px);box-shadow:0 7px 20px rgba(57,169,0,.45)}
+.btn-cer-abrir:active{transform:translateY(0)}
+.btn-cer-abrir:disabled{background:#b0c4a8;cursor:not-allowed;box-shadow:none;transform:none}
+.cer-apertura-msg{margin-top:10px;padding:9px 14px;border-radius:7px;font-size:.83rem;font-weight:600;display:none}
+.cer-apertura-msg.ok{background:#edfcee;color:#2a7f30;border:1px solid #cde8b8;display:block}
+.cer-apertura-msg.err{background:#fff3f3;color:#c0392b;border:1px solid #f5c5c5;display:block}
+
+/* Lista cerraduras activas */
+.cer-activas{padding:12px 20px 16px}
+.cer-activa-item{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid #cde8b8;border-left:4px solid #39A900;border-radius:9px;padding:10px 14px;margin-bottom:8px;box-shadow:0 1px 4px rgba(57,169,0,.08)}
+.cer-activa-item.pendiente{background:#fffbf0;border-color:#f0d080;border-left-color:#f0a500;box-shadow:0 1px 4px rgba(240,165,0,.12)}
+.cer-activa-ico{font-size:1.3rem;flex-shrink:0}
+.cer-activa-info{flex:1}
+.cer-activa-nombre{font-size:.84rem;font-weight:700;color:#1a4a00}
+.cer-activa-meta{font-size:.72rem;color:#5a8a3a;margin-top:2px}
+.btn-cer-cerrar{padding:5px 14px;background:#fff;color:#c0392b;border:1.5px solid #f5c5c5;border-radius:6px;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-cer-cerrar:hover{background:#fff3f3;border-color:#c0392b}
+.cer-empty{text-align:center;padding:16px;color:#9aabbc;font-size:.82rem;display:flex;align-items:center;justify-content:center;gap:6px}
+
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+    <img src="https://betowa.sena.edu.co/assets/logos/sena-logo.svg" alt="SENA" class="tb-sena-logo">
+    <div class="tb-divider"></div>
+    <div class="tb-logo">Sistema de Control de Accesos<small>Servicio Nacional de Aprendizaje — SENA</small></div>
+    <div class="tb-spacer"></div>
+    <div class="tb-clock" id="reloj">--:--:--</div>
+    <div class="tb-spacer2"></div>
+    <div class="tb-pill" id="pill-vig" title="Vigilante de turno"><span>&#128100;</span><span id="lbl-vig">...</span></div>
+    <div class="tb-pill"><div class="dot" id="dot-rt"></div><span id="lbl-rt">Iniciando conexión</span></div>
+    <button class="tb-btn" id="btn-ambientes" onclick="abrirModalAmbientesConCerraduras()" title="Ver ambientes ocupados e controlar cerraduras">
+        Ambientes <span class="badge-count none" id="cnt-amb">0</span>
+    </button>
+    <button class="tb-btn" id="btn-inventario" onclick="abrirInventario()">
+        Objetos <span class="badge-count none" id="cnt-inv">0</span>
+    </button>
+    <button class="tb-btn" onclick="abrirModalEquipo()" title="Registrar ingreso con equipo" style="background:rgba(0,80,160,.45);border-color:rgba(150,200,255,.7);">💻 Equipo</button>
+    <button class="tb-btn" onclick="abrirAgregarVisitante()" title="Registrar visitante">👤 Visitante</button>
+    <button class="tb-btn" onclick="abrirBusquedaGlobal()" title="Consultar historial">🔍 Historial</button>
+    <button class="tb-btn danger" onclick="pedirConfirmRegistros()">Cerrar turno</button>
+</div>
+
+<!-- PAGINA -->
+<div class="page">
+    <div class="stats">
+        <div class="stat"><div class="stat-ico gray">📊</div><div><div class="stat-label">Movimientos hoy</div><div class="stat-val" id="kpi-total">0</div></div></div>
+        <div class="stat"><div class="stat-ico green">↓</div><div><div class="stat-label">Entradas registradas</div><div class="stat-val" id="kpi-ent">0</div></div></div>
+        <div class="stat"><div class="stat-ico orange">↑</div><div><div class="stat-label">Salidas registradas</div><div class="stat-val" id="kpi-sal">0</div></div></div>
+        <div class="stat"><div class="stat-ico blue">◉</div><div><div class="stat-label">Personas en sede</div><div class="stat-val" id="kpi-den">0</div></div></div>
+    </div>
+
+    <div class="grid2">
+        <div class="left">
+            <div class="card">
+                <div class="card-hd"><div class="card-title">Personas por piso</div></div>
+                <div class="card-body"><div class="floors" id="floors"></div></div>
+            </div>
+        </div>
+
+        <div class="card" style="overflow:visible">
+            <div class="card-hd">
+                <div class="card-title">📋 Historial de movimientos — Turno actual (Persistente)</div>
+                <div class="filters">
+                    <button class="f-btn active" onclick="filtrar('TODOS',this)">Todos</button>
+                    <button class="f-btn" onclick="filtrar('ENTRADA',this)">↓ Entradas</button>
+                    <button class="f-btn" onclick="filtrar('SALIDA',this)">↑ Salidas</button>
+                </div>
+            </div>
+            <div class="tbl-wrap">
+                <table><thead><tr><th>Hora</th><th>Tipo</th><th>Nombre</th><th>Cédula</th><th>Perfil</th><th>Ambiente</th><th>Equipo</th></tr></thead>
+                <tbody id="tbody-feed"></tbody></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL COMBINADO: AMBIENTES & CERRADURAS -->
+<div class="overlay" id="ov-ambcerr" onclick="if(event.target===this)cerrarOvAmbCerr()">
+    <div class="mbox" style="max-width:900px;max-height:85vh;display:flex;flex-direction:column">
+        <!-- Cabecera con pestañas -->
+        <div class="mhd" style="display:flex;justify-content:space-between;align-items:center;padding:0;border-bottom:2px solid #39A900;background:#f9fafb">
+            <div style="display:flex;gap:0;flex:1">
+                <button class="mhd-tab active" id="tab-amb" onclick="cambiarTabAmbCerr('amb')" style="flex:1;padding:14px 16px;border:none;background:transparent;color:#1c2b4b;font-weight:700;font-size:.9rem;cursor:pointer;border-bottom:3px solid #39A900;transition:all .2s">🏢 AMBIENTES OCUPADOS</button>
+                <button class="mhd-tab" id="tab-cerr" onclick="cambiarTabAmbCerr('cerr')" style="flex:1;padding:14px 16px;border:none;background:transparent;color:#7a8aab;font-weight:700;font-size:.9rem;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s">🔐 CERRADURAS</button>
+            </div>
+            <button class="mclose" onclick="cerrarOvAmbCerr()" style="margin:0;padding:10px 15px">✕</button>
+        </div>
+        <!-- Contenido con scroll -->
+        <div class="mbody" id="mbody-ambcerr" style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px"></div>
+    </div>
+</div>
+
+<!-- MODAL CERRADURAS AUXILIAR (oculto - solo para mantener compatibilidad) -->
+<div class="overlay" id="ov-cerradura" onclick="if(event.target===this)cerrarModalCerradura()" style="display:none">
+    <div class="mbox-cer">
+
+        <!-- Cabecera -->
+        <div class="cer-header">
+            <div class="cer-header-icon">&#x1F513;</div>
+            <div class="cer-header-text">
+                <div class="cer-header-title">Cerraduras electrónicas</div>
+                <div class="cer-header-sub">Selecciona un ambiente para abrirlo o cerrarlo</div>
+            </div>
+            <button class="cer-close" onclick="cerrarModalCerradura()">&#x2715;</button>
+        </div>
+
+        <!-- Breadcrumb -->
+        <div class="cer-nav">
+            <span class="cer-nav-crumb" onclick="cerNavEdificio()">&#x1F3E2; Edificio</span>
+            <span id="cer-nav-sep1" class="cer-nav-sep" style="display:none"> › </span>
+            <span id="cer-nav-piso-lbl" class="cer-nav-crumb" style="display:none" onclick="cerNavPiso()"></span>
+            <span id="cer-nav-sep2" class="cer-nav-sep" style="display:none"> › </span>
+            <span id="cer-nav-amb-lbl" class="cer-nav-active" style="display:none"></span>
+        </div>
+
+        <div class="cer-body">
+            <!-- Panel navegación (edificios / pisos / ambientes) -->
+            <div id="cer-panel"></div>
+
+            <!-- Panel apertura -->
+            <div class="cer-apertura-panel" id="cer-apertura" style="display:none">
+                <div class="cer-apertura-titulo">&#x1F513; Abrir cerradura</div>
+                <div class="cer-apertura-nombre" id="cer-apertura-nombre-box">
+                    <span style="font-size:1rem">&#x1F4CD;</span>
+                    <span id="cer-apertura-nombre"></span>
+                </div>
+                <div class="cer-apertura-row">
+                    <div class="cer-apertura-min">
+                        <label>Tiempo según piso</label>
+                        <div id="cer-tiempo-info" class="cer-tiempo-display">— min</div>
+                    </div>
+                    <button class="btn-cer-abrir" id="cer-btn-abrir" onclick="cerAbrirCerradura()">
+                        &#x1F513; Abrir cerradura
+                    </button>
+                    <button class="btn-cer-abrir" id="cer-btn-cerrar" onclick="cerCerrarCerradura()" style="background:#424242;border-color:#616161">
+                        &#x1F512; Cerrar cerradura
+                    </button>
+                </div>
+                <div class="cer-apertura-msg" id="cer-apertura-msg"></div>
+            </div>
+
+            <!-- Cerraduras activas -->
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:0 4px">
+                <div class="cer-section-title" style="margin:0">🟢 Cerraduras abiertas ahora</div>
+                <button class="btn-cer-hist" id="cer-btn-hist" onclick="cerToggleHistorial()">&#x1F4CB; Historial</button>
+            </div>
+            <div class="cer-activas" id="cer-lista">
+                <div class="cer-empty">&#x1F512; Sin cerraduras activas</div>
+            </div>
+
+            <!-- Historial cerraduras -->
+            <div id="cer-hist-panel" style="display:none">
+                <div class="cer-section-title">📋 Historial de cerraduras</div>
+                <div class="cer-hist-list" id="cer-hist-lista">
+                    <div class="cer-empty">Cargando...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DEPURAR -->
+<div class="overlay" id="ov-dep">
+    <div class="mbox-sm">
+        <div class="mhd-warn"><div class="mhd-title" id="dep-title">Confirmar acción</div><button class="mclose" onclick="cerrarOvDep()">✕</button></div>
+        <div class="mbody-warn">
+            <div class="warn-txt" id="dep-txt"></div>
+            <div class="mfoot">
+                <button class="btn-cancel-w" onclick="cerrarOvDep()">Cancelar</button>
+                <button class="btn-confirm-w" id="btn-dep-confirm" onclick="ejecutarLimpiar()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL AGREGAR VISITANTE -->
+<div class="overlay" id="ov-visitante">
+    <div class="mbox" style="max-height:90vh;overflow-y:auto">
+        <div class="mhd">
+            <div class="mhd-title">Gestión de Visitantes</div>
+            <button class="mclose" onclick="cerrarAgregarVisitante()">✕</button>
+        </div>
+        <div class="mbody">
+            <!-- SECCIÓN 1: REGISTRAR ENTRADA DE VISITANTE -->
+            <div style="margin-bottom:20px;border-bottom:2px solid #e8f0f8;padding-bottom:20px">
+                <h3 style="font-size:.95rem;font-weight:700;color:#2a8000;margin-bottom:15px">Registrar Entrada de Visitante</h3>
+                <div style="background:#edfcee;border:1px solid #b2d9b0;border-radius:7px;padding:12px 16px;margin-bottom:16px;font-size:.88rem;color:#2e8b35">
+                    <strong>Completa el formulario para registrar entrada del visitante al edificio</strong>
+                </div>
+                <div style="margin-bottom:12px">
+                    <label style="display:block;font-size:.75rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">Nombre Completo <span style="color:#c0392b">*</span></label>
+                    <input type="text" id="vis-nombre" placeholder="Ej: Juan Pérez García" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+                    <div>
+                        <label style="display:block;font-size:.75rem;font-weight:700;color:#7a8aub;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">Tipo de Documento <span style="color:#c0392b">*</span></label>
+                        <select id="vis-tipo-doc" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+                            <option value="CC">Cédula (CC)</option>
+                            <option value="TI">Tarjeta de Identidad (TI)</option>
+                            <option value="PP">Pasaporte (PP)</option>
+                            <option value="CE">Cédula de Extranjería (CE)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:.75rem;font-weight:700;color:#7a8aub;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">Número de Documento <span style="color:#c0392b">*</span></label>
+                        <input type="text" id="vis-numero-doc" placeholder="Ej: 1234567890" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+                    <div>
+                        <label style="display:block;font-size:.75rem;font-weight:700;color:#7a8aub;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">Email</label>
+                        <input type="email" id="vis-email" placeholder="Ej: juan@example.com" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:.75rem;font-weight:700;color:#7a8aub;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">Teléfono</label>
+                        <input type="text" id="vis-telefono" placeholder="Ej: 3001234567" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+                    </div>
+                </div>
+                <div style="margin-bottom:12px">
+                    <label style="display:block;font-size:.75rem;font-weight:700;color:#7a8aub;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">Empresa / Organización</label>
+                    <input type="text" id="vis-empresa" placeholder="Ej: Empresa de mantenimiento" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+                </div>
+                <div style="margin-bottom:12px">
+                    <label style="display:block;font-size:.75rem;font-weight:700;color:#7a8aub;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">Motivo de Ingreso <span style="color:#c0392b">*</span></label>
+                    <textarea id="vis-motivo" placeholder="Ej: Reunión con coordinador, Capacitación, Mantenimiento" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none;resize:vertical;min-height:80px"></textarea>
+                </div>
+                <div id="vis-msg" style="display:none;padding:10px 14px;border-radius:6px;font-size:.84rem;font-weight:600;margin-bottom:12px"></div>
+                <div style="display:flex;gap:10px">
+                    <button onclick="cerrarAgregarVisitante()" style="flex:1;padding:10px;border:1.5px solid #d0d8e8;background:#fff;color:#5a6a80;border-radius:6px;font-size:.87rem;font-weight:700;cursor:pointer">Cancelar</button>
+                    <button id="btn-vis-save" onclick="guardarVisitante()" style="flex:1;padding:10px;border:none;background:#39A900;color:#fff;border-radius:6px;font-size:.87rem;font-weight:700;cursor:pointer">Registrar Entrada</button>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: REGISTRAR SALIDA DE VISITANTE -->
+            <div style="margin-bottom:20px;border-bottom:2px solid #e8f0f8;padding-bottom:20px">
+                <h3 style="font-size:.95rem;font-weight:700;color:#c0392b;margin-bottom:15px">Registrar Salida de Visitante</h3>
+                <div style="background:#ffe8e8;border:1px solid #d99;border-radius:7px;padding:12px 16px;margin-bottom:16px;font-size:.88rem;color:#c0392b">
+                    <strong>Busca el visitante para registrar su salida del edificio</strong>
+                </div>
+                <div style="margin-bottom:12px">
+                    <label style="display:block;font-size:.75rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px">Buscar por Documento</label>
+                    <input type="text" id="vis-salida-doc" placeholder="Ingresa número de documento" style="width:100%;padding:9px 12px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.87rem;color:#1c2b4b;background:#fff;outline:none">
+                </div>
+                <div id="vis-salida-info" style="display:none;background:#f5f9fc;border:1px solid #d0d8e8;border-radius:6px;padding:12px;margin-bottom:12px;font-size:.85rem">
+                    <p style="margin:0 0 8px 0"><strong>Visitante:</strong> <span id="vis-salida-nombre">-</span></p>
+                    <p style="margin:0"><strong>Documento:</strong> <span id="vis-salida-doc-display">-</span></p>
+                </div>
+                <div id="vis-salida-msg" style="display:none;padding:10px 14px;border-radius:6px;font-size:.84rem;font-weight:600;margin-bottom:12px"></div>
+                <div style="display:flex;gap:10px">
+                    <button onclick="limpiarSalida()" style="flex:1;padding:10px;border:1.5px solid #d0d8e8;background:#fff;color:#5a6a80;border-radius:6px;font-size:.87rem;font-weight:700;cursor:pointer">Limpiar</button>
+                    <button id="btn-vis-salida" onclick="registrarSalidaModal()" style="flex:1;padding:10px;border:none;background:#c0392b;color:#fff;border-radius:6px;font-size:.87rem;font-weight:700;cursor:pointer;opacity:.5;pointer-events:none">Registrar Salida</button>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3: VISITANTES ACTIVOS EN EL EDIFICIO -->
+            <div>
+                <h3 style="font-size:.95rem;font-weight:700;color:#2a8000;margin-bottom:15px">Visitantes Activos en el Edificio</h3>
+                <div id="vis-list" style="background:#f5f9fc;border:1px solid #d0d8e8;border-radius:6px;padding:15px;min-height:100px">
+                    <div style="text-align:center;color:#7a8aab;font-size:.87rem">Cargando visitantes activos...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL BUSQUEDA GLOBAL -->
+<div class="overlay" id="ov-busq">
+    <div class="mbox-lg">
+        <div class="mhd">
+            <div class="mhd-title">&#128269; Historial de acceso — Búsqueda por documento</div>
+            <button class="mclose" onclick="cerrarBusquedaGlobal()">✕</button>
+        </div>
+        <div style="padding:18px 22px;border-bottom:1px solid #e8ecf2;display:flex;gap:10px;align-items:flex-end">
+            <div class="fg" style="flex:1">
+                <label style="display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">🆔 Número de documento</label>
+                <input type="text" id="busq-doc" placeholder="Ej: 1234567890" inputmode="numeric" style="width:100%;padding:10px 12px;border:1.5px solid #39A900;border-radius:6px;font-size:.95rem;color:#1c2b4b;background:#fff;outline:none;font-weight:600" onkeydown="if(event.key==='Enter')ejecutarBusquedaGlobal()">
+            </div>
+            <button class="btn-inv-save" id="btn-busq" onclick="ejecutarBusquedaGlobal()" style="width:auto;padding:10px 22px;margin-top:0">Buscar historial</button>
+        </div>
+        <div class="inv-pane active" id="busq-resultados" style="padding:18px 22px;overflow-y:auto;flex:1;max-height:440px">
+            <div class="m-empty">Ingresa un número de documento para consultar el historial de accesos.</div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CONFIRMACION SALIDA DE OBJETO -->
+<div class="overlay" id="ov-sal-obj">
+    <div class="mbox-sm">
+        <div class="mhd-warn" style="background:#1c4b3a">
+            <div class="mhd-title">&#128230; Confirmar salida de objeto</div>
+            <button class="mclose" onclick="cerrarConfirmSalida()">&#x2715;</button>
+        </div>
+        <div class="mbody-warn">
+            <div style="background:#f0fff8;border:1px solid #b2dfdb;border-radius:7px;padding:14px 16px;margin-bottom:16px;font-size:.88rem;line-height:1.7">
+                <div><strong>Objeto:</strong> <span id="sal-obj-desc" style="color:#1c2b4b"></span></div>
+                <div><strong>Cantidad:</strong> <span id="sal-obj-cant" style="color:#1c2b4b"></span></div>
+                <div><strong>Portador:</strong> <span id="sal-obj-portador" style="color:#1c2b4b"></span></div>
+                <div><strong>Documento:</strong> <span id="sal-obj-doc" style="color:#1c2b4b" class="mono"></span></div>
+                <div><strong>Destino registrado:</strong> <span id="sal-obj-dest" style="color:#7a8aab"></span></div>
+                <div><strong>Hora de ingreso:</strong> <span id="sal-obj-entrada" style="color:#7a8aab"></span></div>
+            </div>
+            <div class="warn-txt" style="color:#1c4b3a;font-size:.88rem">Al confirmar, se registrará la hora de salida del objeto y quedará en el historial de la bitácora.<br><br>¿El objeto realmente está saliendo de la sede?</div>
+            <div class="mfoot">
+                <button class="btn-cancel-w" onclick="cerrarConfirmSalida()">Cancelar</button>
+                <button class="btn-confirm-w" id="btn-sal-obj-confirm" onclick="ejecutarSalidaInv()" style="background:#1c4b3a">Confirmar salida</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL INVENTARIO -->
+<div class="overlay" id="ov-inv">
+    <div class="mbox-lg">
+        <div class="mhd">
+            <div class="mhd-title">📦 Registro de objetos y Bitácora</div>
+            <button class="mclose" onclick="cerrarInventario()">✕</button>
+        </div>
+        <div class="inv-tabs">
+            <button class="inv-tab active" onclick="invTab('registrar',this)">Ingresar objeto</button>
+            <button class="inv-tab" onclick="invTab('ensede',this)">Objetos en sede ahora <span id="cnt-inv-tab" style="font-size:.7rem;background:#1c2b4b;color:#fff;border-radius:99px;padding:1px 7px;margin-left:4px">0</span></button>
+            <button class="inv-tab" onclick="invTab('bitacora',this)">Historial de objetos</button>
+        </div>
+
+        <!-- PESTAÑA: Registrar ingreso -->
+        <div class="inv-pane active" id="inv-registrar">
+            <div class="inv-form">
+                <div class="fg full">
+                    <label>Descripción del objeto / equipo / herramienta <span class="req">*</span></label>
+                    <input type="text" id="inv-desc" placeholder="Ej: Laptop Dell, taladro, caja de herramientas...">
+                </div>
+                <div class="fg">
+                    <label>Cantidad <span class="req">*</span></label>
+                    <input type="number" id="inv-cant" value="1" min="1">
+                </div>
+                <div class="fg">
+                    <label>Destino / Ambiente</label>
+                    <input type="text" id="inv-dest" placeholder="Ej: Oficina 301, Piso 2...">
+                </div>
+                <div class="fg">
+                    <label>Nombre de quien ingresa <span class="req">*</span></label>
+                    <input type="text" id="inv-pnombre" placeholder="Nombre completo">
+                </div>
+                <div class="fg">
+                    <label>Documento de quien ingresa <span class="req">*</span></label>
+                    <input type="text" id="inv-pdoc" placeholder="Número de documento">
+                </div>
+                <div class="fg full">
+                    <label>Observaciones</label>
+                    <textarea id="inv-obs" placeholder="Detalles adicionales, serial, color, marca..."></textarea>
+                </div>
+                <div class="fg full">
+                    <button class="btn-inv-save" id="btn-inv-save" onclick="guardarInvIngreso()">Registrar entrada</button>
+                    <div class="inv-msg" id="inv-msg"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PESTAÑA: En sede -->
+        <div class="inv-pane" id="inv-ensede">
+            <div id="inv-ensede-body"><div class="m-empty">Cargando...</div></div>
+        </div>
+
+        <!-- PESTAÑA: Bitácora -->
+        <div class="inv-pane" id="inv-bitacora">
+            <div id="inv-bitacora-body"><div class="m-empty">Cargando...</div></div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="/js/socket.io.min.js"></script>
+<script>
+var token = localStorage.getItem("sena_api_token");
+var filtroActual = "TODOS";
+var todos = [];
+var flashNext = false;
+var socket = null;
+var _accionLimpiar = null;
+var _listaAmb = [];
+var _usuarioActual = null;
+var _inicializado = false;
+
+window.addEventListener("load", async function() {
+    // Validación clara: si NO hay token, redirigir a login
+    if (!token || !token.trim()) {
+        window.location.replace('/login');
+        return;
+    }
+    
+    // Marcar que estamos inicializando
+    _inicializado = true;
+    
+    try {
+        // Cargar información del vigilante
+        await cargarInfoVigilante();
+        
+        // Inicializar UI
+        tickReloj();
+        setInterval(tickReloj, 1000);
+        initFloors();
+        
+        // Cargar datos
+        cargarDatos();
+        cargarAmbientes();
+        cargarInventario();
+        iniciarRT();
+        
+        // Polling
+        setInterval(cargarDatos, 3000);
+        setInterval(cargarAmbientes, 5000);
+        setInterval(cargarInventario, 10000);
+    } catch (e) {
+        console.error('[VIGILANCIA] Error en inicialización:', e);
+    }
+});
+
+async function cargarInfoVigilante(){
+    try{
+        var resp=await fetch('/api/auth/me',{headers:{'Authorization':'Bearer '+token}});
+        if(resp.status === 401 || resp.status === 403) {
+            // Token inválido
+            localStorage.removeItem('sena_api_token');
+            window.location.replace('/login');
+            return;
+        }
+        if(resp.ok){
+            _usuarioActual=await resp.json();
+            var lbl=document.getElementById('lbl-vig');
+            if(lbl) lbl.textContent=_usuarioActual.nombre||_usuarioActual.email;
+        }
+    }catch(e){
+        console.warn('auth/me error:',e);
+    }
+}
+
+function cerrarSesion() {
+    localStorage.removeItem('sena_api_token');
+    window.location.replace('/login');
+}
+
+function tickReloj(){
+    var n=new Date();
+    document.getElementById("reloj").textContent=p(n.getHours())+":"+p(n.getMinutes())+":"+p(n.getSeconds());
+}
+function p(n){return String(n).padStart(2,"0")}
+
+function iniciarRT(){
+    if(typeof io==="undefined"){setRT(false);return}
+    socket=io(window.location.origin,{transports:["websocket","polling"]});
+    socket.on("connect",function(){setRT(true)});
+    socket.on("disconnect",function(){setRT(false)});
+    socket.on("acceso_registrado",function(){flashNext=true;cargarDatos()});
+    socket.on("ambiente_ocupado",cargarAmbientes);
+    socket.on("ambiente_liberado",cargarAmbientes);
+    socket.on("cerradura_abierta",   cargarEstadoCerraduras);
+    socket.on("cerradura_cerrada",   cargarEstadoCerraduras);
+    socket.on("cerradura_pendiente", cargarEstadoCerraduras);
+    
+    // ─ Eventos de cerradura automática ─
+    socket.on("cerradura_intento_creado",   cargarIntentosCerradura);
+    socket.on("cerradura_intento_actualizado", cargarIntentosCerradura);
+    socket.on("cerradura_abierta_manual", function(data) {
+        console.log("Cerradura abierta manualmente:", data);
+        cargarIntentosCerradura();
+        mostrarAlertaTexto(`🔓 Cerradura abierta manualmente por ${data.duracion_segundos}s (Vigilante: ${data.vigilante})`);
+    });
+    socket.on("cerradura_cerrada_manual", function(data) {
+        console.log("Cerradura cerrada manualmente:", data);
+        cargarIntentosCerradura();
+        mostrarAlertaTexto(`🔒 Cerradura cerrada por ${data.vigilante}`);
+    });
+    
+    socket.on("registros_limpiados",function(){
+        flashNext=false;
+        todos=[];
+        renderFeed();
+        cargarDatos();
+        cargarAmbientes();
+    });
+    socket.on("traslado_ambiente",function(d){
+        flashNext=true;
+        cargarDatos();
+        cargarAmbientes();
+        mostrarToastTraslado(d);
+    });
+}
+function setRT(ok){
+    document.getElementById("dot-rt").className="dot "+(ok?"on":"off");
+    document.getElementById("lbl-rt").textContent=ok?"En vivo":"Sin conexión";
+}
+
+function initFloors(){
+    var h="";
+    for(var i=1;i<=6;i++) h+='<div class="floor" id="fl-'+i+'"><div class="floor-lbl">Piso '+i+'</div><div class="floor-n">0</div></div>';
+    document.getElementById("floors").innerHTML=h;
+}
+
+async function cargarDatos(){
+    try{
+        var resp=await fetch("/api/registros-acceso",{headers:{"Authorization":"Bearer "+token}});
+        if(!resp.ok) return;
+        var data=await resp.json();
+        todos=Array.isArray(data)?data:(data.registros||[]);
+        var ent=todos.filter(function(r){return r.tipo==="ENTRADA"}).length;
+        var sal=todos.filter(function(r){return r.tipo==="SALIDA"}).length;
+        document.getElementById("kpi-total").textContent=todos.length;
+        document.getElementById("kpi-ent").textContent=ent;
+        document.getElementById("kpi-sal").textContent=sal;
+        document.getElementById("kpi-den").textContent=Math.max(0,ent-sal);
+        // pisos
+        var cp={};for(var i=1;i<=6;i++) cp[i]=0;
+        todos.forEach(function(r){
+            var m=(r.ambiente||"").match(/PISO\s*(\d+)/i);
+            if(m){var pi=parseInt(m[1]);if(pi>=1&&pi<=6){cp[pi]+=r.tipo==="ENTRADA"?1:-1}}
+        });
+        for(var i=1;i<=6;i++){
+            var c=document.getElementById("fl-"+i);
+            if(c){c.querySelector(".floor-n").textContent=Math.max(0,cp[i]||0);c.classList.toggle("alert",(cp[i]||0)>15)}
+        }
+        renderFeed();
+    }catch(e){console.warn(e)}
+}
+
+function renderFeed(){
+    var lista=filtroActual==="TODOS"?todos:todos.filter(function(r){return r.tipo===filtroActual});
+    lista=lista.slice().sort(function(a,b){return new Date(b.created_at||b.timestamp||0)-new Date(a.created_at||a.timestamp||0)});
+    var html="";
+    lista.slice(0,60).forEach(function(r,i){
+        var ts=new Date(r.created_at||r.timestamp||Date.now());
+        var hora=p(ts.getHours())+":"+p(ts.getMinutes())+":"+p(ts.getSeconds());
+        var bc=r.tipo==="ENTRADA"?"badge-e":"badge-s";
+        var cls=(flashNext&&i===0)?' class="row-new"':'';
+        var perfil=(r.persona&&r.persona.perfil)?r.persona.perfil.toLowerCase():'';
+        var perfilHtml='';
+        if(perfil==='aprendiz')      perfilHtml='<span style="background:#e8f4fd;color:#1565c0;border-radius:5px;padding:2px 8px;font-size:.7rem;font-weight:700">Aprendiz</span>';
+        else if(perfil==='instructor'||perfil==='instructora') perfilHtml='<span style="background:#f0fdf4;color:#166534;border-radius:5px;padding:2px 8px;font-size:.7rem;font-weight:700">Instructor</span>';
+        else if(perfil==='directivo') perfilHtml='<span style="background:#fefce8;color:#854d0e;border-radius:5px;padding:2px 8px;font-size:.7rem;font-weight:700">Directivo</span>';
+        else if(perfil==='ejecutivo') perfilHtml='<span style="background:#faf5ff;color:#6b21a8;border-radius:5px;padding:2px 8px;font-size:.7rem;font-weight:700">Ejecutivo</span>';
+        else if(perfil==='visitante') perfilHtml='<span style="background:#f1f5f9;color:#475569;border-radius:5px;padding:2px 8px;font-size:.7rem;font-weight:700">Visitante</span>';
+        else if(perfil)               perfilHtml='<span style="background:#f1f5f9;color:#475569;border-radius:5px;padding:2px 8px;font-size:.7rem;font-weight:700">'+perfil.charAt(0).toUpperCase()+perfil.slice(1)+'</span>';
+        else                          perfilHtml='<span style="color:#c8d4e4;font-size:.8rem;font-style:italic">—</span>';
+        var eqHtml='<span style="color:#c8d4e4;font-size:.8rem;font-style:italic">—</span>';
+        if(r.equipos&&r.equipos.length>0){
+            var n=r.equipos.length;
+            eqHtml='<span style="display:inline-flex;align-items:center;gap:5px;background:#e8f4fd;border:1px solid #90caf9;color:#1565c0;border-radius:6px;padding:3px 10px;font-size:.76rem;font-weight:700;white-space:nowrap;">&#x1F4BB; '+(n>1?n+' equipos':'Con equipo')+'</span>';
+        }
+        html+='<tr'+cls+'><td class="mono">'+hora+'</td><td><span class="'+bc+'">'+r.tipo+'</span></td><td>'+(r.persona?r.persona.nombre:"N/A")+'</td><td class="mono">'+(r.persona?r.persona.numero_doc:"N/A")+'</td><td>'+perfilHtml+'</td><td style="color:#7a8aab;font-size:.8rem">'+(r.ambiente||"-")+'</td><td>'+eqHtml+'</td></tr>';
+    });
+    document.getElementById("tbody-feed").innerHTML=html||'<tr><td colspan="7" style="text-align:center;padding:24px;color:#aaa">Sin registros</td></tr>';
+    flashNext=false;
+}
+
+function filtrar(tipo,btn){
+    filtroActual=tipo;
+    document.querySelectorAll(".f-btn").forEach(function(b){b.classList.remove("active")});
+    if(btn) btn.classList.add("active");
+    renderFeed();
+}
+
+// AMBIENTES
+async function cargarAmbientes(){
+    try{
+        var resp=await fetch("/api/ambientes/ocupados",{headers:{"Authorization":"Bearer "+token}});
+        if(!resp.ok) return;
+        var data=await resp.json();
+        _listaAmb=data.ocupaciones||[];
+        var cnt=document.getElementById("cnt-amb");
+        cnt.textContent=_listaAmb.length;
+        cnt.className="badge-count "+(_listaAmb.length===0?"none":"");
+        // si el modal está abierto, actualizar su contenido
+        if(document.getElementById("ov-ambcerr").classList.contains("show") && _tabActualAmbCerr === 'amb') {
+            renderModalAmbTabla(document.getElementById("mbody-ambcerr"));
+        }
+    }catch(e){console.warn(e)}
+}
+
+// ═══ CERRADURA AUTOMÁTICA — INTENTOS Y CONTROL ═══════════════════════════
+var _listaIntentosCerradura=[];
+
+async function cargarIntentosCerradura(){
+    try{
+        var resp=await fetch("/api/cerradura-automatica/estadisticas",{headers:{"Authorization":"Bearer "+token}});
+        if(!resp.ok) return;
+        var data=await resp.json();
+        _listaIntentosCerradura=data.intentos||[];
+    }catch(e){console.warn(e)}
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// NUEVO: Modal Combinado - Ambientes & Cerraduras con Pestañas
+// ═══════════════════════════════════════════════════════════════════════
+var _tabActualAmbCerr = 'amb'; // 'amb' o 'cerr'
+
+function abrirModalAmbientesConCerraduras(){
+    _tabActualAmbCerr = 'amb'; // Comenzar en pestaña de ambientes
+    cargarIntentosCerradura();
+    cambiarTabAmbCerr('amb');
+    document.getElementById("ov-ambcerr").classList.add("show");
+}
+
+function cerrarOvAmbCerr(){
+    document.getElementById("ov-ambcerr").classList.remove("show");
+    if(_cerTimer){ clearInterval(_cerTimer); _cerTimer = null; }
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+    var ovAmbCerr = document.getElementById("ov-ambcerr");
+    if(ovAmbCerr) ovAmbCerr.addEventListener("click",function(e){if(e.target===this)cerrarOvAmbCerr()});
+});
+
+function cambiarTabAmbCerr(tab){
+    _tabActualAmbCerr = tab;
+    var tabAmb = document.getElementById("tab-amb");
+    var tabCerr = document.getElementById("tab-cerr");
+    var mbody = document.getElementById("mbody-ambcerr");
+    
+    if(tab === 'amb'){
+        tabAmb.classList.add("active");
+        tabAmb.style.color = "#1c2b4b";
+        tabAmb.style.borderBottomColor = "#39A900";
+        tabCerr.classList.remove("active");
+        tabCerr.style.color = "#7a8aab";
+        tabCerr.style.borderBottomColor = "transparent";
+        
+        renderModalAmbTabla(mbody);
+    } else if(tab === 'cerr'){
+        tabCerr.classList.add("active");
+        tabCerr.style.color = "#1c2b4b";
+        tabCerr.style.borderBottomColor = "#39A900";
+        tabAmb.classList.remove("active");
+        tabAmb.style.color = "#7a8aab";
+        tabAmb.style.borderBottomColor = "transparent";
+        
+        _cerEdificio = null; _cerPiso = null; _cerAmbiente = null;
+        cerNavActualizar();
+        cerRenderEdificiosTab(mbody);
+        cargarEstadoCerradurasTab(mbody);
+    }
+}
+
+// Versión de renderizado de ambientes para la pestaña
+function renderModalAmbTabla(cont){
+    var html='';
+    
+    // Sección 1: Ambientes ocupados
+    if(_listaAmb.length>0){
+        html+='<div style="margin-bottom:20px"><h4 style="font-size:.9rem;font-weight:700;color:#1c2b4b;margin-bottom:10px;border-bottom:2px solid #39A900;padding-bottom:6px">🏢 AMBIENTES OCUPADOS</h4>';
+        html+='<table class="env-table"><thead><tr><th>Instructor</th><th>Cédula</th><th>Ambiente</th><th>Ingreso</th><th>Acciones</th></tr></thead><tbody>';
+        _listaAmb.forEach(function(o){
+            var desde="--";
+            if(o.desde){var d=new Date(o.desde);desde=p(d.getHours())+":"+p(d.getMinutes())}
+            var nombre=o.persona?o.persona.nombre:"N/A";
+            var doc=o.persona?o.persona.numero_doc:"";
+            html+='<tr id="erow-'+o.id+'"><td><strong>'+esc(nombre)+'</strong></td><td style="font-family:Courier New,monospace;font-size:.82rem">'+esc(doc)+'</td><td>'+esc(o.ambiente||"—")+'</td><td style="color:#9aabbc;font-size:.82rem">'+desde+'</td><td style="white-space:nowrap"><button class="btn-lib" id="blib-'+o.id+'" onclick="liberarAmb(\''+o.id+'\')">Liberar</button></td></tr>';
+        });
+        html+='</tbody></table></div>';
+    } else {
+        html+='<div style="margin-bottom:20px"><p style="color:#9aabbc;font-size:.9rem;text-align:center;padding:20px">No hay ambientes ocupados en este momento.</p></div>';
+    }
+    
+    // Sección 2: Control manual de cerradura
+    html+='<div><h4 style="font-size:.9rem;font-weight:700;color:#1c2b4b;margin-bottom:10px;border-bottom:2px solid #ff5722;padding-bottom:6px">🔐 CONTROL DE CERRADURA AUTOMÁTICA</h4>';
+    html+='<div style="background:#f5f5f5;border:1px solid #ddd;border-radius:5px;padding:12px;text-align:center;color:#666;font-size:.85rem">';
+    html+='<span style="display:block">🔒 Control manual de cerradura deshabilitado</span>';
+    html+='<span style="display:block;font-size:.8rem;opacity:.8;margin-top:4px">Será reimplementado próximamente</span>';
+    html+='</div>';
+    
+    // Tabla de intentos activos
+    var intentosActivos=[];
+    if(intentosActivos.length===0){
+        html+='<div style="background:#f9f3e6;border:1px solid #ffe0b2;border-radius:5px;padding:12px;text-align:center;color:#856404;font-size:.85rem">';
+        html+='<span style="display:block;margin-bottom:4px">⏳ Sin intentos automáticos activos</span>';
+        html+='<span style="font-size:.8rem;opacity:.8">Se activarán cuando un instructor registre entrada</span>';
+        html+='</div>';
+    }
+    html+='</div>';
+    cont.innerHTML=html;
+}
+
+// Funciones auxiliares para la pestaña de cerraduras
+function cerRenderEdificiosTab(mbody){
+    var lista = CER_EDIFICIOS.filter(function(e){ return e.activo; });
+    var html = '<div style="margin-bottom:20px"><h4 style="font-size:.9rem;font-weight:700;color:#1c2b4b;margin-bottom:10px;border-bottom:2px solid #39A900;padding-bottom:6px">🏢 SELECCIONAR EDIFICIO</h4>';
+    html += '<div class="cer-grid-ed">';
+    lista.forEach(function(ed){
+        html += '<div class="cer-card-ed" onclick="cerSelEdificioTab(\''+ed.id+'\')">'
+            +'<div class="cer-card-ed-ico">🏢</div>'
+            +'<div class="cer-card-ed-nombre">'+ed.nombre+'</div>'
+            +'<div class="cer-card-ed-sub">'+ed.num_pisos+' pisos</div>'
+            +'</div>';
+    });
+    html += '</div></div>';
+    mbody.innerHTML = html;
+}
+
+function cerSelEdificioTab(id){
+    _cerEdificio = CER_EDIFICIOS.find(function(e){ return e.id===id; });
+    _cerPiso = null; _cerAmbiente = null;
+    cerNavActualizar(); 
+    cerRenderPisosTab();
+}
+
+function cerRenderPisosTab(){
+    if(!_cerEdificio) return;
+    var mbody = document.getElementById("mbody-ambcerr");
+    var html = '<div style="margin-bottom:20px"><h4 style="font-size:.9rem;font-weight:700;color:#1c2b4b;margin-bottom:10px;border-bottom:2px solid #39A900;padding-bottom:6px">📋 SELECCIONAR PISO</h4>';
+    html += '<div class="cer-grid-piso">';
+    for(var p=1; p<=_cerEdificio.num_pisos; p++){
+        var pp = p;
+        html += '<div class="cer-card-piso" onclick="cerSelPisoTab('+pp+')">'
+            +'<div class="cer-card-piso-ico">📋</div>'
+            +'<div class="cer-card-piso-lbl">Piso</div>'
+            +'<div class="cer-card-piso-num">'+pp+'</div>'
+            +'</div>';
+    }
+    html += '</div></div>';
+    mbody.innerHTML = html;
+}
+
+function cerSelPisoTab(p){
+    _cerPiso = p; _cerAmbiente = null;
+    cerNavActualizar(); 
+    cerRenderAmbientesTab();
+}
+
+async function cerRenderAmbientesTab(){
+    if(!_cerEdificio || !_cerPiso) return;
+    var mbody = document.getElementById("mbody-ambcerr");
+    var estados = {};
+    try{
+        var r = await fetch('/api/ambientes/cerradura/estado',{headers:{'Authorization':'Bearer '+token}});
+        if(r.ok){ var d=await r.json(); d.forEach(function(c){ estados[c.ambiente]=c; }); }
+    }catch(e){}
+
+    var defPiso = _cerEdificio.ambientes_piso ? _cerEdificio.ambientes_piso[_cerPiso] : null;
+    var lista = [];
+    if(Array.isArray(defPiso)){
+        lista = defPiso;
+    } else {
+        var total = typeof defPiso==='number' ? defPiso : (_cerEdificio.num_ambientes_por_piso||10);
+        for(var n=1;n<=total;n++) lista.push(String(_cerPiso*100+n));
+    }
+
+    var html = '<div style="margin-bottom:20px"><h4 style="font-size:.9rem;font-weight:700;color:#1c2b4b;margin-bottom:10px;border-bottom:2px solid #39A900;padding-bottom:6px">🚪 SELECCIONAR AMBIENTE</h4><div class="cer-grid-amb">';
+    lista.forEach(function(amb){
+        var nombreCompleto = _cerEdificio.nombre + ' - PISO ' + _cerPiso + ' - AMBIENTE ' + amb;
+        var estado = estados[nombreCompleto];
+        var estaAbierto = estado && estado.abierto;
+        var sel = (_cerAmbiente === nombreCompleto) ? ' seleccionado' : '';
+        var clases = 'cer-card-amb ' + (estaAbierto ? 'abierto' : 'libre') + sel;
+        var ico = estaAbierto ? '🔓' : '🔒';
+        var tiempoHtml = '';
+        if(estaAbierto && estado.segundos_restantes >= 0){
+            tiempoHtml = '<div class="cer-amb-tiempo">\u23f1 '+cerFormatSeg(estado.segundos_restantes)+'</div>';
+        }
+        var pulso = estaAbierto ? '<div class="cer-amb-pulse"></div>' : '';
+        var matchAmb = String(amb).match(/^AMBIENTE\s+(\S+)$/i);
+        var displayNum = matchAmb ? matchAmb[1] : amb;
+        html += '<div class="'+clases+'" onclick="cerSelAmbienteTab(\''+nombreCompleto.replace(/'/g,"\\'")+'\')" title="'+nombreCompleto+'">'
+            + pulso
+            +'<div class="cer-amb-ico">'+ico+'</div>'
+            +'<div class="cer-amb-badge">AMB.</div>'
+            +'<div class="cer-amb-num">'+displayNum+'</div>'
+            +tiempoHtml
+            +'</div>';
+    });
+    html += '</div></div>';
+    
+    // Panel de apertura
+    if(_cerAmbiente){
+        var mPiso = /PISO\s+(\d+)/i.exec(_cerAmbiente);
+        var pisoN = mPiso ? parseInt(mPiso[1]) : 1;
+        var mins = pisoN <= 2 ? 2 : (pisoN <= 4 ? 4 : 6);
+        html += '<div style="background:#f0f8f4;border:2px solid #39A900;border-radius:8px;padding:16px;margin-bottom:16px">';
+        html += '<div style="font-weight:700;color:#1c2b4b;margin-bottom:10px">🔓 Abrir Cerradura</div>';
+        html += '<div style="font-size:.9rem;color:#2a5730;margin-bottom:12px"><strong>'+_cerAmbiente+'</strong></div>';
+        html += '<div style="display:flex;gap:8px">';
+        html += '<button onclick="cerAbrirCerraduraTab()" style="flex:1;padding:10px;background:#39A900;color:#fff;border:none;border-radius:5px;font-weight:700;cursor:pointer;font-size:.85rem">🔓 Abrir</button>';
+        html += '<button onclick="cerCerrarCerraduraTab()" style="flex:1;padding:10px;background:#ff5722;color:#fff;border:none;border-radius:5px;font-weight:700;cursor:pointer;font-size:.85rem">🔒 Cerrar</button>';
+        html += '</div>';
+        html += '<div id="cer-msg-tab" style="margin-top:10px;padding:10px;border-radius:5px;display:none;font-size:.85rem;font-weight:600"></div>';
+        html += '</div>';
+    }
+    
+    // Estado actual de cerraduras
+    html += '<div><h4 style="font-size:.9rem;font-weight:700;color:#1c2b4b;margin-bottom:10px;border-bottom:2px solid #39A900;padding-bottom:6px">🟢 Cerraduras abiertas ahora</h4>';
+    var visibles = (await cargarEstadosCerradura()).filter(function(c){ return c.abierto || c.pendiente; });
+    if(visibles.length === 0){
+        html += '<div style="text-align:center;color:#9aabbc;padding:20px">🔒 Sin cerraduras activas</div>';
+    } else {
+        html += '<div style="display:flex;flex-direction:column;gap:8px">';
+        visibles.forEach(function(c){
+            var ico = (c.pendiente && !c.abierto) ? '⏳' : '🔓';
+            html += '<div style="background:#f9f3e6;padding:10px;border-radius:5px;border-left:4px solid #ff9800;display:flex;justify-content:space-between;align-items:center">';
+            html += '<div><span style="font-weight:700">'+ico+' '+c.ambiente+'</span><br><span style="font-size:.8rem;color:#9aabbc">Por: '+c.abierto_por+'</span></div>';
+            html += '<button onclick="cerCerrarCerraduraEspecificaTab(\''+c.ambiente.replace(/'/g,"\\'")+'\')" style="padding:6px 12px;background:#ff5722;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.8rem">Cerrar</button>';
+            html += '</div>';
+        });
+        html += '</div>';
+    }
+    html += '</div>';
+    
+    mbody.innerHTML = html;
+}
+
+function cerSelAmbienteTab(nombre){
+    _cerAmbiente = nombre;
+    cerNavActualizar();
+    cerRenderAmbientesTab(); // Recargar para mostrar el panel de apertura
+}
+
+async function cargarEstadosCerradura(){
+    try{
+        var r = await fetch('/api/ambientes/cerradura/estado',{headers:{'Authorization':'Bearer '+token}});
+        if(!r.ok) return [];
+        var data = await r.json();
+        return Array.isArray(data) ? data : (data.cerraduras_abiertas || []);
+    }catch(e){ 
+        console.error('[CER]',e); 
+        return [];
+    }
+}
+
+async function cargarEstadoCerradurasTab(){
+    var estados = await cargarEstadosCerradura();
+    renderCerraduras(estados);
+    if(_cerPiso) cerRenderAmbientesTab();
+}
+
+async function cerAbrirCerraduraTab(){
+    if(!_cerAmbiente){ alert('Selecciona un ambiente primero'); return; }
+    var msg = document.getElementById('cer-msg-tab');
+    var btn = event.target;
+    btn.disabled=true; btn.textContent='⏳ Abriendo...';
+    try{
+        var r = await fetch('/api/vigilancia/triac/iniciar',{
+            method:'POST',
+            headers:{'Content-Type':'application/json', 'Authorization':'Bearer '+token}
+        });
+        var d = await r.json();
+        if(r.ok){
+            msg.style.background='#c8e6c9';
+            msg.style.color='#2e7d32';
+            msg.textContent = '✅ Cerradura '+_cerAmbiente+' abierta';
+            msg.style.display='block';
+            await cargarEstadoCerradura();
+            setTimeout(function(){ cerRenderAmbientesTab(); }, 500);
+        } else {
+            msg.style.background='#ffcdd2';
+            msg.style.color='#c62828';
+            msg.textContent = '❌ '+d.error||d.mensaje||'Error al abrir';
+            msg.style.display='block';
+        }
+    }catch(e){
+        msg.style.background='#ffcdd2';
+        msg.style.color='#c62828';
+        msg.textContent = '❌ Error: '+e.message;
+        msg.style.display='block';
+    }
+    btn.disabled=false; btn.textContent='🔓 Abrir';
+}
+
+async function cerCerrarCerraduraTab(){
+    if(!_cerAmbiente){ alert('Selecciona un ambiente primero'); return; }
+    var msg = document.getElementById('cer-msg-tab');
+    var btn = event.target;
+    btn.disabled=true; btn.textContent='⏳ Cerrando...';
+    try{
+        var r = await fetch('/api/vigilancia/triac/detener',{
+            method:'POST',
+            headers:{'Content-Type':'application/json', 'Authorization':'Bearer '+token}
+        });
+        var d = await r.json();
+        if(r.ok){
+            msg.style.background='#c8e6c9';
+            msg.style.color='#2e7d32';
+            msg.textContent = '✅ Cerradura '+_cerAmbiente+' cerrada';
+            msg.style.display='block';
+            await cargarEstadoCerradura();
+            setTimeout(function(){ cerRenderAmbientesTab(); }, 500);
+        } else {
+            msg.style.background='#ffcdd2';
+            msg.style.color='#c62828';
+            msg.textContent = '❌ '+d.error||d.mensaje||'Error al cerrar';
+            msg.style.display='block';
+        }
+    }catch(e){
+        msg.style.background='#ffcdd2';
+        msg.style.color='#c62828';
+        msg.textContent = '❌ Error: '+e.message;
+        msg.style.display='block';
+    }
+    btn.disabled=false; btn.textContent='🔒 Cerrar';
+}
+
+async function cerCerrarCerraduraEspecificaTab(ambiente){
+    try{
+        var r = await fetch('/api/vigilancia/triac/detener',{
+            method:'POST',
+            headers:{'Content-Type':'application/json', 'Authorization':'Bearer '+token},
+            body:JSON.stringify({ambiente:ambiente})
+        });
+        if(r.ok){
+            await cargarEstadoCerradura();
+            cerRenderAmbientesTab();
+        }
+    }catch(e){ console.error(e); }
+}
+
+// Mantener compatibilidad con la antigua función
+function abrirModalAmbientes(){
+    abrirModalAmbientesConCerraduras();
+}
+
+
+
+async function liberarAmb(id){
+    var btn=document.getElementById("blib-"+id);
+    if(btn){btn.disabled=true;btn.textContent="..."}
+    try{
+        var resp=await fetch("/api/ambientes/"+id+"/liberar",{method:"PUT",headers:{"Authorization":"Bearer "+token}});
+        if(resp.ok){
+            var row=document.getElementById("erow-"+id);
+            if(row){row.style.opacity="0";row.style.transition="opacity .3s";setTimeout(function(){cargarAmbientes()},320)}
+        } else {
+            var d=await resp.json();
+            alert(d.error||"No se pudo liberar");
+            if(btn){btn.disabled=false;btn.textContent="Liberar ambiente"}
+        }
+    }catch(e){alert("Error de red");if(btn){btn.disabled=false;btn.textContent="Liberar ambiente"}}
+}
+
+// Funciones de control de cerradura eliminadas - Será reimplementado por separado
+
+// LIMPIAR REGISTROS
+function pedirConfirmRegistros(){
+    document.getElementById("dep-title").textContent="Cerrar turno — Guardar historial";
+    var esTodoAdmin=(_usuarioActual&&_usuarioActual.rol==='admin');
+    if(esTodoAdmin){
+        document.getElementById("dep-txt").innerHTML='<strong>(Administrador)</strong> Se exportarán <strong>TODOS los registros</strong> a un archivo Excel como respaldo.<br>Los registros se guardarán en disco local, en la memoria USB (si hay una conectada) y en la nube (si está configurada).<br><br><strong style="color:green">✅ Los registros se PRESERVARÁN en la BD para que el próximo vigilante pueda registrar salidas.</strong><br><br>¿Está seguro de continuar?';
+    } else {
+        document.getElementById("dep-txt").innerHTML='<strong>Cerrar turno — Guardar historial</strong><br><br>Los registros de <strong>su turno</strong> se guardarán en un archivo Excel como respaldo.<br>El archivo quedará guardado en disco, en la memoria USB (si hay una conectada) y en la nube (si está configurada).<br><br><strong style="color:green">✅ Los registros se PRESERVARÁN en la BD para que:</strong><br>El próximo vigilante pueda ver el historial completo del día.<br>Los aprendices puedan registrar su salida sin importar cambios de turno.<br><br>¿Está seguro de continuar?';
+    }
+    var btn=document.getElementById("btn-dep-confirm");
+    btn.disabled=false; btn.textContent="Confirmar";
+    document.getElementById("ov-dep").classList.add("show");
+}
+function cerrarOvDep(){document.getElementById("ov-dep").classList.remove("show")}
+document.getElementById("ov-dep").addEventListener("click",function(e){if(e.target===this)cerrarOvDep()});
+
+async function ejecutarLimpiar(){
+    var btn=document.getElementById("btn-dep-confirm");
+    btn.disabled=true; btn.textContent="Exportando y cerrando turno...";
+    try{
+        var resp=await fetch("/api/vigilante/cerrar-turno",{method:"POST",headers:{"Authorization":"Bearer "+token}});
+        var data=await resp.json();
+        cerrarOvDep();
+        if(resp.ok){
+            var partes=[];
+            partes.push("✔ Turno cerrado correctamente.");
+            partes.push("Registros exportados: "+(data.registros_exportados||0)+".");
+            if(data.excel_generado){
+                var destinos=[];
+                if(data.guardado_local) destinos.push("disco local");
+                if(data.guardado_usb)   destinos.push("memoria USB");
+                if(data.guardado_nube)  destinos.push("nube");
+                if(destinos.length>0){
+                    partes.push("Excel guardado en: "+destinos.join(", ")+".");
+                } else {
+                    partes.push("Excel guardado en disco local.");
+                }
+                if(data.archivo) partes.push("Archivo: "+data.archivo);
+            }
+            alert(partes.join("\n"));
+            cerrarSesion();
+        } else {
+            alert("Error al cerrar turno: "+(data.error||"Intente nuevamente"));
+            btn.disabled=false; btn.textContent="Confirmar";
+        }
+        cargarDatos();
+        cargarAmbientes();
+    }catch(e){alert("Error de red");btn.disabled=false;btn.textContent="Confirmar"}
+}
+
+function esc(s){return(s||"").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+
+// Funciones de traslado eliminadas - Será reimplementado por separado
+
+// ── AGREGAR VISITANTE ───────────────────────────────────────
+function abrirAgregarVisitante(){
+    ['vis-nombre','vis-numero-doc','vis-email','vis-telefono','vis-empresa','vis-motivo'].forEach(function(id){
+        var el=document.getElementById(id);
+        if(el) el.value='';
+    });
+    var tipoEl=document.getElementById('vis-tipo-doc');
+    if(tipoEl) tipoEl.value='CC';
+    var msgEl=document.getElementById('vis-msg');
+    if(msgEl) msgEl.style.display='none';
+    var btnEl=document.getElementById('btn-vis-save');
+    if(btnEl){
+        btnEl.disabled=false;
+        btnEl.textContent='Registrar Entrada';
+    }
+    limpiarSalida();
+    document.getElementById('ov-visitante').classList.add('show');
+    cargarVisitantesActivos();
+}
+
+function cerrarAgregarVisitante(){
+    document.getElementById('ov-visitante').classList.remove('show');
+}
+
+document.getElementById('ov-visitante').addEventListener('click',function(e){
+    if(e.target.id==='ov-visitante') cerrarAgregarVisitante();
+});
+
+async function guardarVisitante(){
+    var nombre=(document.getElementById('vis-nombre').value||'').trim();
+    var tipoDoc=(document.getElementById('vis-tipo-doc').value||'CC');
+    var numeroDoc=(document.getElementById('vis-numero-doc').value||'').trim();
+    var email=(document.getElementById('vis-email').value||'').trim();
+    var telefono=(document.getElementById('vis-telefono').value||'').trim();
+    var empresa=(document.getElementById('vis-empresa').value||'').trim();
+    var motivo=(document.getElementById('vis-motivo').value||'').trim();
+    var msgEl=document.getElementById('vis-msg');
+    msgEl.style.display='none';
+    
+    if(!nombre||!numeroDoc||!motivo){
+        msgEl.style.background='#fff3cd';
+        msgEl.style.color='#856404';
+        msgEl.textContent='❌ Nombre, Número de Documento y Motivo de Ingreso son obligatorios.';
+        msgEl.style.display='block';
+        return;
+    }
+    
+    var btnEl=document.getElementById('btn-vis-save');
+    btnEl.disabled=true;
+    btnEl.textContent='Registrando...';
+    
+    try{
+        // PASO 1: Registrar visitante en /api/personas
+        var personaPayload={
+            nombre: nombre,
+            tipo_doc: tipoDoc,
+            numero_doc: numeroDoc,
+            perfil: 'visitante',
+            email: email||null,
+            telefono: telefono||null,
+            area: empresa||null,
+            observaciones: motivo
+        };
+        
+        var respPersona=await fetch('/api/personas',{
+            method:'POST',
+            headers:{
+                'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||''),
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(personaPayload)
+        });
+        
+        var dataPersona=await respPersona.json();
+        
+        if(!respPersona.ok){
+            msgEl.style.background='#f8d7da';
+            msgEl.style.color='#721c24';
+            
+            // Mensaje específico para acceso denegado
+            if(respPersona.status === 403){
+                msgEl.textContent='⛔ Acceso Denegado: Solo los vigilantes pueden registrar visitantes. Por favor, dirígete al panel del vigilante.';
+            } else {
+                msgEl.textContent='❌ '+(dataPersona.error||'Error al registrar visitante');
+            }
+            
+            msgEl.style.display='block';
+            btnEl.disabled=false;
+            btnEl.textContent='Registrar Entrada';
+            return;
+        }
+        
+        // PASO 2: Registrar entrada en /api/registros-acceso
+        var accesoPayload={
+            numero_doc: numeroDoc,
+            tipo: 'ENTRADA',
+            observaciones: motivo
+        };
+        
+        var respAcceso=await fetch('/api/registros-acceso',{
+            method:'POST',
+            headers:{
+                'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||''),
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(accesoPayload)
+        });
+        
+        var dataAcceso=await respAcceso.json();
+        
+        if(!respAcceso.ok){
+            msgEl.style.background='#f8d7da';
+            msgEl.style.color='#721c24';
+            msgEl.textContent='❌ Error al registrar entrada: '+(dataAcceso.error||'Intente nuevamente');
+            msgEl.style.display='block';
+            btnEl.disabled=false;
+            btnEl.textContent='Registrar Entrada';
+            return;
+        }
+        
+        // ÉXITO: Visitante registrado y entrada realizada
+        msgEl.style.background='#d4edda';
+        msgEl.style.color='#155724';
+        msgEl.textContent='✅ Visitante ingresado exitosamente. Motivo: '+motivo;
+        msgEl.style.display='block';
+        
+        // Limpiar formulario
+        ['vis-nombre','vis-numero-doc','vis-email','vis-telefono','vis-empresa','vis-motivo'].forEach(function(id){
+            var el=document.getElementById(id);
+            if(el) el.value='';
+        });
+        document.getElementById('vis-tipo-doc').value='CC';
+        
+        // Recargar listado de visitantes
+        cargarVisitantesActivos();
+        
+        // Cerrar después de 1.5s
+        setTimeout(function(){
+            cerrarAgregarVisitante();
+        },1500);
+        
+    }catch(e){
+        msgEl.style.background='#f8d7da';
+        msgEl.style.color='#721c24';
+        msgEl.textContent='❌ Error de red: '+e.message;
+        msgEl.style.display='block';
+        btnEl.disabled=false;
+        btnEl.textContent='Registrar Entrada';
+    }
+}
+
+// ── CARGAR VISITANTES ACTIVOS ───────────────────────────────────────
+async function cargarVisitantesActivos(){
+    try{
+        // Obtener TODOS los registros de acceso
+        var resp=await fetch('/api/registros-acceso?limit=10000&sort=-timestamp',{
+            method:'GET',
+            headers:{
+                'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||''),
+                'Content-Type':'application/json'
+            }
+        });
+        
+        if(!resp.ok) throw new Error('Error al obtener registros');
+        
+        var data=await resp.json();
+        var registros=data.registros||[];
+        
+        // Agrupar por número de documento y tomar el ÚLTIMO movimiento
+        var ultimoMovimiento={};
+        registros.forEach(function(reg){
+            if(!ultimoMovimiento[reg.numero_doc]){
+                ultimoMovimiento[reg.numero_doc]=reg;
+            }
+        });
+        
+        // Filtrar solo VISITANTES cuyo último movimiento fue ENTRADA (activos)
+        var visitantesActivos=[];
+        Object.keys(ultimoMovimiento).forEach(function(numDoc){
+            var ultimo=ultimoMovimiento[numDoc];
+            if(ultimo.tipo==='ENTRADA' && ultimo.perfil==='visitante'){
+                visitantesActivos.push(ultimo);
+            }
+        });
+        
+        var listEl=document.getElementById('vis-list');
+        
+        if(visitantesActivos.length===0){
+            listEl.innerHTML='<div style="text-align:center;color:#7a8aab;font-size:.87rem;padding:20px">No hay visitantes activos en este momento</div>';
+            return;
+        }
+        
+        // Obtener datos completos de cada visitante (nombre, empresa)
+        var promesas=visitantesActivos.map(function(vis){
+            return fetch('/api/personas/buscar-por-documento?numero_doc='+encodeURIComponent(vis.numero_doc),{
+                headers:{
+                    'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||''),
+                    'Content-Type':'application/json'
+                }
+            })
+            .then(r=>r.json())
+            .then(d=>{
+                if(d.persona){
+                    vis.nombre=d.persona.nombre||'Sin nombre';
+                    vis.area=d.persona.area||'-';
+                }
+                return vis;
+            })
+            .catch(e=>{
+                return vis;
+            });
+        });
+        
+        Promise.all(promesas).then(function(visitantesConDatos){
+            var html='<table style="width:100%;border-collapse:collapse;font-size:.85rem">';
+            html+='<tr style="border-bottom:2px solid #d0d8e8;font-weight:700;color:#2a8000">';
+            html+='<td style="padding:10px;text-align:left">Nombre</td>';
+            html+='<td style="padding:10px;text-align:left">Documento</td>';
+            html+='<td style="padding:10px;text-align:left">Empresa</td>';
+            html+='<td style="padding:10px;text-align:left">Motivo</td>';
+            html+='<td style="padding:10px;text-align:center">Acción</td>';
+            html+='</tr>';
+            
+            visitantesConDatos.forEach(function(vis){
+                html+='<tr style="border-bottom:1px solid #e8f0f8">';
+                html+='<td style="padding:10px">'+(vis.nombre||'-')+'</td>';
+                html+='<td style="padding:10px">'+vis.numero_doc+'</td>';
+                html+='<td style="padding:10px">'+(vis.area||'-')+'</td>';
+                html+='<td style="padding:10px;font-size:.80rem">'+(vis.observaciones||'-')+'</td>';
+                html+='<td style="padding:10px;text-align:center"><button onclick="registrarSalidaVisitante(\''+vis.numero_doc+'\')" style="padding:6px 12px;background:#c0392b;color:#fff;border:none;border-radius:4px;font-size:.80rem;font-weight:600;cursor:pointer">Salida</button></td>';
+                html+='</tr>';
+            });
+            html+='</table>';
+            listEl.innerHTML=html;
+        }).catch(e=>{
+            listEl.innerHTML='<div style="color:#c0392b;font-size:.87rem;padding:10px">Error: '+e.message+'</div>';
+        });
+        
+    }catch(e){
+        document.getElementById('vis-list').innerHTML='<div style="color:#c0392b;font-size:.87rem;padding:10px">Error: '+e.message+'</div>';
+    }
+}
+
+// ── REGISTRAR SALIDA DE VISITANTE ────────────────────────────────────────
+async function registrarSalidaVisitante(numeroDoc){
+    if(!confirm('¿Registrar salida del visitante '+numeroDoc+'?')) return;
+    
+    try{
+        var resp=await fetch('/api/registros-acceso',{
+            method:'POST',
+            headers:{
+                'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||''),
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                numero_doc: numeroDoc,
+                tipo: 'SALIDA'
+            })
+        });
+        
+        var data=await resp.json();
+        
+        if(resp.ok){
+            alert('✅ Salida registrada correctamente para: '+numeroDoc);
+            cargarVisitantesActivos();
+        } else {
+            alert('❌ Error: '+(data.error||'No se pudo registrar la salida'));
+        }
+    }catch(e){
+        alert('❌ Error de red: '+e.message);
+    }
+}
+
+function limpiarSalida(){
+    document.getElementById('vis-salida-doc').value='';
+    var infoEl=document.getElementById('vis-salida-info');
+    if(infoEl) infoEl.style.display='none';
+    var msgEl=document.getElementById('vis-salida-msg');
+    if(msgEl) msgEl.style.display='none';
+    var btnEl=document.getElementById('btn-vis-salida');
+    if(btnEl){
+        btnEl.disabled=true;
+        btnEl.style.opacity='0.5';
+        btnEl.style.pointerEvents='none';
+    }
+}
+
+async function registrarSalidaModal(){
+    var numeroDoc=(document.getElementById('vis-salida-doc').value||'').trim();
+    var msgEl=document.getElementById('vis-salida-msg');
+    
+    if(!numeroDoc){
+        msgEl.textContent='❌ Ingresa un número de documento';
+        msgEl.style.color='#d32f2f';
+        msgEl.style.display='block';
+        return;
+    }
+    
+    try{
+        // Buscar el visitante
+        var searchResp=await fetch('/api/personas/buscar-por-documento?numero_doc='+encodeURIComponent(numeroDoc),{
+            headers:{'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||'')}
+        });
+        var visitante=await searchResp.json();
+        
+        if(!searchResp.ok || !visitante || visitante.error){
+            msgEl.textContent='❌ Visitante no encontrado';
+            msgEl.style.color='#d32f2f';
+            msgEl.style.display='block';
+            return;
+        }
+        
+        if(visitante.perfil!=='visitante'){
+            msgEl.textContent='❌ Esta persona no es visitante';
+            msgEl.style.color='#d32f2f';
+            msgEl.style.display='block';
+            return;
+        }
+        
+        // Registrar salida
+        var salidaResp=await fetch('/api/registros-acceso',{
+            method:'POST',
+            headers:{
+                'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||''),
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                numero_doc: numeroDoc,
+                tipo: 'SALIDA'
+            })
+        });
+        
+        var salidaData=await salidaResp.json();
+        
+        if(salidaResp.ok){
+            msgEl.textContent='✅ Salida registrada correctamente para: '+visitante.nombre;
+            msgEl.style.color='#4caf50';
+            msgEl.style.display='block';
+            limpiarSalida();
+            cargarVisitantesActivos();
+        } else {
+            msgEl.textContent='❌ Error: '+(salidaData.error||'No se pudo registrar la salida');
+            msgEl.style.color='#d32f2f';
+            msgEl.style.display='block';
+        }
+    }catch(e){
+        msgEl.textContent='❌ Error: '+e.message;
+        msgEl.style.color='#d32f2f';
+        msgEl.style.display='block';
+    }
+}
+
+// ── BÚSQUEDA GLOBAL
+function abrirBusquedaGlobal(){
+    document.getElementById('busq-doc').value='';
+    document.getElementById('busq-resultados').innerHTML='<div class="m-empty">Ingresa un número de documento para consultar el historial de accesos.</div>';
+    document.getElementById('ov-busq').classList.add('show');
+    document.getElementById('busq-doc').focus();
+}
+function cerrarBusquedaGlobal(){document.getElementById('ov-busq').classList.remove('show');}
+document.getElementById('ov-busq').addEventListener('click',function(e){if(e.target===this)cerrarBusquedaGlobal();});
+
+async function ejecutarBusquedaGlobal(){
+    var doc=(document.getElementById('busq-doc').value||'').trim();
+    if(!doc){alert('Por favor, ingresa un número de documento.');return;}
+    
+    // Validar que sea solo números
+    if(!/^\d+$/.test(doc)){alert('El número de documento debe contener solo dígitos.');return;}
+    
+    var btn=document.getElementById('btn-busq');
+    var cont=document.getElementById('busq-resultados');
+    
+    btn.disabled=true;
+    btn.textContent='Buscando...';
+    cont.innerHTML='<div class="m-empty">Buscando registros...</div>';
+    
+    try{
+        var resp=await fetch('/api/registros-acceso/busqueda-global?numero_doc='+encodeURIComponent(doc),{
+            headers:{'Authorization':'Bearer '+token}
+        });
+        
+        if(!resp.ok){
+            var data=await resp.json();
+            cont.innerHTML='<div class="m-empty" style="color:#c0392b">❌ Error: '+(data.error||'No se pudo completar la búsqueda')+'</div>';
+            btn.disabled=false;
+            btn.textContent='Buscar historial';
+            return;
+        }
+        
+        var data=await resp.json();
+        var lista=data.registros||[];
+        var persona=data.persona;
+        
+        if(lista.length===0){
+            cont.innerHTML='<div class="m-empty" style="color:#c4700a">⚠️ No se encontraron registros para el documento: <strong>'+esc(doc)+'</strong></div>';
+            btn.disabled=false;
+            btn.textContent='Buscar historial';
+            return;
+        }
+        
+        // Card con info de la persona
+        var h='<div style="background:linear-gradient(135deg,#2a8000,#39A900);color:#fff;border-radius:8px;padding:14px 16px;margin-bottom:16px;box-shadow:0 3px 10px rgba(42,128,0,.2)">';
+        if(persona){
+            h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:.88rem"><div>';
+            h+='<div style="opacity:.8;font-size:.7rem;text-transform:uppercase">Nombre completo</div>';
+            h+='<div style="font-weight:700;font-size:1rem">'+esc(persona.nombre)+'</div>';
+            h+='</div><div>';
+            h+='<div style="opacity:.8;font-size:.7rem;text-transform:uppercase">Documento</div>';
+            h+='<div style="font-weight:700;font-family:monospace;font-size:.99rem">'+esc(persona.numero_doc)+'</div>';
+            h+='</div><div>';
+            h+='<div style="opacity:.8;font-size:.7rem;text-transform:uppercase">Perfil SENA</div>';
+            h+='<div style="font-weight:600">'+esc(persona.perfil||'—')+'</div>';
+            h+='</div><div>';
+            h+='<div style="opacity:.8;font-size:.7rem;text-transform:uppercase">Ficha</div>';
+            h+='<div style="font-weight:600">'+esc(persona.ficha||'—')+'</div>';
+            h+='</div></div>';
+        }else{
+            h+='<strong>Documento: '+esc(doc)+'</strong><br><small style="opacity:.9">No se encontró información adicional de esta persona.</small>';
+        }
+        h+='</div>';
+        
+        // Tabla de registros
+        h+='<div style="margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">';
+        h+='<div style="font-size:.8rem;color:#7a8aab;font-weight:600;text-transform:uppercase;letter-spacing:.3px">📊 Historial completo</div>';
+        h+='<div style="background:#edfcee;color:#2e8b35;padding:4px 10px;border-radius:4px;font-size:.75rem;font-weight:700">'+lista.length+' registros</div>';
+        h+='</div>';
+        h+='<table class="env-table"><thead><tr><th>Fecha y hora</th><th>Tipo</th><th>Ambiente</th><th>Vigilante</th></tr></thead><tbody>';
+        
+        lista.forEach(function(r){
+            var ts=new Date(r.timestamp);
+            var hora=p(ts.getDate())+'/'+(p(ts.getMonth()+1))+'/'+ts.getFullYear()+' '+p(ts.getHours())+':'+p(ts.getMinutes())+':'+p(ts.getSeconds());
+            var bc=r.tipo==='ENTRADA'?'badge-e':'badge-s';
+            var vig=(r.vigilante&&r.vigilante.nombre)?esc(r.vigilante.nombre):'<span style="color:#ccc;opacity:.6">Sin asignar</span>';
+            h+='<tr>';
+            h+='<td style="font-size:.80rem;color:#7a8aab;white-space:nowrap;font-family:monospace">'+hora+'</td>';
+            h+='<td><span class="'+bc+'">'+r.tipo+'</span></td>';
+            h+='<td style="font-size:.82rem;color:#2c3e5a">'+esc(r.ambiente||'—')+'</td>';
+            h+='<td style="font-size:.80rem;color:#7a8aab">'+vig+'</td>';
+            h+='</tr>';
+        });
+        h+='</tbody></table>';
+        cont.innerHTML=h;
+        
+    }catch(e){
+        console.warn(e);
+        cont.innerHTML='<div class="m-empty" style="color:#c0392b">❌ Error de conexión. Por favor intenta de nuevo.</div>';
+    }
+    
+    btn.disabled=false;
+    btn.textContent='Buscar historial';
+}
+
+// ── INVENTARIO ──────────────────────────────────────────
+var _invEnSede=[];
+var _invBitacora=[];
+var _invTabActual='registrar';
+
+async function cargarInventario(){
+    try{
+        var resp=await fetch('/api/inventario',{headers:{'Authorization':'Bearer '+token}});
+        if(!resp.ok) return;
+        var data=await resp.json();
+        _invEnSede=data.items||[];
+        var cnt=_invEnSede.length;
+        var el=document.getElementById('cnt-inv');
+        if(el){el.textContent=cnt;el.className='badge-count '+(cnt===0?'none':'');}
+        var el2=document.getElementById('cnt-inv-tab');
+        if(el2) el2.textContent=cnt;
+        if(document.getElementById('ov-inv').classList.contains('show')&&_invTabActual==='ensede') renderInvEnSede();
+    }catch(e){console.warn(e)}
+}
+
+async function cargarBitacora(){
+    try{
+        var resp=await fetch('/api/inventario/historial?por_pagina=150',{headers:{'Authorization':'Bearer '+token}});
+        if(!resp.ok) return;
+        var data=await resp.json();
+        _invBitacora=data.items||[];
+        if(document.getElementById('ov-inv').classList.contains('show')&&_invTabActual==='bitacora') renderBitacora();
+    }catch(e){console.warn(e)}
+}
+
+function abrirInventario(){
+    document.getElementById('ov-inv').classList.add('show');
+    cargarInventario();
+    cargarBitacora();
+    invTab('registrar',document.querySelectorAll('.inv-tab')[0]);
+}
+function cerrarInventario(){document.getElementById('ov-inv').classList.remove('show');}
+document.getElementById('ov-inv').addEventListener('click',function(e){if(e.target===this)cerrarInventario();});
+
+function invTab(nombre,btn){
+    _invTabActual=nombre;
+    document.querySelectorAll('.inv-tab').forEach(function(b){b.classList.remove('active');});
+    if(btn) btn.classList.add('active');
+    document.querySelectorAll('.inv-pane').forEach(function(p){p.classList.remove('active');});
+    var pane=document.getElementById('inv-'+nombre);
+    if(pane) pane.classList.add('active');
+    if(nombre==='ensede') renderInvEnSede();
+    if(nombre==='bitacora') renderBitacora();
+}
+
+function fmtFecha(iso){
+    if(!iso) return '-';
+    var d=new Date(iso);
+    return p(d.getDate())+'/'+(p(d.getMonth()+1))+'/'+d.getFullYear()+' '+p(d.getHours())+':'+p(d.getMinutes());
+}
+
+function renderInvEnSede(){
+    var cont=document.getElementById('inv-ensede-body');
+    if(!cont) return;
+    if(_invEnSede.length===0){cont.innerHTML='<div class="m-empty">No hay objetos o equipos en sede actualmente.</div>';return;}
+    var h='<table class="env-table"><thead><tr><th>Descripción</th><th>Cant.</th><th>Portador</th><th>Documento</th><th>Destino</th><th>Entrada</th><th></th></tr></thead><tbody>';
+    _invEnSede.forEach(function(it){
+        var obs=it.observaciones?('<br><span style="font-size:.73rem;color:#9aabbc">'+esc(it.observaciones)+'</span>'):''; 
+        h+='<tr id="irow-'+it.id+'">';
+        h+='<td><strong>'+esc(it.descripcion)+'</strong>'+obs+'</td>';
+        h+='<td style="text-align:center">'+it.cantidad+'</td>';
+        h+='<td>'+esc(it.portador_nombre)+'</td>';
+        h+='<td class="mono" style="font-size:.8rem">'+esc(it.portador_documento)+'</td>';
+        h+='<td style="color:#7a8aab;font-size:.8rem">'+esc(it.destino||'-')+'</td>';
+        h+='<td style="color:#9aabbc;font-size:.79rem;white-space:nowrap">'+fmtFecha(it.fecha_entrada)+'</td>';
+        h+='<td><button class="btn-salida" id="bsal-'+it.id+'" onclick="pedirConfirmSalidaInv(\''+it.id+'\',\''+esc(it.descripcion)+'\',\''+esc(it.portador_nombre)+'\',\''+esc(it.portador_documento)+'\',\''+esc(it.destino||'-')+'\',\''+fmtFecha(it.fecha_entrada)+'\')">Registrar salida</button></td>';
+        h+='</tr>';
+    });
+    h+='</tbody></table>';
+    cont.innerHTML=h;
+}
+
+function renderBitacora(){
+    var cont=document.getElementById('inv-bitacora-body');
+    if(!cont) return;
+    if(_invBitacora.length===0){cont.innerHTML='<div class="m-empty">No hay registros en la bitácora.</div>';return;}
+    var h='<table class="env-table"><thead><tr><th>Descripción</th><th>Cant.</th><th>Portador</th><th>Estado</th><th>Entrada</th><th>Salida</th></tr></thead><tbody>';
+    _invBitacora.forEach(function(it){
+        var bc=it.estado==='EN_SEDE'?'badge-en':'badge-ret';
+        var te=it.estado==='EN_SEDE'?'En sede':'Retirado';
+        var dest=it.destino?('<br><span style="font-size:.73rem;color:#9aabbc">'+esc(it.destino)+'</span>'):''; 
+        h+='<tr>';
+        h+='<td><strong>'+esc(it.descripcion)+'</strong>'+dest+'</td>';
+        h+='<td style="text-align:center">'+it.cantidad+'</td>';
+        h+='<td>'+esc(it.portador_nombre)+'<br><span class="mono" style="font-size:.77rem;color:#9aabbc">'+esc(it.portador_documento)+'</span></td>';
+        h+='<td><span class="'+bc+'">'+te+'</span></td>';
+        h+='<td style="font-size:.79rem;color:#7a8aab;white-space:nowrap">'+fmtFecha(it.fecha_entrada)+'</td>';
+        h+='<td style="font-size:.79rem;color:#7a8aab;white-space:nowrap">'+fmtFecha(it.fecha_salida)+'</td>';
+        h+='</tr>';
+    });
+    h+='</tbody></table>';
+    cont.innerHTML=h;
+}
+
+async function guardarInvIngreso(){
+    var desc=(document.getElementById('inv-desc').value||'').trim();
+    var cant=parseInt(document.getElementById('inv-cant').value)||1;
+    var pnombre=(document.getElementById('inv-pnombre').value||'').trim();
+    var pdoc=(document.getElementById('inv-pdoc').value||'').trim();
+    var dest=(document.getElementById('inv-dest').value||'').trim();
+    var obs=(document.getElementById('inv-obs').value||'').trim();
+    var msgEl=document.getElementById('inv-msg');
+    msgEl.className='inv-msg';
+    if(!desc||!pnombre||!pdoc){msgEl.className='inv-msg err';msgEl.textContent='Completa los campos obligatorios (*).';return;}
+    var btn=document.getElementById('btn-inv-save');
+    btn.disabled=true;btn.textContent='Guardando...';
+    try{
+        var resp=await fetch('/api/inventario',{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({descripcion:desc,cantidad:cant,portador_nombre:pnombre,portador_documento:pdoc,destino:dest||null,observaciones:obs||null})});
+        var data=await resp.json();
+        if(resp.ok){
+            msgEl.className='inv-msg ok';msgEl.textContent='✔ Entrada registrada: '+data.descripcion;
+            document.getElementById('inv-desc').value='';
+            document.getElementById('inv-cant').value='1';
+            document.getElementById('inv-pnombre').value='';
+            document.getElementById('inv-pdoc').value='';
+            document.getElementById('inv-dest').value='';
+            document.getElementById('inv-obs').value='';
+            cargarInventario();
+            cargarBitacora();
+        } else {
+            msgEl.className='inv-msg err';msgEl.textContent='Error: '+(data.error||'No se pudo guardar');
+        }
+    }catch(e){msgEl.className='inv-msg err';msgEl.textContent='Error de red.';}
+    btn.disabled=false;btn.textContent='Registrar entrada';
+}
+
+// ── CONFIRMACIÓN SALIDA DE OBJETO ───────────────────────────
+var _salObjId = null;
+
+function pedirConfirmSalidaInv(id, desc, portador, doc, dest, entrada){
+    _salObjId = id;
+    // Recuperar la cantidad del item en memoria
+    var item = _invEnSede.find(function(it){return it.id===id;});
+    document.getElementById('sal-obj-desc').textContent     = desc   || '—';
+    document.getElementById('sal-obj-cant').textContent     = item   ? item.cantidad : '—';
+    document.getElementById('sal-obj-portador').textContent = portador|| '—';
+    document.getElementById('sal-obj-doc').textContent      = doc    || '—';
+    document.getElementById('sal-obj-dest').textContent     = dest   || '—';
+    document.getElementById('sal-obj-entrada').textContent  = entrada|| '—';
+    var btn = document.getElementById('btn-sal-obj-confirm');
+    btn.disabled = false; btn.textContent = 'Confirmar salida';
+    document.getElementById('ov-sal-obj').classList.add('show');
+}
+
+function cerrarConfirmSalida(){
+    document.getElementById('ov-sal-obj').classList.remove('show');
+    _salObjId = null;
+}
+document.getElementById('ov-sal-obj').addEventListener('click', function(e){
+    if(e.target === this) cerrarConfirmSalida();
+});
+
+async function ejecutarSalidaInv(){
+    if(!_salObjId) return;
+    var id  = _salObjId;
+    var btn = document.getElementById('btn-sal-obj-confirm');
+    btn.disabled = true; btn.textContent = 'Registrando...';
+    try{
+        var resp = await fetch('/api/inventario/'+id+'/salida', {method:'PUT', headers:{'Authorization':'Bearer '+token}});
+        var data = await resp.json();
+        cerrarConfirmSalida();
+        if(resp.ok){
+            var btnRow = document.getElementById('bsal-'+id);
+            if(btnRow){ btnRow.disabled=true; btnRow.textContent='Salida registrada'; }
+            var row = document.getElementById('irow-'+id);
+            if(row){ row.style.opacity='0'; row.style.transition='opacity .4s';
+                setTimeout(function(){ cargarInventario(); cargarBitacora(); }, 420); }
+        } else {
+            alert('⚠ '+(data.error||'No se pudo registrar la salida del objeto.'));
+        }
+    }catch(e){
+        cerrarConfirmSalida();
+        alert('Error de red. Intente nuevamente.');
+    }
+}
+
+async function registrarSalidaInv(id){
+    // Mantenido por compatibilidad; el flujo normal pasa por pedirConfirmSalidaInv
+    var btn=document.getElementById('bsal-'+id);
+    if(btn){btn.disabled=true;btn.textContent='...';}
+    try{
+        var resp=await fetch('/api/inventario/'+id+'/salida',{method:'PUT',headers:{'Authorization':'Bearer '+token}});
+        var data=await resp.json();
+        if(resp.ok){
+            var row=document.getElementById('irow-'+id);
+            if(row){row.style.opacity='0';row.style.transition='opacity .35s';
+                setTimeout(function(){cargarInventario();cargarBitacora();},360);}
+        } else {
+            alert(data.error||'No se pudo registrar salida');
+            if(btn){btn.disabled=false;btn.textContent='Registrar salida';}
+        }
+    }catch(e){alert('Error de red');if(btn){btn.disabled=false;btn.textContent='Registrar salida';}}
+}
+
+// ── MODAL INGRESO CON EQUIPO ─────────────────────────────────────────────────
+var ceqTipo = 'ENTRADA';
+var ceqPersona = null;
+var ceqEquipo = null;
+var _ceqScanGuardLast = {};
+var _ceqScanTimer = {};
+
+function abrirModalEquipo(){
+    ceqTipo = 'ENTRADA';
+    ceqPersona = null;
+    ceqEquipo = null;
+    document.getElementById('ceq-cedula').value = '';
+    document.getElementById('ceq-barcode').value = '';
+    ['ceq-persona-info','ceq-persona-err','ceq-equipo-info','ceq-equipo-err','ceq-msg'].forEach(function(id){
+        document.getElementById(id).style.display = 'none';
+    });
+    ceqSelTipo('ENTRADA');
+    var btn = document.getElementById('btn-ceq-registrar');
+    btn.disabled = false;
+    btn.textContent = '✓ REGISTRAR ACCESO CON EQUIPO';
+    document.getElementById('ov-equipo').classList.add('show');
+    setTimeout(function(){ document.getElementById('ceq-cedula').focus(); }, 150);
+}
+
+function cerrarModalEquipo(){
+    document.getElementById('ov-equipo').classList.remove('show');
+}
+
+// ═══════════════════════════════════════════════
+//  CERRADURAS ELECTRÓNICAS
+// ═══════════════════════════════════════════════
+var _cerTimer = null;
+var _cerEdificio = null;
+var _cerPiso     = null;
+var _cerAmbiente = null;
+
+var CER_EDIFICIOS = [
+    {
+        id: 'sede-principal',
+        nombre: 'SEDE PRINCIPAL',
+        num_pisos: 5,
+        activo: true,
+        ambientes_piso: {
+            1: ['101','102','AMBIENTE 1','AMBIENTE 2','AMBIENTE 3','AMBIENTE 4'],
+            2: ['201','202','203','204','205','206','207','208','209','210'],
+            3: ['301','302','303','304','305','306','307','308','309','310','311'],
+            4: ['401','402','403','404','405','406','407','408','409','410','411'],
+            5: ['501','502','503','504','505','506','507','508','509','510']
+        }
+    }
+];
+
+function abrirModalCerradura(){
+    _cerEdificio = null; _cerPiso = null; _cerAmbiente = null;
+    document.getElementById('ov-cerradura').classList.add('show');
+    document.getElementById('cer-apertura').style.display = 'none';
+    cerNavActualizar();
+    cerRenderEdificios();
+    cargarEstadoCerraduras();
+}
+function cerrarModalCerradura(){
+    document.getElementById('ov-cerradura').classList.remove('show');
+    if(_cerTimer){ clearInterval(_cerTimer); _cerTimer = null; }
+}
+
+function cerNavActualizar(){
+    var s1 = document.getElementById('cer-nav-sep1');
+    var s2 = document.getElementById('cer-nav-sep2');
+    var lp = document.getElementById('cer-nav-piso-lbl');
+    var la = document.getElementById('cer-nav-amb-lbl');
+    if(_cerEdificio){
+        s1.style.display=''; lp.style.display='';
+        lp.textContent = _cerEdificio.nombre + (_cerPiso ? ' — PISO ' + _cerPiso : '');
+    } else { s1.style.display='none'; lp.style.display='none'; }
+    if(_cerAmbiente){
+        s2.style.display=''; la.style.display='';
+        la.textContent = _cerAmbiente;
+    } else { s2.style.display='none'; la.style.display='none'; }
+}
+function cerNavEdificio(){
+    _cerEdificio=null; _cerPiso=null; _cerAmbiente=null;
+    document.getElementById('cer-apertura').style.display='none';
+    cerNavActualizar(); cerRenderEdificios();
+}
+function cerNavPiso(){
+    _cerPiso=null; _cerAmbiente=null;
+    document.getElementById('cer-apertura').style.display='none';
+    cerNavActualizar(); cerRenderPisos();
+}
+
+function cerRenderEdificios(){
+    var lista = CER_EDIFICIOS.filter(function(e){ return e.activo; });
+    var html = '<div class="cer-grid-ed">';
+    lista.forEach(function(ed){
+        html += '<div class="cer-card-ed" onclick="cerSelEdificio(\''+ed.id+'\')">'
+            +'<div class="cer-card-ed-ico">🏢</div>'
+            +'<div class="cer-card-ed-nombre">'+ed.nombre+'</div>'
+            +'<div class="cer-card-ed-sub">'+ed.num_pisos+' pisos</div>'
+            +'</div>';
+    });
+    html += '</div>';
+    document.getElementById('cer-panel').innerHTML = html;
+}
+
+function cerSelEdificio(id){
+    _cerEdificio = CER_EDIFICIOS.find(function(e){ return e.id===id; });
+    _cerPiso = null; _cerAmbiente = null;
+    cerNavActualizar(); cerRenderPisos();
+}
+
+function cerRenderPisos(){
+    if(!_cerEdificio) return;
+    var html = '<div class="cer-grid-piso">';
+    for(var p=1; p<=_cerEdificio.num_pisos; p++){
+        var pp = p;
+        html += '<div class="cer-card-piso" onclick="cerSelPiso('+pp+')">'
+            +'<div class="cer-card-piso-ico">📋</div>'
+            +'<div class="cer-card-piso-lbl">Piso</div>'
+            +'<div class="cer-card-piso-num">'+pp+'</div>'
+            +'</div>';
+    }
+    html += '</div>';
+    document.getElementById('cer-panel').innerHTML = html;
+}
+
+function cerSelPiso(p){
+    _cerPiso = p; _cerAmbiente = null;
+    document.getElementById('cer-apertura').style.display='none';
+    cerNavActualizar(); cerRenderAmbientes();
+}
+
+async function cerRenderAmbientes(){
+    if(!_cerEdificio || !_cerPiso) return;
+    var estados = {};
+    try{
+        var r = await fetch('/api/ambientes/cerradura/estado',{headers:{'Authorization':'Bearer '+token}});
+        if(r.ok){ var d=await r.json(); d.forEach(function(c){ estados[c.ambiente]=c; }); }
+    }catch(e){}
+
+    var defPiso = _cerEdificio.ambientes_piso ? _cerEdificio.ambientes_piso[_cerPiso] : null;
+    var lista = [];
+    if(Array.isArray(defPiso)){
+        lista = defPiso;
+    } else {
+        var total = typeof defPiso==='number' ? defPiso : (_cerEdificio.num_ambientes_por_piso||10);
+        for(var n=1;n<=total;n++) lista.push(String(_cerPiso*100+n));
+    }
+
+    var html = '<div class="cer-grid-amb">';
+    lista.forEach(function(amb){
+        var nombreCompleto = _cerEdificio.nombre + ' - PISO ' + _cerPiso + ' - AMBIENTE ' + amb;
+        var estado = estados[nombreCompleto];
+        var estaAbierto = estado && estado.abierto;
+        var sel = (_cerAmbiente === nombreCompleto) ? ' seleccionado' : '';
+        var clases = 'cer-card-amb ' + (estaAbierto ? 'abierto' : 'libre') + sel;
+        var ico = estaAbierto ? '🔓' : '🔒';
+        var tiempoHtml = '';
+        if(estaAbierto && estado.segundos_restantes >= 0){
+            tiempoHtml = '<div class="cer-amb-tiempo">\u23f1 '+cerFormatSeg(estado.segundos_restantes)+'</div>';
+        }
+        var pulso = estaAbierto ? '<div class="cer-amb-pulse"></div>' : '';
+        // Si el nombre es 'AMBIENTE N', mostrar solo el número para no repetir "AMB."
+        var matchAmb = String(amb).match(/^AMBIENTE\s+(\S+)$/i);
+        var displayNum = matchAmb ? matchAmb[1] : amb;
+        html += '<div class="'+clases+'" onclick="cerSelAmbiente(\''+nombreCompleto.replace(/'/g,"\\'")+'\')" title="'+nombreCompleto+'">'
+            + pulso
+            +'<div class="cer-amb-ico">'+ico+'</div>'
+            +'<div class="cer-amb-badge">AMB.</div>'
+            +'<div class="cer-amb-num">'+displayNum+'</div>'
+            +tiempoHtml
+            +'</div>';
+    });
+    html += '</div>';
+    document.getElementById('cer-panel').innerHTML = html;
+}
+
+function cerSelAmbiente(nombre){
+    _cerAmbiente = nombre;
+    cerNavActualizar();
+    // Calcular y mostrar tiempo según piso
+    var mPiso = /PISO\s+(\d+)/i.exec(nombre);
+    var pisoN = mPiso ? parseInt(mPiso[1]) : 1;
+    var mins = pisoN <= 2 ? 2 : (pisoN <= 4 ? 4 : 6);
+    document.getElementById('cer-tiempo-info').textContent = mins + ' min (piso ' + pisoN + ')';
+    // Marcar visualmente la seleccionada
+    document.querySelectorAll('.cer-card-amb').forEach(function(el){
+        el.classList.remove('seleccionado');
+        if(el.getAttribute('title') === nombre) el.classList.add('seleccionado');
+    });
+    document.getElementById('cer-apertura-nombre').textContent = nombre;
+    var msg = document.getElementById('cer-apertura-msg');
+    msg.className = 'cer-apertura-msg'; msg.textContent = '';
+    var panel = document.getElementById('cer-apertura');
+    panel.style.display = 'block';
+    panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+async function cargarEstadoCerraduras(){
+    try{
+        var r = await fetch('/api/ambientes/cerradura/estado',{headers:{'Authorization':'Bearer '+token}});
+        if(!r.ok) return;
+        var data = await r.json();
+        // El endpoint devuelve {ok: true, cerraduras_abiertas: [...], ...} o un array directo
+        var estados = Array.isArray(data) ? data : (data.cerraduras_abiertas || []);
+        renderCerraduras(estados);
+        if(_cerPiso) cerRenderAmbientes();
+    }catch(e){ console.error('[CER]',e); }
+}
+
+function cerFormatSeg(s){
+    var h=Math.floor(s/3600), m=Math.floor((s%3600)/60), ss=s%60;
+    if(h>0) return h+'h '+m+'m';
+    return (m>0?m+'m ':'')+ss+'s';
+}
+
+function renderCerraduras(estados){
+    var contenedor = document.getElementById('cer-lista');
+    if(_cerTimer){ clearInterval(_cerTimer); _cerTimer = null; }
+    var visibles = estados.filter(function(c){ return c.abierto || c.pendiente; });
+    if(!visibles.length){
+        contenedor.innerHTML='<div class="cer-empty">🔒 Sin cerraduras activas en este momento</div>';
+        return;
+    }
+    contenedor.innerHTML = visibles.map(function(c){
+        var esPendiente = !c.abierto && c.pendiente;
+        var seg = esPendiente ? (c.segundos_para_abrir || 0) : 0;
+        var ico  = esPendiente ? '⏳' : '🔓';
+        var itemClass = 'cer-activa-item' + (esPendiente ? ' pendiente' : '');
+        var metaTexto = esPendiente
+            ? 'Abre en <span class="cer-countdown" data-seg="'+seg+'" style="font-weight:800;color:#b06000">'+cerFormatSeg(seg)+'</span> · por <strong>'+c.abierto_por+'</strong> · '+c.origen
+            : 'ABIERTO · por <strong>'+c.abierto_por+'</strong> · '+c.origen;
+        return '<div class="'+itemClass+'">'
+            +'<div class="cer-activa-ico">'+ico+'</div>'
+            +'<div class="cer-activa-info">'
+            +  '<div class="cer-activa-nombre">'+c.ambiente+'</div>'
+            +  '<div class="cer-activa-meta">'+metaTexto+'</div>'
+            +'</div>'
+            +'<button class="btn-cer-cerrar" onclick="cerCerrarCerradura(\''+c.ambiente.replace(/'/g,"\\'")+'\')" title="Cancelar / Cerrar">🔒 Cerrar</button>'
+            +'</div>';
+    }).join('');
+
+    // Countdown descendente para pendientes — al llegar a 0 recarga el estado
+    _cerTimer = setInterval(function(){
+        var alguno = false;
+        document.querySelectorAll('.cer-countdown').forEach(function(el){
+            var s = parseInt(el.dataset.seg||0) - 1;
+            if(s < 0) s = 0;
+            el.dataset.seg = s;
+            el.textContent = cerFormatSeg(s);
+            if(s > 0) alguno = true;
+        });
+        if(!alguno){ clearInterval(_cerTimer); _cerTimer=null; cargarEstadoCerraduras(); }
+    }, 1000);
+}
+
+async function cerAbrirCerradura(){
+    if(!_cerAmbiente){ alert('Selecciona un ambiente primero'); return; }
+    var btn = document.getElementById('cer-btn-abrir');
+    var msg = document.getElementById('cer-apertura-msg');
+    btn.disabled=true; btn.innerHTML='⏳ Abriendo...';
+    try{
+        // Activar TRIAC directamente
+        var r = await fetch('/api/vigilancia/triac/iniciar',{
+            method:'POST',
+            headers:{'Content-Type':'application/json', 'Authorization':'Bearer '+token}
+        });
+        var d = await r.json();
+        if(r.ok){
+            msg.className = 'cer-apertura-msg ok';
+            msg.textContent = '✅ Cerradura ' + _cerAmbiente + ' abierta (TRIAC activado)';
+            cargarEstadoCerraduras();
+            if(document.getElementById('cer-hist-panel').style.display !== 'none') cerCargarHistorial();
+        } else {
+            msg.className = 'cer-apertura-msg err';
+            msg.textContent = '❌ ' + (d.error||d.mensaje||'No se pudo abrir la cerradura');
+        }
+    }catch(e){
+        msg.className = 'cer-apertura-msg err';
+        msg.textContent = '❌ Error: ' + e.message;
+    }
+    btn.disabled=false; btn.innerHTML='🔓 Abrir cerradura';
+}
+
+async function cerCerrarCerradura(){
+    if(!_cerAmbiente){ alert('Selecciona un ambiente primero'); return; }
+    var btn = document.getElementById('cer-btn-cerrar');
+    var msg = document.getElementById('cer-apertura-msg');
+    btn.disabled=true; btn.innerHTML='⏳ Cerrando...';
+    try{
+        // Desactivar TRIAC/cerradura
+        var r = await fetch('/api/vigilancia/triac/parar',{
+            method:'POST',
+            headers:{'Content-Type':'application/json', 'Authorization':'Bearer '+token}
+        });
+        var d = await r.json();
+        if(r.ok){
+            msg.className = 'cer-apertura-msg ok';
+            msg.textContent = '✅ Cerradura ' + _cerAmbiente + ' cerrada (TRIAC desactivado)';
+            cargarEstadoCerraduras();
+            if(document.getElementById('cer-hist-panel').style.display !== 'none') cerCargarHistorial();
+        } else {
+            msg.className = 'cer-apertura-msg err';
+            msg.textContent = '❌ ' + (d.error||d.mensaje||'No se pudo cerrar la cerradura');
+        }
+    }catch(e){
+        msg.className = 'cer-apertura-msg err';
+        msg.textContent = '❌ Error: ' + e.message;
+    }
+    btn.disabled=false; btn.innerHTML='🔒 Cerrar cerradura';
+}
+
+function cerMostrarToast(msg, tipo){
+    var t = document.getElementById('cer-toast');
+    if(!t){ t=document.createElement('div'); t.id='cer-toast'; document.body.appendChild(t); }
+    t.textContent = msg;
+    t.className = 'cer-toast cer-toast-'+tipo;
+    t.style.display='block';
+    setTimeout(function(){ t.style.display='none'; }, 3500);
+}
+
+function cerToggleHistorial(){
+    var panel = document.getElementById('cer-hist-panel');
+    var btn   = document.getElementById('cer-btn-hist');
+    if(panel.style.display === 'none'){
+        panel.style.display = 'block';
+        if(btn) btn.textContent = '❌ Cerrar historial';
+        cerCargarHistorial();
+    } else {
+        panel.style.display = 'none';
+        if(btn) btn.textContent = '📋 Historial';
+    }
+}
+
+async function cerCargarHistorial(){
+    var lista = document.getElementById('cer-hist-lista');
+    lista.innerHTML = '<div class="cer-empty">Cargando...</div>';
+    try{
+        var r = await fetch('/api/ambientes/cerradura/historial?limite=40',{headers:{'Authorization':'Bearer '+token}});
+        if(!r.ok){ lista.innerHTML='<div class="cer-empty">Error al cargar historial</div>'; return; }
+        var data = await r.json();
+        // El endpoint devuelve {ok: true, historial: [...], ...} o un array directo
+        var historial = Array.isArray(data) ? data : (data.historial || []);
+        if(!historial.length){ lista.innerHTML='<div class="cer-empty">💭 Sin registros aún</div>'; return; }
+        lista.innerHTML = historial.map(function(h){
+            var ico = h.activo ? '🔓' : '🔒';
+            var cls = h.activo ? 'cer-hist-item activo' : 'cer-hist-item';
+            var fAbrir = new Date(h.abierto_en).toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'});
+            var fCerrar = h.cerrado_en ? new Date(h.cerrado_en).toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'}) : '⏳ Activo';
+            var cerInfo = h.cerrado_por ? (' · Cerrado por <strong>'+h.cerrado_por+'</strong> '+fCerrar) : ' · <strong style="color:#39A900">⏳ Abierto ahora</strong>';
+            return '<div class="'+cls+'">'   
+                +'<div class="cer-hist-ico">'+ico+'</div>'   
+                +'<div class="cer-hist-info">'   
+                +  '<div class="cer-hist-amb">📍 '+h.ambiente+'</div>'   
+                +  '<div class="cer-hist-meta">Abierto por <strong>'+h.abierto_por+'</strong> '+fAbrir+' ('+h.duracion_minutos+' min)'+cerInfo+'</div>'   
+                +'</div>'   
+                +'</div>';
+        }).join('');
+    }catch(e){ lista.innerHTML='<div class="cer-empty">Error de conexión</div>'; }
+}
+
+
+
+function ceqSelTipo(tipo){
+    ceqTipo = tipo;
+    document.getElementById('ceq-btn-ent').style.background = tipo === 'ENTRADA' ? '#39A900' : '#ccc';
+    document.getElementById('ceq-btn-ent').style.color = tipo === 'ENTRADA' ? 'white' : '#333';
+    document.getElementById('ceq-btn-sal').style.background = tipo === 'SALIDA' ? '#e65100' : '#ccc';
+    document.getElementById('ceq-btn-sal').style.color = tipo === 'SALIDA' ? 'white' : '#333';
+}
+
+function ceqScanGuard(e, fieldId){
+    var skip = ['Enter','Backspace','Tab','Delete','Escape','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Shift','Control','Alt','Meta','CapsLock'];
+    if(skip.indexOf(e.key) !== -1 || e.ctrlKey || e.metaKey || e.altKey) return;
+    var now = Date.now();
+    var last = _ceqScanGuardLast[fieldId] || 0;
+    var gap = now - last;
+    _ceqScanGuardLast[fieldId] = now;
+    if(e.target.value.length === 0) return;
+    if(gap > 80){ e.preventDefault(); e.target.value = ''; _ceqScanGuardLast[fieldId] = 0; }
+}
+
+function ceqDetectarEscaner(input, ctx){
+    clearTimeout(_ceqScanTimer[ctx]);
+    if(input.value.length >= 6){
+        _ceqScanTimer[ctx] = setTimeout(function(){
+            if(ctx === 'cedula') ceqBuscarPersona();
+            else ceqBuscarEquipo();
+        }, 120);
+    }
+}
+
+async function ceqBuscarPersona(){
+    var cedula = document.getElementById('ceq-cedula').value.trim();
+    if(!cedula) return;
+    document.getElementById('ceq-persona-info').style.display = 'none';
+    document.getElementById('ceq-persona-err').style.display = 'none';
+    ceqPersona = null;
+    try{
+        var resp = await fetch('/api/acceso/verificar?numero_doc=' + encodeURIComponent(cedula) + '&tipo=' + ceqTipo,
+            { headers: { 'Authorization': 'Bearer ' + token } });
+        var data = await resp.json();
+        if(!data.found){
+            document.getElementById('ceq-persona-err').textContent = '⚠ Persona no encontrada: ' + cedula;
+            document.getElementById('ceq-persona-err').style.display = 'block';
+            return;
+        }
+        ceqPersona = data;
+        document.getElementById('ceq-persona-nombre').textContent = data.nombre || '';
+        document.getElementById('ceq-persona-doc').textContent = 'C.C. ' + cedula;
+        var badge = !data.permitido
+            ? '<span style="background:#fee2e2;color:#991b1b;border-radius:5px;padding:2px 8px;font-size:.75rem;font-weight:700">⚠ ' + (ceqTipo === 'ENTRADA' ? 'Ya está dentro' : 'No está dentro') + '</span>'
+            : '<span style="background:#dcfce7;color:#166534;border-radius:5px;padding:2px 8px;font-size:.75rem;font-weight:700">✓ OK</span>';
+        document.getElementById('ceq-persona-badge').innerHTML = badge;
+        document.getElementById('ceq-persona-info').style.display = 'block';
+        setTimeout(function(){ document.getElementById('ceq-barcode').focus(); }, 100);
+    } catch(e){
+        document.getElementById('ceq-persona-err').textContent = '⚠ Error de conexión al verificar la cédula.';
+        document.getElementById('ceq-persona-err').style.display = 'block';
+    }
+}
+
+async function ceqBuscarEquipo(){
+    var codigo = document.getElementById('ceq-barcode').value.trim();
+    if(!codigo) return;
+    document.getElementById('ceq-equipo-info').style.display = 'none';
+    document.getElementById('ceq-equipo-err').style.display = 'none';
+    ceqEquipo = null;
+    var numDoc = ceqPersona ? ceqPersona.numero_doc : '';
+    try{
+        var url = '/api/equipos/verificar-seguridad?codigo_barras=' + encodeURIComponent(codigo) +
+                  '&numero_doc=' + encodeURIComponent(numDoc) + '&tipo=' + ceqTipo;
+        var resp = await fetch(url, { headers: { 'Authorization': 'Bearer ' + token } });
+        var data = await resp.json();
+        if(data.barcode_tomado){
+            document.getElementById('ceq-equipo-err').textContent = '⛔ Código ya registrado a otro equipo en el sistema.';
+            document.getElementById('ceq-equipo-err').style.display = 'block';
+            return;
+        }
+        if(data.alerta_propietario){
+            document.getElementById('ceq-equipo-err').textContent = '⛔ Este equipo pertenece a otra persona del sistema.';
+            document.getElementById('ceq-equipo-err').style.display = 'block';
+            return;
+        }
+        ceqEquipo = { codigo_barras: codigo, datos: data };
+        var estadoTxt = !data.found
+            ? '<span style="color:#a16207;font-size:.8rem">⚠ Dispositivo nuevo — se registrará</span>'
+            : (data.estado_equipo === 'DENTRO'
+                ? '<span style="color:#166534;font-weight:700">🟢 Dentro</span>'
+                : '<span style="color:#991b1b;font-weight:700">🔴 Fuera</span>');
+        document.getElementById('ceq-equipo-codigo').textContent = '💻 ' + codigo;
+        document.getElementById('ceq-equipo-estado').innerHTML = estadoTxt;
+        document.getElementById('ceq-equipo-info').style.display = 'block';
+    } catch(e){
+        document.getElementById('ceq-equipo-err').textContent = '⚠ Error de conexión al verificar el dispositivo.';
+        document.getElementById('ceq-equipo-err').style.display = 'block';
+    }
+}
+
+async function ceqRegistrar(){
+    if(!ceqPersona){
+        alert('Primero escanea la cédula de la persona.');
+        document.getElementById('ceq-cedula').focus();
+        return;
+    }
+    if(!ceqEquipo){
+        alert('Primero escanea el código del dispositivo.');
+        document.getElementById('ceq-barcode').focus();
+        return;
+    }
+    var btn = document.getElementById('btn-ceq-registrar');
+    btn.disabled = true;
+    btn.textContent = 'Registrando...';
+    document.getElementById('ceq-msg').style.display = 'none';
+    var payload = {
+        numero_doc: ceqPersona.numero_doc,
+        nombre: ceqPersona.nombre,
+        tipo: ceqTipo,
+        ambiente: 'CONTROL DE ACCESO — CON EQUIPO',
+        codigo_barras_equipo: ceqEquipo.codigo_barras,
+        timestamp: new Date().toISOString()
+    };
+    try{
+        var resp = await fetch('/api/registros-acceso', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify(payload)
+        });
+        var data = await resp.json();
+        var msgEl = document.getElementById('ceq-msg');
+        if(resp.ok){
+            Object.assign(msgEl.style, {background:'#dcfce7', color:'#166534', border:'1.5px solid #86efac', display:'block'});
+            msgEl.textContent = '✅ ' + ceqTipo + ' registrada: ' + ceqPersona.nombre + ' — Equipo: ' + ceqEquipo.codigo_barras;
+            // Limpiar para el siguiente ingreso
+            setTimeout(function(){
+                ceqPersona = null;
+                ceqEquipo = null;
+                document.getElementById('ceq-cedula').value = '';
+                document.getElementById('ceq-barcode').value = '';
+                ['ceq-persona-info','ceq-persona-err','ceq-equipo-info','ceq-equipo-err'].forEach(function(id){
+                    document.getElementById(id).style.display = 'none';
+                });
+                msgEl.style.display = 'none';
+                btn.disabled = false;
+                btn.textContent = '✓ REGISTRAR ACCESO CON EQUIPO';
+                document.getElementById('ceq-cedula').focus();
+            }, 2800);
+        } else {
+            Object.assign(msgEl.style, {background:'#fff3f3', color:'#991b1b', border:'1.5px solid #fca5a5', display:'block'});
+            msgEl.textContent = '❌ Error: ' + (data.error || 'No se pudo registrar');
+            btn.disabled = false;
+            btn.textContent = '✓ REGISTRAR ACCESO CON EQUIPO';
+        }
+    } catch(e){
+        var msgEl = document.getElementById('ceq-msg');
+        Object.assign(msgEl.style, {background:'#fff3f3', color:'#991b1b', border:'1.5px solid #fca5a5', display:'block'});
+        msgEl.textContent = '❌ Error de conexión. Inténtalo de nuevo.';
+        btn.disabled = false;
+        btn.textContent = '✓ REGISTRAR ACCESO CON EQUIPO';
+    }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  ESP32 — Pruebas de cerradura eléctrica física
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── EVENT LISTENER: Búsqueda de visitante para salida
+document.getElementById('vis-salida-doc').addEventListener('keyup', async function(){
+    var numeroDoc=(this.value||'').trim();
+    var infoEl=document.getElementById('vis-salida-info');
+    var msgEl=document.getElementById('vis-salida-msg');
+    var btnEl=document.getElementById('btn-vis-salida');
+    
+    if(!numeroDoc){
+        infoEl.style.display='none';
+        msgEl.style.display='none';
+        btnEl.disabled=true;
+        btnEl.style.opacity='0.5';
+        btnEl.style.pointerEvents='none';
+        return;
+    }
+    
+    try{
+        var resp=await fetch('/api/personas/buscar-por-documento?numero_doc='+encodeURIComponent(numeroDoc),{
+            headers:{'Authorization':'Bearer '+(localStorage.getItem('sena_api_token')||'')}
+        });
+        var visitante=await resp.json();
+        
+        if(resp.ok && visitante && visitante.nombre && visitante.perfil==='visitante'){
+            document.getElementById('vis-salida-nombre').textContent=visitante.nombre;
+            document.getElementById('vis-salida-doc-display').textContent=numeroDoc;
+            infoEl.style.display='block';
+            msgEl.style.display='none';
+            btnEl.disabled=false;
+            btnEl.style.opacity='1';
+            btnEl.style.pointerEvents='auto';
+        } else {
+            infoEl.style.display='none';
+            msgEl.textContent='❌ Visitante no válido o no encontrado';
+            msgEl.style.color='#d32f2f';
+            msgEl.style.display='block';
+            btnEl.disabled=true;
+            btnEl.style.opacity='0.5';
+            btnEl.style.pointerEvents='none';
+        }
+    }catch(e){
+        infoEl.style.display='none';
+        msgEl.textContent='❌ Error en búsqueda: '+e.message;
+        msgEl.style.color='#d32f2f';
+        msgEl.style.display='block';
+        btnEl.disabled=true;
+        btnEl.style.opacity='0.5';
+        btnEl.style.pointerEvents='none';
+    }
+});
+
+
+</script>
+
+<!-- MODAL INGRESO CON EQUIPO -->
+<div class="overlay" id="ov-equipo" onclick="if(event.target===this)cerrarModalEquipo()">
+    <div class="mbox-lg" style="width:min(620px,97vw)">
+        <div class="mhd">
+            <div class="mhd-title">&#x1F4BB; Ingreso con Computador / Laptop</div>
+            <button class="mclose" onclick="cerrarModalEquipo()">&#x2715;</button>
+        </div>
+        <div class="mbody" style="padding:22px">
+            <!-- TIPO -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+                <button id="ceq-btn-ent" onclick="ceqSelTipo('ENTRADA')" style="padding:14px;background:#39A900;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:800;font-size:1rem">&#x2193; ENTRADA</button>
+                <button id="ceq-btn-sal" onclick="ceqSelTipo('SALIDA')" style="padding:14px;background:#ccc;color:#333;border:none;border-radius:10px;cursor:pointer;font-weight:800;font-size:1rem">&#x2191; SALIDA</button>
+            </div>
+            <!-- PERSONA -->
+            <div class="fg" style="margin-bottom:14px">
+                <label style="display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">1. Cédula de la persona <span style="color:#c0392b">*</span></label>
+                <div style="position:relative">
+                    <input type="text" id="ceq-cedula" placeholder="Escanea o escribe la cédula..."
+                        autocomplete="off" autocorrect="off" spellcheck="false"
+                        oninput="ceqDetectarEscaner(this,'cedula')"
+                        onkeydown="ceqScanGuard(event,'ceq-cedula')"
+                        onkeypress="if(event.key==='Enter')ceqBuscarPersona()"
+                        style="width:100%;padding:11px 40px 11px 14px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.95rem;color:#1c2b4b;background:#fff;outline:none;transition:border-color .15s">
+                    <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:#e3f2fd;color:#1565c0;border-radius:5px;padding:2px 7px;font-size:.65rem;font-weight:700;pointer-events:none">&#x1F4F7; ESCÁNER</span>
+                </div>
+            </div>
+            <!-- Info persona -->
+            <div id="ceq-persona-info" style="display:none;background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:.88rem">
+                <strong id="ceq-persona-nombre" style="color:#166534"></strong>
+                <span id="ceq-persona-doc" style="color:#7a8aab;font-size:.82rem;margin-left:8px"></span>
+                <span id="ceq-persona-badge" style="float:right"></span>
+            </div>
+            <div id="ceq-persona-err" style="display:none;background:#fff3f3;border:1.5px solid #fca5a5;border-radius:8px;padding:10px 16px;margin-bottom:14px;color:#991b1b;font-size:.84rem"></div>
+            <!-- DISPOSITIVO -->
+            <div class="fg" style="margin-bottom:14px">
+                <label style="display:block;font-size:.72rem;font-weight:700;color:#7a8aab;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">2. Código de barras del equipo <span style="color:#c0392b">*</span></label>
+                <div style="position:relative">
+                    <input type="text" id="ceq-barcode" placeholder="Escanea el código del dispositivo..."
+                        autocomplete="off" autocorrect="off" spellcheck="false"
+                        oninput="ceqDetectarEscaner(this,'barcode')"
+                        onkeydown="ceqScanGuard(event,'ceq-barcode')"
+                        onkeypress="if(event.key==='Enter')ceqBuscarEquipo()"
+                        style="width:100%;padding:11px 40px 11px 14px;border:1.5px solid #d0d8e8;border-radius:6px;font-size:.95rem;color:#1c2b4b;background:#fff;outline:none;transition:border-color .15s">
+                    <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:#e3f2fd;color:#1565c0;border-radius:5px;padding:2px 7px;font-size:.65rem;font-weight:700;pointer-events:none">&#x1F4F7; ESCÁNER</span>
+                </div>
+            </div>
+            <!-- Info equipo -->
+            <div id="ceq-equipo-info" style="display:none;background:#eff6ff;border:1.5px solid #93c5fd;border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:.88rem">
+                <strong id="ceq-equipo-codigo" style="color:#1e40af"></strong>
+                <span id="ceq-equipo-estado" style="margin-left:8px"></span>
+            </div>
+            <div id="ceq-equipo-err" style="display:none;background:#fff3f3;border:1.5px solid #fca5a5;border-radius:8px;padding:10px 16px;margin-bottom:14px;color:#991b1b;font-size:.84rem"></div>
+            <!-- MENSAJE RESULTADO -->
+            <div id="ceq-msg" style="display:none;border-radius:8px;padding:11px 16px;margin-bottom:14px;font-size:.88rem;font-weight:600"></div>
+            <!-- BOTONES -->
+            <div style="display:flex;gap:10px;margin-top:6px">
+                <button class="btn-cancel-w" onclick="cerrarModalEquipo()">Cancelar</button>
+                <button id="btn-ceq-registrar" onclick="ceqRegistrar()"
+                    style="flex:1;padding:12px;border:none;background:linear-gradient(135deg,#2a8000 0%,#39A900 100%);color:#fff;border-radius:7px;font-size:.95rem;font-weight:700;cursor:pointer">
+                    &#x2713; REGISTRAR ACCESO CON EQUIPO
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ MODO MANTENIMIENTO ═══ -->
+<div id="_mantOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(8,18,60,0.97);z-index:99999;align-items:center;justify-content:center;flex-direction:column;text-align:center">
+    <div style="padding:40px 24px;max-width:680px">
+        <div style="font-size:88px;margin-bottom:14px">&#x1F527;</div>
+        <div style="font-size:2.6rem;font-weight:900;color:#fff;letter-spacing:4px;text-transform:uppercase;line-height:1.2;margin-bottom:18px">Sistema en<br>Mantenimiento</div>
+        <div id="_mantMsg" style="font-size:1.2rem;color:#9bbce0;margin-bottom:24px">El sistema est&aacute; siendo actualizado. Por favor espere.</div>
+        <div style="font-size:.9rem;color:#5b7a99;line-height:1.7">Si tiene urgencia, contacte al personal de soporte t&eacute;cnico.<br>El servicio ser&aacute; restablecido en breve.</div>
+        <div style="margin-top:44px;display:flex;gap:12px;justify-content:center">
+            <div style="width:10px;height:10px;border-radius:50%;background:#3a7bd5;animation:_mp .8s 0s infinite alternate"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#f39c12;animation:_mp .8s .2s infinite alternate"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#3a7bd5;animation:_mp .8s .4s infinite alternate"></div>
+        </div>
+    </div>
+</div>
+<style>@keyframes _mp{from{opacity:.2;transform:translateY(4px)}to{opacity:1;transform:translateY(-4px)}}</style>
+<script>(function(){function _chkMant(){fetch('/api/sistema/mantenimiento').then(function(r){return r.json();}).then(function(d){var ov=document.getElementById('_mantOverlay');if(!ov)return;if(d.activo){ov.style.display='flex';var msg=document.getElementById('_mantMsg');if(msg&&d.mensaje)msg.textContent=d.mensaje;}else{ov.style.display='none';}}).catch(function(){});}_chkMant();setInterval(_chkMant,20000);})();</script>
+</body>
+</html>
