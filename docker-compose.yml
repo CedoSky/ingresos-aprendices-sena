@@ -96,7 +96,24 @@ services:
       # Security
       SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY:-change-me-in-production}
-      
+      ENCRYPTION_KEY: "${ENCRYPTION_KEY:?Define ENCRYPTION_KEY en tu .env (ver .env.example)}"
+
+      # Usuarios por defecto (admin/vigilante)
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      VIGILANTE_PASSWORD: ${VIGILANTE_PASSWORD:-}
+
+      # CORS y almacenamiento de respaldos
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+      STORAGE_BACKEND: ${STORAGE_BACKEND:-usb}
+      DEV_PIN_SECRET: ${DEV_PIN_SECRET:-}
+
+      # Wompi (pasarela de pagos)
+      WOMPI_PUBLIC_KEY: ${WOMPI_PUBLIC_KEY:-}
+      WOMPI_PRIVATE_KEY: ${WOMPI_PRIVATE_KEY:-}
+      WOMPI_INTEGRITY_SECRET: ${WOMPI_INTEGRITY_SECRET:-}
+      WOMPI_EVENTS_SECRET: ${WOMPI_EVENTS_SECRET:-}
+      WOMPI_ENV: ${WOMPI_ENV:-sandbox}
+
       # AWS S3 (Opcional para respaldos)
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
@@ -104,8 +121,10 @@ services:
       AWS_REGION: ${AWS_REGION:-us-east-1}
       
       # Email Configuration (Gmail)
-      GMAIL_USER: ${GMAIL_USER:-}
-      GMAIL_PASSWORD: ${GMAIL_PASSWORD:-}
+      GMAIL_REMITENTE: ${GMAIL_REMITENTE:-}
+      GMAIL_APP_PASSWORD: ${GMAIL_APP_PASSWORD:-}
+      GMAIL_NOMBRE: ${GMAIL_NOMBRE:-SENA — Sistema de Ingresos}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
       
       # ESP32 Configuration
       ESP32_IP: ${ESP32_IP:-192.168.1.100}
